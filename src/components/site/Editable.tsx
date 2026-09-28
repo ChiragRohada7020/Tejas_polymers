@@ -1,0 +1,242 @@
+"use client";
+
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+
+type BaseProps = {
+  contentKey: string;
+  editMode: boolean;
+  className?: string;
+  style?: CSSProperties;
+};
+
+function useEditingFlag(editMode: boolean) {
+  useEffect(() => {
+    if (!editMode) return;
+    document.body.classList.add("site-editing");
+  }, [editMode]);
+}
+
+function useCancelOnEscape(ref: React.RefObject<HTMLElement | null>, editMode: boolean, original: string) {
+  useEffect(() => {
+    if (!editMode) return;
+    const node = ref.current;
+    if (!node) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        node.textContent = original;
+        node.blur();
+      }
+    };
+    node.addEventListener("keydown", onKey);
+    return () => node.removeEventListener("keydown", onKey);
+  }, [editMode, original, ref]);
+}
+
+/** Plain-text inline block. Renders identical output for anonymous visitors. */
+export function EditableText({
+  contentKey,
+  editMode,
+  value,
+  as: Tag = "span",
+  className,
+  style,
+}: BaseProps & { value: string; as?: "span" | "p" | "h1" | "h2" | "h3" | "li" | "div" }) {
+  const ref = useRef<HTMLElement | null>(null);
+  useEditingFlag(editMode);
+  useCancelOnEscape(ref, editMode, value);
+
+  if (!editMode) {
+    return (
+      <Tag className={className} style={style}>
+        {value}
+      </Tag>
+    );
+  }
+
+  return (
+    <Tag
+      // @ts-expect-error contentEditable ref polymorphism
+      ref={ref}
+      className={className}
+      style={style}
+      contentEditable
+      suppressContentEditableWarning
+      spellCheck={false}
+      data-content-key={contentKey}
+      data-content-kind="text"
+    >
+      {value}
+    </Tag>
+  );
+}
+
+/** Rich-text inline block with a minimal B/I/link/list toolbar. */
+export function EditableRichText({
+  contentKey,
+  editMode,
+  value,
+  className,
+  style,
+}: BaseProps & { value: string }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEditingFlag(editMode);
+  useCancelOnEscape(ref, editMode, value);
+
+  useEffect(() => {
+    if (editMode && ref.current) {
+      ref.current.innerHTML = value;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editMode]);
+
+  if (!editMode) {
+    return <div className={className} style={style} dangerouslySetInnerHTML={{ __html: value }} />;
+  }
+
+  function command(cmd: string, arg?: string) {
+    document.execCommand(cmd, false, arg);
+    ref.current?.focus();
+  }
+
+  function addLink() {
+    const url = window.prompt("Link destination (e.g. /products or https://…)", "/products");
+    if (url) command("createLink", url);
+  }
+
+  return (
+    <div className={className} style={style}>
+      <div className="site-edit-toolbar" contentEditable={false}>
+        <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => command("bold")}>
+          B
+        </button>
+        <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => command("italic")}>
+          I
+        </button>
+        <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={addLink}>
+          🔗
+        </button>
+        <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => command("insertUnorderedList")}>
+          • List
+        </button>
+      </div>
+      <div
+        ref={ref}
+        contentEditable
+        suppressContentEditableWarning
+        spellCheck={false}
+        data-content-key={contentKey}
+        data-content-kind="rich"
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
+    </div>
+  );
+}
+
+/**
+ * Adds the `edit=1` flag to internal links so the target page opens in the
+ * visual editor. External links, anchors and tel/mailto are left untouched.
+ */
+function withEditParam(href: string, editMode: boolean): string {
+  if (!editMode || !href) return href;
+  if (/^(https?:)?\/\//i.test(href)) return href;
+  if (/^(#|mailto:|tel:|javascript:)/i.test(href)) return href;
+  const [path, query = ""] = href.split("?");
+  const params = new URLSearchParams(query);
+  params.set("edit", "1");
+  return `${path}?${params.toString()}`;
+}
+
+/**
+ * Link that still navigates normally while the visual editor is on (the target
+ * page opens in edit mode too). Use the small buttons next to the label to
+ * rename the text or change the destination.
+ */
+export function EditableLink({
+  labelKey,
+  hrefKey,
+  editMode,
+  label,
+  href,
+  className,
+  children,
+}: {
+  labelKey: string;
+  hrefKey: string;
+  editMode: boolean;
+  label: string;
+  href: string;
+  className?: string;
+  children?: ReactNode;
+}) {
+  useEditingFlag(editMode);
+  const labelRef = useRef<HTMLSpanElement | null>(null);
+
+  if (!editMode) {
+    return (
+      <a href={href} className={className}>
+        {children ?? label}
+      </a>
+    );
+  }
+
+  function editLabel(event: React.MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    const holder = labelRef.current;
+    if (!holder) return;
+    const next = window.prompt("Text", holder.innerText.trim() || label);
+    if (next === null) return;
+    holder.textContent = next;
+    holder.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  function editHref(event: React.MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    const holder = labelRef.current;
+    if (!holder) return;
+    const next = window.prompt("Link destination (e.g. /products or https://…)", href);
+    if (next === null) return;
+    holder.dataset.linkHref = next;
+    const anchor = holder.closest("a");
+    if (anchor) anchor.setAttribute("href", withEditParam(next, true));
+    // Trigger an input event so VisualEditorShell detects the change
+    holder.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <a
+        href={withEditParam(href, true)}
+        className={className}
+        title={`Go to ${href} (edit mode stays on)`}
+      >
+        <span
+          ref={labelRef}
+          data-content-key={labelKey}
+          data-content-kind="text"
+          data-link-key={hrefKey}
+          data-link-href={href}
+        >
+          {children ?? label}
+        </span>
+      </a>
+      <button
+        type="button"
+        onClick={editLabel}
+        title="Change text"
+        className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-900/10 text-[10px] hover:bg-slate-900/20"
+      >
+        ✏️
+      </button>
+      <button
+        type="button"
+        onClick={editHref}
+        title="Change link destination"
+        className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-900/10 text-[10px] hover:bg-slate-900/20"
+      >
+        🔗
+      </button>
+    </span>
+  );
+}
