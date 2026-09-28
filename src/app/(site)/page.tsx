@@ -5,6 +5,7 @@ import { Category } from "@/lib/models/Category";
 import { Product } from "@/lib/models/Product";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
+import AnimatedStat from "@/components/AnimatedStat";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import {
@@ -200,7 +201,12 @@ export default async function HomePage() {
           {stats.map((s, i) => (
             <div key={i} className="reveal text-center">
               <p className="text-3xl font-extrabold text-brand-700 sm:text-4xl">
-                <EditableText contentKey={`home.stats.${i}.value`} editMode={editMode} value={s.value} as="span" />
+                <AnimatedStat
+                  contentKey={`home.stats.${i}.value`}
+                  editMode={editMode}
+                  value={s.value}
+                  delay={i * 90}
+                />
               </p>
               <p className="mt-1 text-sm font-medium text-slate-500">
                 <EditableText contentKey={`home.stats.${i}.label`} editMode={editMode} value={s.label} as="span" />

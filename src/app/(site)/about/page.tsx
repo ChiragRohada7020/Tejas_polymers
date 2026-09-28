@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import AnimatedStat from "@/components/AnimatedStat";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import { content, getSiteContentMap } from "@/lib/site-content";
@@ -60,7 +61,12 @@ export default async function AboutPage() {
             {[0, 1, 2, 3].map((i) => (
               <div key={i} className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
                 <p className="text-2xl font-extrabold text-brand-700">
-                  <EditableText contentKey={`about.stats.${i}.value`} editMode={editMode} value={t(`about.stats.${i}.value`)} as="span" />
+                  <AnimatedStat
+                    contentKey={`about.stats.${i}.value`}
+                    editMode={editMode}
+                    value={t(`about.stats.${i}.value`)}
+                    delay={i * 90}
+                  />
                 </p>
                 <p className="mt-1 text-sm text-slate-500">
                   <EditableText contentKey={`about.stats.${i}.label`} editMode={editMode} value={t(`about.stats.${i}.label`)} as="span" />
