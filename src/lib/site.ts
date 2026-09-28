@@ -1,22 +1,23 @@
 export const SITE_NAME = "Tejas Polymers";
-export const SITE_TAGLINE = "Irrigation Equipment Supplier";
+/** Consumer-facing brand shown in the header/wordmark and product names. */
+export const BRAND_NAME = "Krusheebindoo";
+export const SITE_TAGLINE = "Smart Irrigation… Better Tomorrow…";
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const SITE_DESCRIPTION =
-  "Tejas Polymers is a leading irrigation equipment supplier and agricultural machinery manufacturer in Pachora, Maharashtra. Factory-direct drip systems, sprayers, tillers, harvesters, water pumps and spare parts for dealers and distributors.";
+  "Krusheebindoo by Tejas Polymers manufactures the full range of inline and online drip irrigation products from Pachora, Jalgaon, Maharashtra. IS 13488 certified flat inline drip laterals, on-line emitters, filters and fittings that cut irrigation water use by up to 60%.";
 
 export const CONTACT = {
-  // TODO: replace with the real business email and phone before launch.
-  email: "sales@tejaspolymers.example",
-  phone: "+91 98765 43210",
+  email: "tejaspolymers001@gmail.com",
+  phone: "+91 80803 37813",
   address:
-    "M.S, Survey No. 152/2, Jalgaon Road, Tal, behind Sugaran Dairy, Goradakheda, Pachora, Maharashtra 424201",
-  street: "Survey No. 152/2, Jalgaon Road, Goradakheda, Pachora",
+    "Survey No. 152/3, Behind Sugaran Dairy, Goradakheda, Tal. Pachora, Dist. Jalgaon, Maharashtra 424201",
+  street: "Survey No. 152/3, Behind Sugaran Dairy, Goradakheda",
   locality: "Pachora",
   region: "Maharashtra",
   postalCode: "424201",
   country: "IN",
-  // Approximate coordinates for Pachora, Jalgaon district, Maharashtra.
+  // Approximate coordinates for Goradakheda, Pachora, Jalgaon district, Maharashtra.
   latitude: 20.2589,
   longitude: 75.3556,
 };
@@ -38,16 +39,19 @@ export const OPENING_HOURS = [
 
 /** Primary local-SEO keywords for the home page. */
 export const KEYWORDS = [
-  "irrigation equipment supplier",
-  "irrigation equipment supplier in Pachora",
-  "agriculture equipment supplier Maharashtra",
-  "drip irrigation system supplier",
-  "agricultural machinery manufacturer",
-  "farm machinery supplier Jalgaon",
-  "sprayer and duster dealer",
-  "power tiller supplier",
-  "water pump supplier",
-  "harvester and thresher dealer",
-  "agricultural spare parts supplier",
-  "farm equipment distributor",
+  "drip irrigation manufacturer",
+  "drip irrigation manufacturer in Maharashtra",
+  "inline drip suppliers",
+  "flat inline drip 16mm",
+  "online drip emitter supplier",
+  "IS 13488 certified drip pipe",
+  "drip irrigation products Pachora",
+  "drip irrigation supplier Jalgaon",
+  "agriculture drip pipe manufacturer",
+  "Krusheebindoo drip irrigation",
+  "Tejas Polymers",
+  "disc filter and screen filter supplier",
+  "drip irrigation fittings and accessories",
+  "water saving irrigation equipment",
+  "farm irrigation equipment distributor",
 ];

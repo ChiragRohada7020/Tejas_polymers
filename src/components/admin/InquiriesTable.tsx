@@ -124,7 +124,7 @@ export default function InquiriesTable({ inquiries }: { inquiries: AdminInquiry[
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{q.message}</p>
                   <p className="mt-2 text-xs text-slate-400">Received {formatDateTimeUTC(q.createdAt)} (UTC)</p>
                   <a
-                    href={`mailto:${q.email}?subject=Re: your inquiry to AgriGrid Industries`}
+                    href={`mailto:${q.email}?subject=Re: your inquiry to Tejas Polymers`}
                     className="mt-3 inline-block rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"
                   >
                     Reply by Email

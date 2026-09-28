@@ -14,7 +14,7 @@ export default function ProductCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={product.imageUrl || "/placeholder-product.svg"}
-          alt={`${product.name} — irrigation equipment by Tejas Polymers`}
+          alt={`${product.name} — drip irrigation product by Tejas Polymers`}
           className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           loading="lazy"
         />

@@ -1,8 +1,8 @@
 {
-  "name": "agrigrid-website",
+  "name": "krusheebindoo-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Website for AgriGrid Industries - agricultural equipment manufacturer",
+  "description": "Krusheebindoo by Tejas Polymers - drip irrigation product manufacturer website",
   "engines": {
     "node": ">=18.18.0"
   },

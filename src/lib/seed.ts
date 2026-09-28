@@ -9,7 +9,20 @@ import { CONTENT_DEFS } from "@/lib/site-content";
 
 const allProducts = [...products1, ...products2].map((p) => ({ ...p, specs: { ...p.specs } }));
 
-export async function seedDatabase(): Promise<{ products: number; categories: number; content: number }> {
+export type SeedOptions = {
+  /**
+   * Overwrite every site-content key with the defaultValue declared in
+   * site-content.ts. WITHOUT this, existing rows are left untouched (the
+   * normal, non-destructive behaviour) so admin edits survive a re-seed.
+   * Use this after changing defaults in code, otherwise the live site keeps
+   * serving the old copy forever.
+   */
+  forceContent?: boolean;
+};
+
+export async function seedDatabase(
+  options: SeedOptions = {}
+): Promise<{ products: number; categories: number; content: number; contentReset: number }> {
   await connectDB();
 
   await Category.deleteMany({});
@@ -18,7 +31,17 @@ export async function seedDatabase(): Promise<{ products: number; categories: nu
   await Category.insertMany(categories as unknown as Record<string, unknown>[]);
   await Product.insertMany(allProducts as unknown as Record<string, unknown>[]);
 
-  // Non-destructive: only inserts content keys that don't exist yet.
+  let contentReset = 0;
+  if (options.forceContent) {
+    // Drop keys we manage so $setOnInsert below re-creates them from the
+    // current defaults. Unknown keys are preserved.
+    const { deletedCount } = await SiteContent.deleteMany({
+      key: { $in: CONTENT_DEFS.map((d) => d.key) },
+    });
+    contentReset = deletedCount ?? 0;
+  }
+
+  // Non-destructive by default: only inserts content keys that don't exist yet.
   const ops = CONTENT_DEFS.map((d) => ({
     updateOne: {
       filter: { key: d.key },
@@ -32,6 +55,7 @@ export async function seedDatabase(): Promise<{ products: number; categories: nu
     products: allProducts.length,
     categories: categories.length,
     content: contentResult.upsertedCount,
+    contentReset,
   };
 }
 

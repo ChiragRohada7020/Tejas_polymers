@@ -12,18 +12,20 @@ import { content, getSiteContentMap } from "@/lib/site-content";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Irrigation Equipment & Farm Machinery — Product Catalog",
+  title: "Drip Irrigation Products — Inline Drip, Emitters, Filters & Fittings",
   description:
-    "Browse Tejas Polymers' catalog of irrigation equipment and farm machinery: drip irrigation kits, sprayers and dusters, power tillers, harvesting machinery, water pumps, hand tools and spare parts. Distributor pricing available.",
+    "Browse Krusheebindoo by Tejas Polymers: IS 13488 certified flat inline drip laterals in 12 mm and 16 mm, online drippers 4 and 8 LPH, pressure-compensating emitters, screen and disc filters, grommets, end caps and take-off connectors. Manufacturer pricing for dealers in Jalgaon, Dhule, Nandurbar and across Maharashtra.",
   keywords: [
-    "irrigation equipment products",
-    "drip irrigation kit",
-    "sprayer and duster",
-    "power tiller",
-    "harvesting machinery",
-    "centrifugal water pump",
-    "agricultural hand tools",
-    "farm spare parts",
+    "flat inline drip 12mm",
+    "flat inline drip 16mm",
+    "online drip emitter 4 LPH",
+    "online drip emitter 8 LPH",
+    "PC pressure compensating emitter",
+    "drip screen filter 2 inch",
+    "drip disc filter",
+    "drip take off connector",
+    "drip lateral grommet",
+    "drip irrigation fittings",
   ],
   alternates: { canonical: "/products" },
 };

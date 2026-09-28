@@ -6,7 +6,7 @@ import { Category } from "@/lib/models/Category";
 import { Product } from "@/lib/models/Product";
 import InquiryForm from "@/components/InquiryForm";
 import ProductCard from "@/components/ProductCard";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { BRAND_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
 import { isAdminAuthenticated } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getProduct(slug);
   if (!data) return { title: "Product not found" };
   const { product, category } = data;
-  const title = `${product.name} - ${category?.name ?? "Farm Equipment"} Manufacturer`;
+  const title = `${product.name} - ${category?.name ?? "Drip Irrigation Product"} | ${BRAND_NAME}`;
   return {
     title,
     description: product.shortDescription,
@@ -66,11 +66,12 @@ export default async function ProductDetailPage({ params }: Props) {
     image: product.imageUrl ? `${SITE_URL}${product.imageUrl}` : `${SITE_URL}/images/og/tejas-polymers.jpg`,
     category: category?.name,
     sku: product.slug,
-    brand: { "@type": "Brand", name: SITE_NAME },
+    brand: { "@type": "Brand", name: BRAND_NAME },
     manufacturer: {
       "@type": "Organization",
       "@id": `${SITE_URL}/#business`,
       name: SITE_NAME,
+      alternateName: BRAND_NAME,
       url: SITE_URL,
     },
     offers: {
@@ -180,7 +181,9 @@ export default async function ProductDetailPage({ params }: Props) {
             <p className="mt-4 leading-relaxed text-slate-600">{product.shortDescription}</p>
 
             <div className="mt-6 rounded-xl border border-brand-100 bg-brand-50 p-4">
-              <p className="text-sm text-slate-600">Distributor price</p>
+              <p className="text-sm text-slate-600">
+                {product.price && /₹/.test(product.price) ? "M.R.P. (ex-works)" : "Price"}
+              </p>
               <p className="mt-1 text-xl font-bold text-brand-800">
                 {product.price || "Contact us for pricing"}
               </p>

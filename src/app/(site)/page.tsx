@@ -22,13 +22,13 @@ import { content, getSiteContentMap } from "@/lib/site-content";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} — Irrigation Equipment Supplier in Pachora, Maharashtra`,
+  title: `${SITE_NAME} — Drip Irrigation Manufacturer in Pachora, Maharashtra`,
   description: SITE_DESCRIPTION,
   keywords: KEYWORDS,
   alternates: { canonical: "/" },
 };
 
-const WHY_ICONS = ["🏭", "✅", "🛠️", "🚢"];
+const WHY_ICONS = ["💧", "✅", "🎯", "🌾"];
 
 export default async function HomePage() {
   const editMode = await isAdminAuthenticated();
@@ -90,19 +90,27 @@ export default async function HomePage() {
     ],
     areaServed: AREA_SERVED.map((area) => ({ "@type": "City", name: area })),
     makesOffer: [
-      "Drip irrigation systems",
-      "Sprayers and dusters",
-      "Power tillers",
-      "Harvesting machinery",
-      "Water pumps",
-      "Hand tools",
-      "Spare parts",
+      "Flat inline drip lateral 12 mm - 4 LPH - 40 cm",
+      "Flat inline drip lateral 16 mm - 4 LPH - 30 cm",
+      "Flat inline drip lateral 16 mm - 4 LPH - 40 cm",
+      "Flat inline drip lateral 20 mm - 4 LPH - 60 cm",
+      "Online dripper 4 LPH",
+      "Online dripper 8 LPH",
+      "PC pressure-compensating online emitter 8 LPH",
+      "Plain drip lateral 16 mm",
+      "Inline screen filter 2 inch",
+      "Disc filter 2 inch",
+      "Take-off connector with valve 16 mm",
+      "Drip lateral grommet, end cap, lateral cock",
+      "Drip hole punch 16 mm",
     ].map((name) => ({ "@type": "Offer", itemOffered: { "@type": "Product", name } })),
     knowsAbout: [
       "Drip irrigation",
-      "Agricultural machinery",
-      "Spraying equipment",
-      "Farm implements",
+      "Inline drip laterals",
+      "Online drip emitters",
+      "Pressure-compensating emitters",
+      "Screen and disc filtration",
+      "Fertigation",
     ],
   };
 

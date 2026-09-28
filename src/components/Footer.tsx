@@ -48,12 +48,10 @@ export default function Footer({
         <nav aria-label="Footer products">
           <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Products</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link className="hover:text-white" href="/products?category=sprayers-dusters">Sprayers &amp; Dusters</Link></li>
-            <li><Link className="hover:text-white" href="/products?category=tillers-cultivators">Tillers &amp; Cultivators</Link></li>
-            <li><Link className="hover:text-white" href="/products?category=harvesting-machinery">Harvesting Machinery</Link></li>
-            <li><Link className="hover:text-white" href="/products?category=irrigation-equipment">Irrigation Equipment</Link></li>
-            <li><Link className="hover:text-white" href="/products?category=hand-tools">Hand Tools</Link></li>
-            <li><Link className="hover:text-white" href="/products?category=spare-parts">Spare Parts</Link></li>
+            <li><Link className="hover:text-white" href="/products?category=flat-inline-drip">Flat Inline Drip</Link></li>
+            <li><Link className="hover:text-white" href="/products?category=online-drip-emitters">Online Drip &amp; Emitters</Link></li>
+            <li><Link className="hover:text-white" href="/products?category=filters">Filters</Link></li>
+            <li><Link className="hover:text-white" href="/products?category=fittings-accessories">Fittings &amp; Accessories</Link></li>
           </ul>
         </nav>
 
