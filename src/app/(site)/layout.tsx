@@ -2,6 +2,7 @@ import { isAdminAuthenticated } from "@/lib/auth";
 import HeaderClient from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import VisualEditorShell from "@/components/site/VisualEditorShell";
+import { EditModeProvider } from "@/components/site/EditModeContext";
 import { content, getSiteContentMap } from "@/lib/site-content";
 import { CONTACT } from "@/lib/site";
 
@@ -19,6 +20,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   ].map((item) => ({ ...item, label: content(map, item.labelKey), href: content(map, item.hrefKey) }));
 
   return (
+    <EditModeProvider canEdit={editMode}>
     <div className="flex min-h-screen flex-col">
       <HeaderClient
         editMode={editMode}
@@ -44,6 +46,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       />
       {editMode && <VisualEditorShell />}
     </div>
+    </EditModeProvider>
   );
 }
 

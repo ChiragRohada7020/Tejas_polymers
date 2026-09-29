@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db";
@@ -8,6 +8,7 @@ import InquiryForm from "@/components/InquiryForm";
 import ProductCard from "@/components/ProductCard";
 import { BRAND_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
 import { isAdminAuthenticated } from "@/lib/auth";
+import AdminChrome from "@/components/site/AdminChrome";
 
 export const dynamic = "force-dynamic";
 
@@ -114,32 +115,32 @@ export default async function ProductDetailPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        {editMode && (
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
-            <div className="flex items-center gap-2">
-              <span className="font-bold">Edit Mode:</span>
-              <span>This is dynamic product catalog data (images, specs, descriptions).</span>
+        <AdminChrome canEdit={editMode}>
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
+              <div className="flex items-center gap-2">
+                <span className="font-bold">Edit Mode:</span>
+                <span>This is dynamic product catalog data (images, specs, descriptions).</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/admin/products/${product._id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-lg bg-brand-600 px-3 py-1.5 font-semibold text-white shadow-sm hover:bg-brand-700"
+                >
+                  ✏️ Edit This Product in Admin
+                </Link>
+                <Link
+                  href="/admin/products/new"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
+                >
+                  + Add Another Product
+                </Link>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Link
-                href={`/admin/products/${product._id}`}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg bg-brand-600 px-3 py-1.5 font-semibold text-white shadow-sm hover:bg-brand-700"
-              >
-                ✏️ Edit This Product in Admin
-              </Link>
-              <Link
-                href="/admin/products/new"
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
-              >
-                + Add Another Product
-              </Link>
-            </div>
-          </div>
-        )}
+        </AdminChrome>
 
         <nav aria-label="Breadcrumb" className="mb-8 text-sm text-slate-500">
           <Link href="/" className="hover:text-brand-700">Home</Link>

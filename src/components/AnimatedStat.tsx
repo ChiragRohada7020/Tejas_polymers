@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { EditableText } from "@/components/site/Editable";
+import { useIsEditing } from "@/components/site/EditModeContext";
 
 type Props = {
   /** Raw value, e.g. "120+", "6+", "Pachora", "ISO 9001". */
@@ -50,6 +51,7 @@ export default function AnimatedStat({
 }: Props) {
   const ref = useRef<HTMLSpanElement | null>(null);
   const [display, setDisplay] = useState<string | null>(null);
+  const editing = useIsEditing(editMode);
 
   const parsed = parseValue(value);
 
@@ -104,7 +106,7 @@ export default function AnimatedStat({
   }, [value, delay, duration]);
 
   // Admins edit the raw text — never animate underneath the editor.
-  if (editMode) {
+  if (editing) {
     return (
       <span ref={ref}>
         <EditableText contentKey={contentKey} editMode value={value} as="span" />

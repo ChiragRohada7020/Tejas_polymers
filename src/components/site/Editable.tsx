@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { useIsEditing } from "@/components/site/EditModeContext";
 
 type BaseProps = {
   contentKey: string;
@@ -9,12 +10,6 @@ type BaseProps = {
   style?: CSSProperties;
 };
 
-function useEditingFlag(editMode: boolean) {
-  useEffect(() => {
-    if (!editMode) return;
-    document.body.classList.add("site-editing");
-  }, [editMode]);
-}
 
 function useCancelOnEscape(ref: React.RefObject<HTMLElement | null>, editMode: boolean, original: string) {
   useEffect(() => {
@@ -42,10 +37,10 @@ export function EditableText({
   style,
 }: BaseProps & { value: string; as?: "span" | "p" | "h1" | "h2" | "h3" | "li" | "div" }) {
   const ref = useRef<HTMLElement | null>(null);
-  useEditingFlag(editMode);
-  useCancelOnEscape(ref, editMode, value);
+  const editing = useIsEditing(editMode);
+  useCancelOnEscape(ref, editing, value);
 
-  if (!editMode) {
+  if (!editing) {
     return (
       <Tag className={className} style={style}>
         {value}
@@ -79,17 +74,17 @@ export function EditableRichText({
   style,
 }: BaseProps & { value: string }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  useEditingFlag(editMode);
-  useCancelOnEscape(ref, editMode, value);
+  const editing = useIsEditing(editMode);
+  useCancelOnEscape(ref, editing, value);
 
   useEffect(() => {
-    if (editMode && ref.current) {
+    if (editing && ref.current) {
       ref.current.innerHTML = value;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editMode]);
+  }, [editing]);
 
-  if (!editMode) {
+  if (!editing) {
     return <div className={className} style={style} dangerouslySetInnerHTML={{ __html: value }} />;
   }
 
@@ -168,10 +163,10 @@ export function EditableLink({
   className?: string;
   children?: ReactNode;
 }) {
-  useEditingFlag(editMode);
+  const editing = useIsEditing(editMode);
   const labelRef = useRef<HTMLSpanElement | null>(null);
 
-  if (!editMode) {
+  if (!editing) {
     return (
       <a href={href} className={className}>
         {children ?? label}
@@ -199,7 +194,7 @@ export function EditableLink({
     if (next === null) return;
     holder.dataset.linkHref = next;
     const anchor = holder.closest("a");
-    if (anchor) anchor.setAttribute("href", withEditParam(next, true));
+    if (anchor) anchor.setAttribute("href", withEditParam(next, editing));
     // Trigger an input event so VisualEditorShell detects the change
     holder.dispatchEvent(new Event("input", { bubbles: true }));
   }
@@ -207,7 +202,7 @@ export function EditableLink({
   return (
     <span className="inline-flex items-center gap-1.5">
       <a
-        href={withEditParam(href, true)}
+        href={withEditParam(href, editing)}
         className={className}
         title={`Go to ${href} (edit mode stays on)`}
       >

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { IProduct } from "@/lib/models/Product";
+import AdminChrome from "@/components/site/AdminChrome";
 
 export default function ProductCard({
   product,
@@ -14,7 +15,7 @@ export default function ProductCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={product.imageUrl || "/placeholder-product.svg"}
-          alt={`${product.name} — drip irrigation product by Tejas Polymers`}
+          alt={`${product.name} - drip irrigation product by Tejas Polymers`}
           className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           loading="lazy"
         />
@@ -23,7 +24,7 @@ export default function ProductCard({
             Featured
           </span>
         )}
-        {editMode && (
+        <AdminChrome canEdit={editMode}>
           <div className="absolute right-2 top-2 z-10 flex gap-1.5">
             <Link
               href={`/admin/products/${product._id}`}
@@ -32,10 +33,10 @@ export default function ProductCard({
               className="rounded-lg bg-white/95 px-2.5 py-1 text-xs font-bold text-brand-800 shadow backdrop-blur transition hover:bg-brand-600 hover:text-white"
               title="Edit product details, image & specs in admin"
             >
-              ✏️ Edit Product
+              Edit Product
             </Link>
           </div>
-        )}
+        </AdminChrome>
       </div>
 
       <div className="flex flex-1 flex-col p-5">
@@ -51,7 +52,7 @@ export default function ProductCard({
             {product.minOrderQty ? `MOQ: ${product.minOrderQty}` : "Bulk orders welcome"}
           </span>
           <div className="flex items-center gap-2">
-            {editMode && (
+            <AdminChrome canEdit={editMode}>
               <Link
                 href={`/admin/products/${product._id}`}
                 target="_blank"
@@ -60,12 +61,12 @@ export default function ProductCard({
               >
                 Admin Edit
               </Link>
-            )}
+            </AdminChrome>
             <Link
               href={`/products/${product.slug}`}
               className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-700"
             >
-              View Details →
+              View Details
             </Link>
           </div>
         </div>

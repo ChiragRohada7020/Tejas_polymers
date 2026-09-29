@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useIsEditing } from "@/components/site/EditModeContext";
 
 type Props = {
   imageKey: string;
@@ -34,7 +35,7 @@ export default function EditableMedia({
 
   const current = preview ?? src;
 
-  if (!editMode) {
+  if (!useIsEditing(editMode)) {
     if (!current) return <>{fallback}</>;
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={current} alt={alt} className={imgClassName} loading="lazy" />;

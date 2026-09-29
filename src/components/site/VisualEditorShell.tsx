@@ -1,10 +1,9 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useEditMode } from "@/components/site/EditModeContext";
 
 type EditorState = {
-  enabled: boolean;
   dirty: boolean;
   saving: boolean;
   error: string | null;
@@ -44,31 +43,15 @@ function collectItems(): { key: string; value: string }[] {
   return items;
 }
 
-const EDIT_FLAG = "agrigrid_edit_mode";
-
-/** True when the current URL asks for edit mode, or a previous page turned it on. */
-function editModeRequested(): boolean {
-  if (typeof window === "undefined") return false;
-  const fromUrl = new URLSearchParams(window.location.search).get("edit") === "1";
-  if (fromUrl) {
-    try {
-      window.sessionStorage.setItem(EDIT_FLAG, "1");
-    } catch {
-      /* storage unavailable — edit mode still works for this page */
-    }
-    return true;
-  }
-  try {
-    return window.sessionStorage.getItem(EDIT_FLAG) === "1";
-  } catch {
-    return false;
-  }
-}
-
+/**
+ * Floating save/exit bar. Only rendered while edit mode is actually on
+ * (the visitor pressed "Edit Website"), never merely because they are
+ * logged in.
+ */
 export default function VisualEditorShell() {
-  const pathname = usePathname();
+  const { active, disable } = useEditMode();
+
   const [state, setState] = useState<EditorState>({
-    enabled: false,
     dirty: false,
     saving: false,
     error: null,
@@ -76,16 +59,7 @@ export default function VisualEditorShell() {
   });
 
   useEffect(() => {
-    if (editModeRequested()) {
-      setState((s) => ({ ...s, enabled: true }));
-      document.body.classList.add("site-editing");
-    }
-    return () => document.body.classList.remove("site-editing");
-    // Re-check on every client-side navigation so edit mode persists while browsing pages.
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!state.enabled) return;
+    if (!active) return;
     const onInput = (event: Event) => {
       if ((event.target as HTMLElement | null)?.closest?.("[data-content-key]")) {
         setState((s) => ({ ...s, dirty: true, savedAt: null }));
@@ -93,22 +67,22 @@ export default function VisualEditorShell() {
     };
     document.addEventListener("input", onInput);
     return () => document.removeEventListener("input", onInput);
-  }, [state.enabled]);
+  }, [active]);
 
   // Warn before leaving the page with unsaved edits (link clicks, refresh, close).
   useEffect(() => {
-    if (!state.enabled || !state.dirty) return;
+    if (!active || !state.dirty) return;
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = "";
     };
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
-  }, [state.enabled, state.dirty]);
+  }, [active, state.dirty]);
 
-  // Intercept in-page link clicks so unsaved edits aren't silently dropped.
+  // Intercept in-page link clicks so unsaved edits arent silently dropped.
   useEffect(() => {
-    if (!state.enabled || !state.dirty) return;
+    if (!active || !state.dirty) return;
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented || event.button !== 0) return;
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -121,9 +95,9 @@ export default function VisualEditorShell() {
     };
     document.addEventListener("click", onClick, true);
     return () => document.removeEventListener("click", onClick, true);
-  }, [state.enabled, state.dirty]);
+  }, [active, state.dirty]);
 
-  if (!state.enabled) return null;
+  if (!active) return null;
 
   async function save() {
     setState((s) => ({ ...s, saving: true, error: null }));
@@ -153,27 +127,25 @@ export default function VisualEditorShell() {
   }
 
   function exit() {
-    try {
-      window.sessionStorage.removeItem(EDIT_FLAG);
-    } catch {
-      /* ignore */
-    }
+    disable();
+    // Drop the ?edit=1 deep link so a refresh does not switch it straight back on.
     const url = new URL(window.location.href);
     url.searchParams.delete("edit");
-    window.location.href = url.toString();
+    window.history.replaceState({}, "", url.toString());
+    setState({ dirty: false, saving: false, error: null, savedAt: null });
   }
 
   return (
     <div className="fixed bottom-4 left-1/2 z-[100] flex w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white/95 px-4 py-3 shadow-xl backdrop-blur">
-      <span className="rounded-full bg-brand-600 px-2.5 py-1 text-xs font-bold text-white">✏️ Editing</span>
+      <span className="rounded-full bg-brand-600 px-2.5 py-1 text-xs font-bold text-white">Editing</span>
       <span className="text-xs text-slate-500">
         {state.saving
-          ? "Saving…"
+          ? "Saving..."
           : state.savedAt
-            ? "Saved ✓"
+            ? "Saved"
             : state.dirty
               ? "Unsaved changes"
-              : "Click text to edit · click links to open that page · ✏️/🔗 to edit link text/URL"}
+              : "Click text to edit - click links to open that page"}
       </span>
       {state.error && <span className="w-full text-xs text-red-600">{state.error}</span>}
       <span className="ml-auto flex gap-2">
@@ -191,7 +163,7 @@ export default function VisualEditorShell() {
           disabled={state.saving || !state.dirty}
           className="rounded-lg bg-brand-600 px-4 py-1.5 text-xs font-bold text-white hover:bg-brand-700 disabled:opacity-50"
         >
-          {state.saving ? "Saving…" : "Save changes"}
+          {state.saving ? "Saving..." : "Save changes"}
         </button>
         <button
           type="button"

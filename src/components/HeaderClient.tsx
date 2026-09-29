@@ -1,9 +1,10 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { EditableLink, EditableText } from "@/components/site/Editable";
+import { useIsEditing } from "@/components/site/EditModeContext";
 import EditableMedia from "@/components/site/EditableMedia";
 import type { NavItem } from "@/app/(site)/layout";
 
@@ -43,7 +44,7 @@ export function BrandMark({
     </span>
   );
 
-  if (!editMode) {
+  if (!useIsEditing(editMode)) {
     return (
       <span className="flex items-center gap-2">
         {logoImage ? (
@@ -81,6 +82,8 @@ export function BrandMark({
 
 export default function HeaderClient(props: HeaderProps) {
   const { editMode, nav, ctaLabel, ctaHref } = props;
+  // Nav/CTA render as editable links only while the editor is switched on.
+  const editing = useIsEditing(editMode);
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -119,7 +122,7 @@ export default function HeaderClient(props: HeaderProps) {
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
           {nav.map((item) => {
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-            return editMode ? (
+            return editing ? (
               <span key={item.hrefKey} className="inline-flex items-center">
                 <EditableLink
                   labelKey={item.labelKey}
@@ -137,7 +140,7 @@ export default function HeaderClient(props: HeaderProps) {
             );
           })}
 
-          {editMode ? (
+          {editing ? (
             <span className="ml-3 inline-flex items-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm">
               <EditableLink
                 labelKey="header.cta.label"
@@ -180,7 +183,7 @@ export default function HeaderClient(props: HeaderProps) {
         <nav className="border-t border-slate-200 bg-white px-4 pb-4 md:hidden" aria-label="Mobile navigation">
           {nav.map((item) => {
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-            return editMode ? (
+            return editing ? (
               <span key={item.hrefKey} className="block">
                 <EditableLink
                   labelKey={item.labelKey}
@@ -197,7 +200,7 @@ export default function HeaderClient(props: HeaderProps) {
               </Link>
             );
           })}
-          {editMode ? (
+          {editing ? (
             <span className="mt-2 block">
               <EditableLink
                 labelKey="header.cta.label"

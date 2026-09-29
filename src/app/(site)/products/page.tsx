@@ -8,6 +8,7 @@ import Reveal from "@/components/Reveal";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import { content, getSiteContentMap } from "@/lib/site-content";
+import AdminChrome from "@/components/site/AdminChrome";
 
 export const dynamic = "force-dynamic";
 
@@ -140,7 +141,7 @@ export default async function ProductsPage({
             {products.length} product{products.length === 1 ? "" : "s"} found
             {q && <> for &ldquo;{q}&rdquo;</>}
           </p>
-          {editMode && (
+          <AdminChrome canEdit={editMode}>
             <Link
               href="/admin/products/new"
               target="_blank"
@@ -149,7 +150,7 @@ export default async function ProductsPage({
             >
               + Add New Product
             </Link>
-          )}
+          </AdminChrome>
         </div>
 
         {products.length === 0 ? (
