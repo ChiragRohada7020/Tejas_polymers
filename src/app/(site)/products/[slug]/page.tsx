@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getCachedProductBySlug, getCachedProducts } from "@/lib/catalog";
 import InquiryForm from "@/components/InquiryForm";
 import ProductCard from "@/components/ProductCard";
+import SafeImage from "@/components/SafeImage";
 import { BRAND_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
 import AdminChrome from "@/components/site/AdminChrome";
 
@@ -152,9 +153,9 @@ export default async function ProductDetailPage({ params }: Props) {
 
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="reveal overflow-hidden rounded-2xl border border-slate-200 bg-brand-50 shadow-sm">
-            <img
-              src={product.imageUrl || "/placeholder-product.jpg"}
-              alt={`${product.name} - agricultural equipment by ${SITE_NAME}`}
+            <SafeImage
+              src={product.imageUrl}
+              alt={`${product.name} - drip irrigation product by ${SITE_NAME}`}
               className="h-full max-h-[480px] w-full object-cover"
             />
           </div>

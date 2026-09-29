@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { IProduct } from "@/lib/models/Product";
 import AdminChrome from "@/components/site/AdminChrome";
+import SafeImage from "@/components/SafeImage";
 
 export default function ProductCard({
   product,
@@ -12,12 +13,10 @@ export default function ProductCard({
   return (
     <article className="reveal group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
       <div className="relative aspect-[4/3] overflow-hidden bg-brand-50">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={product.imageUrl || "/placeholder-product.jpg"}
+        <SafeImage
+          src={product.imageUrl}
           alt={`${product.name} - drip irrigation product by Tejas Polymers`}
           className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-          loading="lazy"
         />
         {product.featured && (
           <span className="absolute left-3 top-3 rounded-full bg-accent-500 px-2.5 py-1 text-xs font-bold text-brand-950">
