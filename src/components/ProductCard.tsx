@@ -14,7 +14,7 @@ export default function ProductCard({
       <div className="relative aspect-[4/3] overflow-hidden bg-brand-50">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={product.imageUrl || "/placeholder-product.svg"}
+          src={product.imageUrl || "/placeholder-product.jpg"}
           alt={`${product.name} - drip irrigation product by Tejas Polymers`}
           className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           loading="lazy"

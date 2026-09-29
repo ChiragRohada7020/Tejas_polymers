@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
+import { verifyPasswordHash } from "@/lib/admin-password";
 
 const COOKIE_NAME = "agrigrid_admin";
 const MAX_AGE_SECONDS = 60 * 60 * 12; // 12 hours
@@ -19,8 +20,33 @@ function safeEqual(a: string, b: string): boolean {
   return timingSafeEqual(ba, bb);
 }
 
-/** Verify the submitted password against ADMIN_PASSWORD. */
-export function verifyPassword(password: string): boolean {
+/**
+ * Verify a submitted password against the administrator account.
+ *
+ * The database credential is authoritative, because that is what the
+ * "forgot password" OTP flow writes to - an env var cannot be changed
+ * at runtime on a serverless host. ADMIN_PASSWORD is kept purely as a
+ * bootstrap fallback for a brand-new install, and is ignored as soon as
+ * a password has been set in the database.
+ */
+export async function verifyPassword(password: string): Promise<boolean> {
+  if (!password) return false;
+
+  const { connectDB } = await import("@/lib/db");
+  const { AdminCredentialModel, ADMIN_CREDENTIAL_ID } = await import(
+    "@/lib/models/AdminCredential"
+  );
+
+  await connectDB();
+  const doc = await AdminCredentialModel.findById(ADMIN_CREDENTIAL_ID).lean();
+  const hash = (doc as { passwordHash?: string } | null)?.passwordHash ?? "";
+  const salt = (doc as { passwordSalt?: string } | null)?.passwordSalt ?? "";
+
+  if (hash && salt) {
+    return verifyPasswordHash(password, hash, salt);
+  }
+
+  // No password set in the database yet: fall back to the env var.
   const expected = process.env.ADMIN_PASSWORD || "";
   if (!expected) return false;
   return safeEqual(password, expected);

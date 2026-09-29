@@ -1,5 +1,7 @@
 import nodemailer, { type Transporter } from "nodemailer";
+import { SITE_NAME } from "@/lib/site";
 import { inquiryAutoReply, inquiryNotification, type InquiryData } from "@/lib/emails/inquiry";
+import { adminOtpEmail } from "@/lib/emails/admin-otp";
 
 /**
  * Gmail SMTP transport.
@@ -109,4 +111,38 @@ export async function sendInquiryAutoReply(data: InquiryData): Promise<SendResul
   } catch (err) {
     return { sent: false, error: err instanceof Error ? err.message : "Unknown SMTP error" };
   }
+}
+/**
+ * Send the password-reset OTP to the account owner's inbox.
+ *
+ * Always sends to the configured ADMIN_ALERT_EMAIL (falling back to
+ * SMTP_USER) rather than to anything supplied by the caller, so this
+ * can never be turned into an open mail relay.
+ */
+export async function sendAdminOtp(
+  otp: string,
+  expiresInMinutes: number
+): Promise<SendResult> {
+  if (!isMailConfigured()) {
+    return { sent: false, error: "SMTP is not configured (SMTP_USER / SMTP_PASS)" };
+  }
+  const to = process.env.ADMIN_ALERT_EMAIL || SMTP_USER;
+  try {
+    const { subject, html, text } = adminOtpEmail(otp, expiresInMinutes);
+    await send({
+      from: `"${SITE_NAME}" <${SMTP_USER}>`,
+      to,
+      subject,
+      text,
+      html,
+    });
+    return { sent: true };
+  } catch (err) {
+    return { sent: false, error: err instanceof Error ? err.message : "Unknown SMTP error" };
+  }
+}
+
+/** Inbox that receives admin security notifications. */
+export function adminAlertEmail(): string {
+  return process.env.ADMIN_ALERT_EMAIL || SMTP_USER;
 }

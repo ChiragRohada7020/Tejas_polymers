@@ -22,6 +22,12 @@ export default async function AdminLoginPage() {
         <h1 className="mt-2 text-2xl font-bold text-slate-900">Sign in</h1>
         <p className="mt-1 text-sm text-slate-500">Enter the administrator password to open the dashboard.</p>
         <LoginForm />
+        <Link
+          href="/admin/forgot-password"
+          className="mt-4 inline-block text-sm font-medium text-brand-700 hover:text-brand-800"
+        >
+          Forgot password?
+        </Link>
         <Link href="/" className="mt-6 inline-block text-sm font-medium text-slate-500 hover:text-slate-700">
           Back to website
         </Link>

@@ -5,7 +5,8 @@ export async function POST(request: Request) {
   try {
     const { password } = (await request.json()) as { password?: string };
 
-    if (!password || !verifyPassword(password)) {
+    // verifyPassword is async because it may read the database credential.
+    if (!password || !(await verifyPassword(password))) {
       return NextResponse.json({ error: "Invalid password." }, { status: 401 });
     }
 

@@ -161,7 +161,7 @@ export default async function ProductDetailPage({ params }: Props) {
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="reveal overflow-hidden rounded-2xl border border-slate-200 bg-brand-50 shadow-sm">
             <img
-              src={product.imageUrl || "/placeholder-product.svg"}
+              src={product.imageUrl || "/placeholder-product.jpg"}
               alt={`${product.name} - agricultural equipment by ${SITE_NAME}`}
               className="h-full max-h-[480px] w-full object-cover"
             />
