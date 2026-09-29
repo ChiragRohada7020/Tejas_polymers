@@ -8,7 +8,7 @@ export const SITE_DESCRIPTION =
   "Krusheebindoo by Tejas Polymers manufactures the full range of inline and online drip irrigation products from Pachora, Jalgaon, Maharashtra. IS 13488 certified flat inline drip laterals, on-line emitters, filters and fittings that cut irrigation water use by up to 60%.";
 
 export const CONTACT = {
-  email: "tejaspolymers001@gmail.com",
+  email: "tejaspolymers0101@gmail.com",
   /** Used in email templates for the "Browse our products" CTA. */
   website: "https://krusheebindoo.com",
   phone: "+91 80803 37813",
