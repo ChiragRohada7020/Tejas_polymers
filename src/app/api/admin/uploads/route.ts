@@ -4,7 +4,16 @@ import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { sendPhotoToTelegram } from "@/lib/telegram";
 
-const MAX_BYTES = 2 * 1024 * 1024;
+/**
+ * Server-side upload guard.
+ *
+ * The browser resizes photos before upload (see lib/image-compress.ts),
+ * because a Vercel serverless function rejects request bodies over
+ * 4.5 MB. This limit is only a backstop for requests that reach the
+ * server unresized - it is deliberately above the platform cap so we
+ * are not the component rejecting a file Vercel would allow.
+ */
+const MAX_BYTES = 4 * 1024 * 1024;
 const ALLOWED: Record<string, string> = {
   "image/png": "png",
   "image/jpeg": "jpg",
@@ -47,7 +56,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Only PNG, JPEG or WebP images are allowed." }, { status: 400 });
   }
   if (file.size <= 0 || file.size > MAX_BYTES) {
-    return NextResponse.json({ error: "Image must be under 2 MB." }, { status: 400 });
+    return NextResponse.json(
+      {
+        error:
+          "That image is too large to upload as-is. The browser normally resizes it automatically — if you are seeing this, try a different image.",
+      },
+      { status: 400 }
+    );
   }
 
   const bytes = Buffer.from(await file.arrayBuffer());

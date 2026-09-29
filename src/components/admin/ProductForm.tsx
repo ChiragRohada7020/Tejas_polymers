@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { compressImageForUpload, formatBytes } from "@/lib/image-compress";
 
 type Spec = { key: string; value: string };
 
@@ -40,6 +41,7 @@ export default function ProductForm({
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  const [uploadInfo, setUploadInfo] = useState("");
   const [price, setPrice] = useState(initial?.price ?? "");
   const [minOrderQty, setMinOrderQty] = useState(initial?.minOrderQty ?? "");
   const [featured, setFeatured] = useState(initial?.featured ?? false);
@@ -59,9 +61,25 @@ export default function ProductForm({
     if (!file) return;
     setUploading(true);
     setUploadError("");
+    setUploadInfo("");
     try {
+      // Resize in the browser first: a serverless function rejects
+      // request bodies over 4.5 MB, so a large photo has to be shrunk
+      // before it is ever sent.
+      const prepared = await compressImageForUpload(file);
+      if (prepared.compressedBytes < prepared.originalBytes) {
+        setUploadInfo(
+          `Resized ${formatBytes(prepared.originalBytes)} to ${formatBytes(
+            prepared.compressedBytes
+          )} (${prepared.width}x${prepared.height})`
+        );
+      }
+
       const form = new FormData();
-      form.append("file", file);
+      form.append(
+        "file",
+        new File([prepared.blob], prepared.filename, { type: "image/jpeg" })
+      );
       const res = await fetch("/api/admin/uploads", { method: "POST", body: form });
       const data = (await res.json().catch(() => null)) as { ok?: boolean; url?: string; error?: string } | null;
       if (!res.ok || !data?.ok || !data.url) {
@@ -152,7 +170,7 @@ export default function ProductForm({
           <input
             ref={fileRef}
             type="file"
-            accept="image/png,image/jpeg,image/webp"
+            accept="image/png,image/jpeg,image/webp,image/heic,image/heif"
             className="hidden"
             onChange={onPickImage}
           />
@@ -176,6 +194,7 @@ export default function ProductForm({
             )}
           </div>
           {uploadError && <p className="mt-2 text-xs text-red-600">{uploadError}</p>}
+          {uploadInfo && <p className="mt-2 text-xs text-slate-500">{uploadInfo}</p>}
           {imageUrl && (
             <img
               src={imageUrl}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { compressImageForUpload, formatBytes } from "@/lib/image-compress";
 import { useIsEditing } from "@/components/site/EditModeContext";
 
 type Props = {
@@ -32,6 +33,7 @@ export default function EditableMedia({
   const [preview, setPreview] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
 
   const current = preview ?? src;
 
@@ -47,9 +49,25 @@ export default function EditableMedia({
     if (!file) return;
     setBusy(true);
     setError(null);
+    setInfo(null);
     try {
+      // Resize in the browser first: a serverless function rejects
+      // request bodies over 4.5 MB, so a large photo has to be shrunk
+      // before it is ever sent.
+      const prepared = await compressImageForUpload(file, 1200);
+      if (prepared.compressedBytes < prepared.originalBytes) {
+        setInfo(
+          `Resized ${formatBytes(prepared.originalBytes)} to ${formatBytes(
+            prepared.compressedBytes
+          )} (${prepared.width}x${prepared.height})`
+        );
+      }
+
       const form = new FormData();
-      form.append("file", file);
+      form.append(
+        "file",
+        new File([prepared.blob], prepared.filename, { type: "image/jpeg" })
+      );
       const response = await fetch("/api/admin/uploads", { method: "POST", body: form });
       const data = (await response.json().catch(() => ({}))) as { url?: string; error?: string };
       if (!response.ok || !data.url) throw new Error(data.error || "Upload failed.");
@@ -105,6 +123,7 @@ export default function EditableMedia({
         {alt}
       </span>
       {error && <span className="mt-1 block text-[11px] text-red-600">{error}</span>}
+      {info && <span className="mt-1 block text-[11px] text-slate-500">{info}</span>}
     </span>
   );
 }
