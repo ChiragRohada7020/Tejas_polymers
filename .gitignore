@@ -33,3 +33,6 @@ agrigrid-prod.log
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local database snapshots (contain customer data / telegram file ids)
+scripts/catalog-backup-*.json
