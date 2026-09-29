@@ -152,11 +152,11 @@ export default async function ProductDetailPage({ params }: Props) {
         </nav>
 
         <div className="grid gap-10 lg:grid-cols-2">
-          <div className="reveal overflow-hidden rounded-2xl border border-slate-200 bg-brand-50 shadow-sm">
+          <div className="reveal flex items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-brand-50 p-4 shadow-sm">
             <SafeImage
               src={product.imageUrl}
               alt={`${product.name} - drip irrigation product by ${SITE_NAME}`}
-              className="h-full max-h-[480px] w-full object-cover"
+              className="block h-auto w-full object-contain"
             />
           </div>
 
