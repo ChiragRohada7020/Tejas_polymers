@@ -7,7 +7,8 @@ import { useIsEditing } from "@/components/site/EditModeContext";
 type Props = {
   imageKey: string;
   altKey: string;
-  editMode: boolean;
+  /** Ignored - edit state now comes from useIsEditing(). */
+  editMode?: boolean;
   src: string;
   alt: string;
   className?: string;
@@ -37,7 +38,7 @@ export default function EditableMedia({
 
   const current = preview ?? src;
 
-  if (!useIsEditing(editMode)) {
+  if (!useIsEditing()) {
     if (!current) return <>{fallback}</>;
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={current} alt={alt} className={imgClassName} loading="lazy" />;

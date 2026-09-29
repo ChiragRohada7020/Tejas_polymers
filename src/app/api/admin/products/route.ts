@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { Product } from "@/lib/models/Product";
+import { invalidateCatalogCache } from "@/lib/catalog";
 
 export async function GET() {
   if (!(await isAdminAuthenticated())) {
@@ -69,7 +70,9 @@ export async function POST(request: Request) {
       featured: Boolean(body.featured),
     });
 
-    return NextResponse.json({ ok: true, product });
+    // Keep the cached catalogue in step with the edit just made.
+  invalidateCatalogCache();
+  return NextResponse.json({ ok: true, product });
   } catch (err) {
     console.error("Create product failed:", err);
     return NextResponse.json({ error: "Could not create product." }, { status: 500 });

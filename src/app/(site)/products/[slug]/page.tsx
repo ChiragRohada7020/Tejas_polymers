@@ -1,27 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { connectDB } from "@/lib/db";
-import { Category } from "@/lib/models/Category";
-import { Product } from "@/lib/models/Product";
+import { getCachedProductBySlug, getCachedProducts } from "@/lib/catalog";
 import InquiryForm from "@/components/InquiryForm";
 import ProductCard from "@/components/ProductCard";
 import { BRAND_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
-import { isAdminAuthenticated } from "@/lib/auth";
 import AdminChrome from "@/components/site/AdminChrome";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+  // Edit state is resolved client-side (see EditModeContext).
+  const editMode = false;
 
 type Props = { params: Promise<{ slug: string }> };
 
 async function getProduct(slug: string) {
-  await connectDB();
-  const product = await Product.findOne({ slug }).lean();
-  if (!product) return null;
-  const category = product.category
-    ? await Category.findOne({ slug: product.category }).lean()
-    : null;
-  return { product, category };
+  return getCachedProductBySlug(slug);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -48,15 +41,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
-  const editMode = await isAdminAuthenticated();
   const data = await getProduct(slug);
   if (!data) notFound();
 
   const { product, category } = data;
-  const related = await Product.find({ category: product.category, slug: { $ne: product.slug } })
-    .sort({ rank: 1, name: 1 })
-    .limit(3)
-    .lean();
+  const all = await getCachedProducts();
+  const related = all
+    .filter((p) => p.category === product.category && p.slug !== product.slug)
+    .slice(0, 3);
 
   const productLd = {
     "@context": "https://schema.org",
@@ -115,7 +107,7 @@ export default async function ProductDetailPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <AdminChrome canEdit={editMode}>
+        <AdminChrome>
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
               <div className="flex items-center gap-2">
                 <span className="font-bold">Edit Mode:</span>

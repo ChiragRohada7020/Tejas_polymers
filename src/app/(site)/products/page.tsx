@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { connectDB } from "@/lib/db";
-import { Category } from "@/lib/models/Category";
-import { Product } from "@/lib/models/Product";
+import { getCachedCategories, getCachedProducts } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
-import { isAdminAuthenticated } from "@/lib/auth";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import { content, getSiteContentMap } from "@/lib/site-content";
 import AdminChrome from "@/components/site/AdminChrome";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+  // Edit state is resolved client-side (see EditModeContext).
+  const editMode = false;
 
 export const metadata: Metadata = {
   title: "Drip Irrigation Products — Inline Drip, Emitters, Filters & Fittings",
@@ -37,18 +36,24 @@ export default async function ProductsPage({
   searchParams: Promise<{ category?: string; q?: string }>;
 }) {
   const { category = "", q = "" } = await searchParams;
-  const editMode = await isAdminAuthenticated();
-  await connectDB();
 
-  const filter: Record<string, unknown> = {};
-  if (category) filter.category = category;
-  if (q) filter.$text = { $search: q };
-
-  const [categories, products, map] = await Promise.all([
-    Category.find().lean(),
-    Product.find(filter).sort({ rank: 1, featured: -1, name: 1 }).lean(),
+  const [categories, allProducts, map] = await Promise.all([
+    getCachedCategories(),
+    getCachedProducts(),
     getSiteContentMap(),
   ]);
+
+  // Filter and search in JS against the cached list - far cheaper than a
+  // database round trip per request. Fifteen products is small enough
+  // that this is the right trade.
+  const needle = q.trim().toLowerCase();
+  const products = allProducts.filter((p) => {
+    if (category && p.category !== category) return false;
+    if (!needle) return true;
+    return [p.name, p.shortDescription, p.category]
+      .filter(Boolean)
+      .some((v) => String(v).toLowerCase().includes(needle));
+  });
 
   const t = (key: string) => content(map, key);
   const activeCat = categories.find((c) => c.slug === category);
@@ -141,7 +146,7 @@ export default async function ProductsPage({
             {products.length} product{products.length === 1 ? "" : "s"} found
             {q && <> for &ldquo;{q}&rdquo;</>}
           </p>
-          <AdminChrome canEdit={editMode}>
+          <AdminChrome>
             <Link
               href="/admin/products/new"
               target="_blank"

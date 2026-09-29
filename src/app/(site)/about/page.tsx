@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import AnimatedStat from "@/components/AnimatedStat";
-import { isAdminAuthenticated } from "@/lib/auth";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import { content, getSiteContentMap } from "@/lib/site-content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+  // Edit state is resolved client-side (see EditModeContext).
+  const editMode = false;
 
 export const metadata: Metadata = {
   title: "About Us — Irrigation Equipment Supplier in Pachora, Maharashtra",
@@ -24,7 +25,6 @@ export const metadata: Metadata = {
 const VALUE_ICONS = ["🎯", "🤝", "♻️"];
 
 export default async function AboutPage() {
-  const editMode = await isAdminAuthenticated();
   const map = await getSiteContentMap();
   const t = (key: string) => content(map, key);
 

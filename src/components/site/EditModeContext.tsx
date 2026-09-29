@@ -14,10 +14,12 @@ import { usePathname } from "next/navigation";
 const FLAG = "agrigrid_edit_mode";
 
 type EditModeValue = {
+  /** True when the browser has confirmed this visitor is an admin. */
+  isAdmin: boolean;
   /**
-   * True only when the visitor is authenticated AND has switched the
-   * editor on. Editing UI must never depend on `active` alone - a
-   * logged-in admin browsing the site sees the normal website.
+   * True only when the visitor is an admin AND has switched the editor
+   * on. Editing UI must never depend on `active` alone - a logged-in
+   * admin browsing the site sees the normal website.
    */
   active: boolean;
   enable: () => void;
@@ -25,12 +27,12 @@ type EditModeValue = {
 };
 
 const EditModeContext = createContext<EditModeValue>({
+  isAdmin: false,
   active: false,
   enable: () => {},
   disable: () => {},
 });
 
-/** Read by every Editable* component to decide whether to render editors. */
 export function useEditMode() {
   return useContext(EditModeContext);
 }
@@ -38,13 +40,15 @@ export function useEditMode() {
 /**
  * Effective "is the editor showing right now" flag.
  *
- * `canEdit` is the server-rendered permission (is this visitor an admin).
- * It alone must never decide visibility of editing UI, otherwise a
- * logged-in admin browsing normally would still see the editor chrome.
+ * Takes no argument on purpose. Admin status is resolved in the browser
+ * from /api/admin/session, because reading cookies() while rendering a
+ * page forces Next.js to mark it `private, no-store` - which disabled
+ * CDN caching site-wide and made every navigation pay for a fresh
+ * server render plus database round trip.
  */
-export function useIsEditing(canEdit: boolean): boolean {
-  const { active } = useEditMode();
-  return canEdit && active;
+export function useIsEditing(): boolean {
+  const { isAdmin, active } = useEditMode();
+  return isAdmin && active;
 }
 
 function readFlag(): boolean {
@@ -77,17 +81,28 @@ function EditWebsiteButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-export function EditModeProvider({
-  canEdit,
-  children,
-}: {
-  canEdit: boolean;
-  children: ReactNode;
-}) {
+export function EditModeProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   // Default OFF. Being logged in grants permission to edit, it does not
   // put the page into edit mode.
   const [active, setActive] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Ask the server once per page load whether this visitor is an admin.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/admin/session", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d: { authenticated?: boolean }) => {
+        if (!cancelled) setIsAdmin(Boolean(d?.authenticated));
+      })
+      .catch(() => {
+        if (!cancelled) setIsAdmin(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const enable = useCallback(() => {
     writeFlag(true);
@@ -101,7 +116,7 @@ export function EditModeProvider({
 
   // Keep the toggle across client-side navigation, and honour ?edit=1.
   useEffect(() => {
-    if (!canEdit) {
+    if (!isAdmin) {
       setActive(false);
       return;
     }
@@ -111,7 +126,7 @@ export function EditModeProvider({
       return;
     }
     setActive(readFlag());
-  }, [canEdit, pathname]);
+  }, [isAdmin, pathname]);
 
   // Drive the dashed-outline styling from one place.
   useEffect(() => {
@@ -122,18 +137,18 @@ export function EditModeProvider({
 
   // Losing the session must drop edit mode immediately.
   useEffect(() => {
-    if (!canEdit) writeFlag(false);
-  }, [canEdit]);
+    if (!isAdmin) writeFlag(false);
+  }, [isAdmin]);
 
   const value = useMemo<EditModeValue>(
-    () => ({ active: active && canEdit, enable, disable }),
-    [active, canEdit, enable, disable]
+    () => ({ isAdmin, active: active && isAdmin, enable, disable }),
+    [isAdmin, active, enable, disable]
   );
 
   return (
     <EditModeContext.Provider value={value}>
       {children}
-      {canEdit && !value.active && <EditWebsiteButton onClick={enable} />}
+      {isAdmin && !value.active && <EditWebsiteButton onClick={enable} />}
     </EditModeContext.Provider>
   );
 }

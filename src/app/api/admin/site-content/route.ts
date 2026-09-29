@@ -4,6 +4,7 @@ import { isAdminAuthenticated } from "@/lib/auth";
 import { SiteContent } from "@/lib/models/SiteContent";
 import {
   CONTENT_DEF_MAP,
+  invalidateSiteContentCache,
   sanitizeImagePath,
   sanitizeLink,
   sanitizeRich,
@@ -55,6 +56,11 @@ export async function PUT(request: Request) {
     await SiteContent.updateOne({ key }, { $set: { value, kind: def.kind } }, { upsert: true });
     saved += 1;
   }
+
+  // Rendered pages read content from a short-lived cache. Drop it on
+  // save so the admin sees their own edit immediately rather than
+  // waiting out the TTL.
+  invalidateSiteContentCache();
 
   return NextResponse.json({ ok: true, saved });
 }

@@ -24,7 +24,7 @@ export default function ProductCard({
             Featured
           </span>
         )}
-        <AdminChrome canEdit={editMode}>
+        <AdminChrome>
           <div className="absolute right-2 top-2 z-10 flex gap-1.5">
             <Link
               href={`/admin/products/${product._id}`}
@@ -52,7 +52,7 @@ export default function ProductCard({
             {product.minOrderQty ? `MOQ: ${product.minOrderQty}` : "Bulk orders welcome"}
           </span>
           <div className="flex items-center gap-2">
-            <AdminChrome canEdit={editMode}>
+            <AdminChrome>
               <Link
                 href={`/admin/products/${product._id}`}
                 target="_blank"

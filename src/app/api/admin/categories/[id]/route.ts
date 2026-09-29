@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { Category } from "@/lib/models/Category";
 import { Product } from "@/lib/models/Product";
+import { invalidateCatalogCache } from "@/lib/catalog";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -28,7 +29,9 @@ export async function DELETE(_request: Request, { params }: Params) {
     }
 
     await Category.findByIdAndDelete(id);
-    return NextResponse.json({ ok: true });
+    // Keep the cached catalogue in step with the edit just made.
+  invalidateCatalogCache();
+  return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Could not delete category." }, { status: 500 });
   }

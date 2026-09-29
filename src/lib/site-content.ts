@@ -214,18 +214,45 @@ export const CONTENT_DEF_MAP: Record<string, ContentDef> = Object.fromEntries(
 
 export type ContentMap = Record<string, string>;
 
+/**
+ * In-process cache for the site content.
+ *
+ * Content only changes when an admin saves, yet every page render used
+ * to run a fresh MongoDB query. Caching it removes that round trip from
+ * the hot path, which is the biggest single win on page load.
+ *
+ * The cache is short-lived AND explicitly invalidated by the save
+ * endpoint, so an admin never sees their own edit go stale.
+ */
+const CACHE_TTL_MS = 60_000;
+
+type ContentCache = { map: ContentMap; expiresAt: number };
+const globalCache = globalThis as unknown as { siteContentCache?: ContentCache };
+
+/** Drop the cache. Call after anything writes site content. */
+export function invalidateSiteContentCache(): void {
+  globalCache.siteContentCache = undefined;
+}
+
 export function content(map: ContentMap | undefined, key: string): string {
   if (!map) return CONTENT_DEF_MAP[key]?.defaultValue ?? "";
   return map[key] ?? CONTENT_DEF_MAP[key]?.defaultValue ?? "";
 }
 
 export async function getSiteContentMap(): Promise<ContentMap> {
+  const cached = globalCache.siteContentCache;
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.map;
+  }
+
   await connectDB();
   const docs = await SiteContent.find().select("key value").lean();
   const map: ContentMap = {};
   for (const doc of docs) {
     map[(doc as unknown as { key: string }).key] = (doc as unknown as { value: string }).value;
   }
+
+  globalCache.siteContentCache = { map, expiresAt: Date.now() + CACHE_TTL_MS };
   return map;
 }
 

@@ -6,7 +6,6 @@ import { Product } from "@/lib/models/Product";
 import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
 import AnimatedStat from "@/components/AnimatedStat";
-import { isAdminAuthenticated } from "@/lib/auth";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import {
   AREA_SERVED,
@@ -19,7 +18,9 @@ import {
 } from "@/lib/site";
 import { content, getSiteContentMap } from "@/lib/site-content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+  // Edit state is resolved client-side (see EditModeContext).
+  const editMode = false;
 
 export const metadata: Metadata = {
   title: `${SITE_NAME} — Drip Irrigation Manufacturer in Pachora, Maharashtra`,
@@ -31,7 +32,6 @@ export const metadata: Metadata = {
 const WHY_ICONS = ["💧", "✅", "🎯", "🌾"];
 
 export default async function HomePage() {
-  const editMode = await isAdminAuthenticated();
   await connectDB();
   const [categories, featured, map] = await Promise.all([
     Category.find().lean(),

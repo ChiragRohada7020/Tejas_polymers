@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import InquiryForm from "@/components/InquiryForm";
 import Reveal from "@/components/Reveal";
-import { isAdminAuthenticated } from "@/lib/auth";
 import { EditableRichText, EditableText } from "@/components/site/Editable";
 import { AREA_SERVED, CONTACT, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { content, getSiteContentMap } from "@/lib/site-content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+  // Edit state is resolved client-side (see EditModeContext).
+  const editMode = false;
 
 export const metadata: Metadata = {
   title: "Contact Us — Irrigation Equipment Supplier in Pachora, Maharashtra",
@@ -28,7 +29,6 @@ export default async function ContactPage({
   searchParams: Promise<{ product?: string }>;
 }) {
   const { product } = await searchParams;
-  const editMode = await isAdminAuthenticated();
   const map = await getSiteContentMap();
   const t = (key: string) => content(map, key);
   const email = t("footer.contact.email") || CONTACT.email;

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { Product } from "@/lib/models/Product";
+import { invalidateCatalogCache } from "@/lib/catalog";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -54,7 +55,9 @@ export async function PUT(request: Request, { params }: Params) {
     if (!updated) {
       return NextResponse.json({ error: "Product not found." }, { status: 404 });
     }
-    return NextResponse.json({ ok: true });
+    // Keep the cached catalogue in step with the edit just made.
+  invalidateCatalogCache();
+  return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("Update product failed:", err);
     return NextResponse.json({ error: "Could not update product." }, { status: 500 });
@@ -77,7 +80,9 @@ export async function PATCH(request: Request, { params }: Params) {
     if (!updated) {
       return NextResponse.json({ error: "Product not found." }, { status: 404 });
     }
-    return NextResponse.json({ ok: true, featured: updated.featured });
+    // Keep the cached catalogue in step with the edit just made.
+  invalidateCatalogCache();
+  return NextResponse.json({ ok: true, featured: updated.featured });
   } catch {
     return NextResponse.json({ error: "Could not update product." }, { status: 500 });
   }
@@ -94,7 +99,9 @@ export async function DELETE(_request: Request, { params }: Params) {
     if (!deleted) {
       return NextResponse.json({ error: "Product not found." }, { status: 404 });
     }
-    return NextResponse.json({ ok: true });
+    // Keep the cached catalogue in step with the edit just made.
+  invalidateCatalogCache();
+  return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Could not delete product." }, { status: 500 });
   }

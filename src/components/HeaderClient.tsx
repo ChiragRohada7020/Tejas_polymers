@@ -9,7 +9,6 @@ import EditableMedia from "@/components/site/EditableMedia";
 import type { NavItem } from "@/app/(site)/layout";
 
 export type HeaderProps = {
-  editMode: boolean;
   logoImage: string;
   logoAlt: string;
   wordmarkStart: string;
@@ -21,11 +20,10 @@ export type HeaderProps = {
 
 type BrandProps = Pick<
   HeaderProps,
-  "editMode" | "logoImage" | "logoAlt" | "wordmarkStart" | "wordmarkEnd"
+  "logoImage" | "logoAlt" | "wordmarkStart" | "wordmarkEnd"
 > & { dark?: boolean };
 
 export function BrandMark({
-  editMode,
   logoImage,
   logoAlt,
   wordmarkStart,
@@ -37,14 +35,14 @@ export function BrandMark({
 
   const wordmark = (
     <span className={`text-lg font-bold tracking-tight ${textColor}`}>
-      <EditableText contentKey="brand.wordmarkStart" editMode={editMode} value={wordmarkStart} as="span" />
+      <EditableText contentKey="brand.wordmarkStart" value={wordmarkStart} as="span" />
       <span className={accentColor}>
-        <EditableText contentKey="brand.wordmarkEnd" editMode={editMode} value={wordmarkEnd} as="span" />
+        <EditableText contentKey="brand.wordmarkEnd" value={wordmarkEnd} as="span" />
       </span>
     </span>
   );
 
-  if (!useIsEditing(editMode)) {
+  if (!useIsEditing()) {
     return (
       <span className="flex items-center gap-2">
         {logoImage ? (
@@ -65,8 +63,7 @@ export function BrandMark({
       <EditableMedia
         imageKey="brand.logoImage"
         altKey="brand.logoAlt"
-        editMode
-        src={logoImage}
+                src={logoImage}
         alt={logoAlt}
         imgClassName="h-9 w-auto rounded-lg object-contain"
         fallback={
@@ -81,9 +78,9 @@ export function BrandMark({
 }
 
 export default function HeaderClient(props: HeaderProps) {
-  const { editMode, nav, ctaLabel, ctaHref } = props;
+  const { nav, ctaLabel, ctaHref } = props;
   // Nav/CTA render as editable links only while the editor is switched on.
-  const editing = useIsEditing(editMode);
+  const editing = useIsEditing();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -127,14 +124,13 @@ export default function HeaderClient(props: HeaderProps) {
                 <EditableLink
                   labelKey={item.labelKey}
                   hrefKey={item.hrefKey}
-                  editMode
-                  label={item.label}
+                                    label={item.label}
                   href={item.href}
                   className={desktopLink(active)}
                 />
               </span>
             ) : (
-              <Link key={item.hrefKey} href={item.href} className={desktopLink(active)}>
+              <Link key={item.hrefKey} href={item.href} prefetch className={desktopLink(active)}>
                 {item.label}
               </Link>
             );
@@ -145,8 +141,7 @@ export default function HeaderClient(props: HeaderProps) {
               <EditableLink
                 labelKey="header.cta.label"
                 hrefKey="header.cta.href"
-                editMode
-                label={ctaLabel}
+                                label={ctaLabel}
                 href={ctaHref}
               />
             </span>
@@ -188,14 +183,13 @@ export default function HeaderClient(props: HeaderProps) {
                 <EditableLink
                   labelKey={item.labelKey}
                   hrefKey={item.hrefKey}
-                  editMode
-                  label={item.label}
+                                    label={item.label}
                   href={item.href}
                   className={mobileLink(active)}
                 />
               </span>
             ) : (
-              <Link key={item.hrefKey} href={item.href} className={mobileLink(active)}>
+              <Link key={item.hrefKey} href={item.href} prefetch className={mobileLink(active)}>
                 {item.label}
               </Link>
             );
@@ -205,8 +199,7 @@ export default function HeaderClient(props: HeaderProps) {
               <EditableLink
                 labelKey="header.cta.label"
                 hrefKey="header.cta.href"
-                editMode
-                label={ctaLabel}
+                                label={ctaLabel}
                 href={ctaHref}
                 className="block rounded-lg bg-brand-600 px-4 py-3 text-center text-sm font-semibold text-white"
               />

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { Category } from "@/lib/models/Category";
+import { invalidateCatalogCache } from "@/lib/catalog";
 
 export async function POST(request: Request) {
   if (!(await isAdminAuthenticated())) {
@@ -34,7 +35,9 @@ export async function POST(request: Request) {
       description: (body.description || "").trim(),
     });
 
-    return NextResponse.json({ ok: true, category });
+    // Keep the cached catalogue in step with the edit just made.
+  invalidateCatalogCache();
+  return NextResponse.json({ ok: true, category });
   } catch (err) {
     console.error("Create category failed:", err);
     return NextResponse.json({ error: "Could not create category." }, { status: 500 });

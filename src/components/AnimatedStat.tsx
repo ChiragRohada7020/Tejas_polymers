@@ -51,7 +51,7 @@ export default function AnimatedStat({
 }: Props) {
   const ref = useRef<HTMLSpanElement | null>(null);
   const [display, setDisplay] = useState<string | null>(null);
-  const editing = useIsEditing(editMode);
+  const editing = useIsEditing();
 
   const parsed = parseValue(value);
 

@@ -3,7 +3,6 @@ import { EditableRichText, EditableText } from "@/components/site/Editable";
 import { BrandMark } from "@/components/HeaderClient";
 
 type Props = {
-  editMode: boolean;
   logoImage: string;
   logoAlt: string;
   wordmarkStart: string;
@@ -15,7 +14,6 @@ type Props = {
 };
 
 export default function Footer({
-  editMode,
   logoImage,
   logoAlt,
   wordmarkStart,
@@ -30,7 +28,6 @@ export default function Footer({
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div>
           <BrandMark
-            editMode={editMode}
             logoImage={logoImage}
             logoAlt={logoAlt}
             wordmarkStart={wordmarkStart}
@@ -39,7 +36,6 @@ export default function Footer({
           />
           <EditableRichText
             contentKey="footer.aboutBlurb"
-            editMode={editMode}
             value={aboutBlurb}
             className="mt-4 text-sm leading-relaxed text-slate-400"
           />
@@ -48,20 +44,20 @@ export default function Footer({
         <nav aria-label="Footer products">
           <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Products</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link className="hover:text-white" href="/products?category=flat-inline-drip">Flat Inline Drip</Link></li>
-            <li><Link className="hover:text-white" href="/products?category=online-drip-emitters">Online Drip &amp; Emitters</Link></li>
-            <li><Link className="hover:text-white" href="/products?category=filters">Filters</Link></li>
-            <li><Link className="hover:text-white" href="/products?category=fittings-accessories">Fittings &amp; Accessories</Link></li>
+            <li><Link prefetch className="hover:text-white" href="/products?category=flat-inline-drip">Flat Inline Drip</Link></li>
+            <li><Link prefetch className="hover:text-white" href="/products?category=online-drip-emitters">Online Drip &amp; Emitters</Link></li>
+            <li><Link prefetch className="hover:text-white" href="/products?category=filters">Filters</Link></li>
+            <li><Link prefetch className="hover:text-white" href="/products?category=fittings-accessories">Fittings &amp; Accessories</Link></li>
           </ul>
         </nav>
 
         <nav aria-label="Footer company">
           <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Company</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link className="hover:text-white" href="/about">About Us</Link></li>
-            <li><Link className="hover:text-white" href="/become-a-distributor">Become a Distributor</Link></li>
-            <li><Link className="hover:text-white" href="/contact">Contact</Link></li>
-            <li><Link className="hover:text-white" href="/products">All Products</Link></li>
+            <li><Link prefetch className="hover:text-white" href="/about">About Us</Link></li>
+            <li><Link prefetch className="hover:text-white" href="/become-a-distributor">Become a Distributor</Link></li>
+            <li><Link prefetch className="hover:text-white" href="/contact">Contact</Link></li>
+            <li><Link prefetch className="hover:text-white" href="/products">All Products</Link></li>
           </ul>
         </nav>
 
@@ -69,13 +65,13 @@ export default function Footer({
           <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Contact</h3>
           <ul className="mt-4 space-y-2 text-sm text-slate-400">
             <li>
-              📧 <EditableText contentKey="footer.contact.email" editMode={editMode} value={email} as="span" />
+              📧 <EditableText contentKey="footer.contact.email" value={email} as="span" />
             </li>
             <li>
-              📞 <EditableText contentKey="footer.contact.phone" editMode={editMode} value={phone} as="span" />
+              📞 <EditableText contentKey="footer.contact.phone" value={phone} as="span" />
             </li>
             <li>
-              📍 <EditableText contentKey="footer.contact.address" editMode={editMode} value={address} as="span" />
+              📍 <EditableText contentKey="footer.contact.address" value={address} as="span" />
             </li>
           </ul>
         </div>

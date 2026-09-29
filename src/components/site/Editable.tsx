@@ -1,11 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { useIsEditing } from "@/components/site/EditModeContext";
 
 type BaseProps = {
   contentKey: string;
-  editMode: boolean;
+  /**
+   * Retained for compatibility with older call sites. Admin status and the
+   * on/off toggle now both come from useIsEditing(), so this is ignored.
+   */
+  editMode?: boolean;
   className?: string;
   style?: CSSProperties;
 };
@@ -37,7 +42,7 @@ export function EditableText({
   style,
 }: BaseProps & { value: string; as?: "span" | "p" | "h1" | "h2" | "h3" | "li" | "div" }) {
   const ref = useRef<HTMLElement | null>(null);
-  const editing = useIsEditing(editMode);
+  const editing = useIsEditing();
   useCancelOnEscape(ref, editing, value);
 
   if (!editing) {
@@ -74,7 +79,7 @@ export function EditableRichText({
   style,
 }: BaseProps & { value: string }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const editing = useIsEditing(editMode);
+  const editing = useIsEditing();
   useCancelOnEscape(ref, editing, value);
 
   useEffect(() => {
@@ -157,20 +162,22 @@ export function EditableLink({
 }: {
   labelKey: string;
   hrefKey: string;
-  editMode: boolean;
+  editMode?: boolean;
   label: string;
   href: string;
   className?: string;
   children?: ReactNode;
 }) {
-  const editing = useIsEditing(editMode);
+  const editing = useIsEditing();
   const labelRef = useRef<HTMLSpanElement | null>(null);
 
   if (!editing) {
+    // Render a next/link Link, not a bare <a>, so that client-side
+    // navigation and prefetching still work for normal visitors.
     return (
-      <a href={href} className={className}>
+      <Link href={href} className={className}>
         {children ?? label}
-      </a>
+      </Link>
     );
   }
 
