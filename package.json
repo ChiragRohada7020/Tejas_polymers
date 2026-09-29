@@ -10,7 +10,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "check:reveal": "tsx scripts/check-reveal.ts",
+    "build": "npm run check:reveal && next build"
   },
   "dependencies": {
     "mongoose": "^8.16.0",

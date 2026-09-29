@@ -5,6 +5,7 @@ import { getCachedProductBySlug, getCachedProducts } from "@/lib/catalog";
 import InquiryForm from "@/components/InquiryForm";
 import ProductCard from "@/components/ProductCard";
 import SafeImage from "@/components/SafeImage";
+import Reveal from "@/components/Reveal";
 import { BRAND_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
 import AdminChrome from "@/components/site/AdminChrome";
 
@@ -106,6 +107,8 @@ export default async function ProductDetailPage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <Reveal />
+
 
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <AdminChrome>
