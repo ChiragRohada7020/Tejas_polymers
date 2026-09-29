@@ -16,6 +16,9 @@ export type AdminInquiry = {
   message: string;
   type: string;
   status: string;
+  /** false when the owner-notification email could not be delivered. */
+  notified?: boolean;
+  notifyError?: string;
   createdAt: string;
 };
 
@@ -123,6 +126,11 @@ export default function InquiriesTable({ inquiries }: { inquiries: AdminInquiry[
                 <div className="border-t border-slate-100 bg-slate-50 px-5 py-4">
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{q.message}</p>
                   <p className="mt-2 text-xs text-slate-400">Received {formatDateTimeUTC(q.createdAt)} (UTC)</p>
+                  {q.notified === false && (
+                    <p className="mt-2 rounded-md bg-amber-50 px-2.5 py-1.5 text-xs text-amber-800">
+                      Notification email not sent{q.notifyError ? `: ${q.notifyError}` : ""}. The inquiry is saved — reply manually.
+                    </p>
+                  )}
                   <a
                     href={`mailto:${q.email}?subject=Re: your inquiry to Tejas Polymers`}
                     className="mt-3 inline-block rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"

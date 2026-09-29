@@ -9,6 +9,8 @@ export const SITE_DESCRIPTION =
 
 export const CONTACT = {
   email: "tejaspolymers001@gmail.com",
+  /** Used in email templates for the "Browse our products" CTA. */
+  website: "https://krusheebindoo.com",
   phone: "+91 80803 37813",
   address:
     "Survey No. 152/3, Behind Sugaran Dairy, Goradakheda, Tal. Pachora, Dist. Jalgaon, Maharashtra 424201",

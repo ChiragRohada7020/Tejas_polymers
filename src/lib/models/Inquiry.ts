@@ -12,6 +12,11 @@ const InquirySchema = new Schema(
     message: { type: String, required: true },
     type: { type: String, enum: ["general", "distributor", "product"], default: "general", index: true },
     status: { type: String, enum: ["new", "contacted", "closed"], default: "new", index: true },
+    /** Whether the owner-notification email was delivered. Lets the admin
+     * panel surface failed sends instead of them vanishing silently. */
+    notified: { type: Boolean, default: false, index: true },
+    notifiedAt: { type: Date },
+    notifyError: { type: String, default: "" },
   },
   { timestamps: true }
 );
