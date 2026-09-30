@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import VideoBackground from "@/components/VideoBackground";
 import AnimatedStat from "@/components/AnimatedStat";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import { content, getSiteContentMap } from "@/lib/site-content";
@@ -31,21 +32,30 @@ export default async function AboutPage() {
   return (
     <>
       <Reveal />
-      <section className="bg-gradient-to-br from-brand-900 to-brand-700">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <nav aria-label="Breadcrumb" className="mb-4 text-sm text-brand-200">
-            <Link href="/" className="hover:text-white">Home</Link>
+      {/* Company video as a decorative background layer behind the hero. */}
+      <VideoBackground
+        videoId="KnSEkZDC1Ho"
+        breadcrumb={
+          <nav aria-label="Breadcrumb" className="text-sm text-brand-200">
+            <Link href="/" className="hover:text-white">
+              Home
+            </Link>
             <span className="mx-2">/</span>
             <span className="text-white">About Us</span>
           </nav>
-          <h1 className="text-3xl font-extrabold text-white sm:text-4xl">
-            <EditableText contentKey="about.heroTitle" editMode={editMode} value={t("about.heroTitle")} as="span" />
-          </h1>
-          <div className="mt-3 max-w-2xl text-brand-100">
-            <EditableRichText contentKey="about.heroBody" editMode={editMode} value={t("about.heroBody")} />
-          </div>
-        </div>
-      </section>
+        }
+        title={
+          <EditableText
+            contentKey="about.heroTitle"
+            editMode={editMode}
+            value={t("about.heroTitle")}
+            as="span"
+          />
+        }
+        subtitle={
+          <EditableRichText contentKey="about.heroBody" editMode={editMode} value={t("about.heroBody")} />
+        }
+      />
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2">
