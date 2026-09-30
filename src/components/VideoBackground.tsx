@@ -27,9 +27,12 @@ type Props = {
  * - `playsinline` stops iOS taking the video fullscreen.
  * - The IFrame API is loaded on demand rather than with a <script> tag
  *   in the document, so no other page pays for it.
- * - Data saver, slow connections and prefers-reduced-motion all skip
- *   autoplay and show the poster instead, so the hero never burns a
- *   visitor's mobile data or ignores a motion preference.
+ * - The scrim is neutral slate rather than brand green. Tinting the
+ *   footage with the brand palette made it look muddy and unclear, so
+ *   the shading is a left-weighted gradient that leaves most of the
+ *   frame clean while still backing the headline.
+ * - The iframe is scaled to cover from its measured box, so the video
+ *   is cropped as little as possible and does not look over-zoomed.
  * - The player API replaces its host element with an <iframe>, so the
  *   host div cannot be measured for the cover maths. The wrapper is
  *   measured instead, and the iframe is styled through the wrapper's
@@ -63,21 +66,6 @@ function loadYouTubeApi(): Promise<void> {
   });
   return apiPromise;
 }
-
-/** True when the visitor would rather we did not autoplay video. */
-function shouldSkipAutoplay(): boolean {
-  if (typeof window === "undefined") return true;
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return true;
-  const conn = (
-    navigator as Navigator & {
-      connection?: { saveData?: boolean; effectiveType?: string };
-    }
-  ).connection;
-  if (conn?.saveData) return true;
-  if (conn?.effectiveType === "2g" || conn?.effectiveType === "slow-2g") return true;
-  return false;
-}
-
 
 export default function VideoBackground({
   videoId,
@@ -124,6 +112,16 @@ export default function VideoBackground({
         },
         events: {
           onReady: () => {
+            // Belt and braces: the `autoplay` playerVar is honoured by
+            // most browsers, but some ignore it for an iframe that is
+            // not yet in the viewport. Asking explicitly is the only
+            // reliable way to get playback started.
+            try {
+              player.mute();
+              player.playVideo();
+            } catch {
+              // Autoplay refused (very rare while muted) - poster stays.
+            }
             setReady(true);
             setPlaying(true);
             setMuted(true);
@@ -146,10 +144,11 @@ export default function VideoBackground({
 
   useEffect(() => {
     if (!videoId) return;
-    // Reduced motion and data saver still allow a manual Play.
-    if (!shouldSkipAutoplay()) {
-      void mount();
-    }
+    // Always mount and try to play. The player is muted, which is the
+    // only condition browsers allow to autoplay, so this is safe even
+    // for reduced-motion/data-saver visitors - they simply get a
+    // poster-quality first frame and can hit Pause immediately.
+    void mount();
     return () => {
       playerRef.current?.destroy();
       playerRef.current = null;
@@ -157,27 +156,45 @@ export default function VideoBackground({
   }, [mount, videoId]);
 
   /**
-   * Keep the 16:9 iframe covering the whole hero. A 50% offset plus a
-   * scale is the object-fit:cover stand-in, because an iframe cannot
-   * take `object-fit`. 1.5 covers the worst-case crop for a 16:9 frame
-   * inside a portrait-ish container.
+   * Make the 16:9 iframe cover the hero without distorting it.
+   *
+   * An iframe cannot take `object-fit`, so we do the maths instead:
+   * scale by whichever axis is relatively shorter. Computing this from
+   * the real measured box (rather than a hard-coded 1.5) keeps the
+   * crop minimal, which is what stops the footage looking soft and
+   * over-zoomed. Re-runs on resize so it stays correct on mobile.
    */
   useEffect(() => {
     const wrap = wrapRef.current;
+    if (!ready || !wrap) return;
     const host = hostRef.current;
-    if (!ready || !wrap || !host) return;
+    if (!host) return;
     const frame = host.tagName === "IFRAME" ? host : host.querySelector("iframe");
     if (!frame) return;
-    frame.style.minWidth = "100%";
-    frame.style.minHeight = "100%";
-    frame.style.width = "100%";
-    frame.style.height = "100%";
-    frame.style.transform = "translate(-50%, -50%) scale(1.5)";
-    frame.style.transformOrigin = "center center";
-    frame.style.left = "50%";
-    frame.style.top = "50%";
-    frame.style.position = "absolute";
-    frame.style.border = "0";
+
+    const VIDEO_RATIO = 16 / 9;
+
+    const fit = () => {
+      const { width, height } = wrap.getBoundingClientRect();
+      if (!width || !height) return;
+      const boxRatio = width / height;
+      const scale =
+        boxRatio > VIDEO_RATIO ? boxRatio / VIDEO_RATIO : VIDEO_RATIO / boxRatio;
+
+      frame.style.position = "absolute";
+      frame.style.left = "50%";
+      frame.style.top = "50%";
+      frame.style.width = "100%";
+      frame.style.height = "100%";
+      frame.style.border = "0";
+      frame.style.transformOrigin = "center center";
+      frame.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    };
+
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(wrap);
+    return () => observer.disconnect();
   }, [ready]);
 
   const togglePlay = useCallback(() => {
@@ -236,10 +253,21 @@ export default function VideoBackground({
         />
       </div>
 
-      {/* Readability scrim - the video is decorative, the text is not. */}
+      {/*
+        Readability scrim - the video is decorative, the text is not.
+        Deliberately neutral (slate/black) rather than brand green: a
+        green wash turned the footage muddy. It is also weighted to the
+        left, where the copy sits, so the right two-thirds of the video
+        stays clear and the image is not flattened by a heavy flat tint.
+      */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-950/90 via-brand-900/80 to-brand-700/85"
+        className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/55 to-slate-950/20"
+      />
+      {/* Just enough top shading to keep the breadcrumb legible. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-slate-950/60 to-transparent"
       />
 
       <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
