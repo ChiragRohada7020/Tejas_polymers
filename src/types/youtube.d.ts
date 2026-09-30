@@ -13,6 +13,8 @@ type YouTubePlayer = {
   unMute: () => void;
   isMuted: () => boolean;
   destroy: () => void;
+  /** The live <iframe> the API created in place of the host element. */
+  getIframe: () => HTMLIFrameElement;
 };
 
 interface Window {

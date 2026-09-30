@@ -158,26 +158,37 @@ export default function VideoBackground({
   /**
    * Make the 16:9 iframe cover the hero without distorting it.
    *
-   * An iframe cannot take `object-fit`, so we do the maths instead:
-   * scale by whichever axis is relatively shorter. Computing this from
-   * the real measured box (rather than a hard-coded 1.5) keeps the
-   * crop minimal, which is what stops the footage looking soft and
-   * over-zoomed. Re-runs on resize so it stays correct on mobile.
+   * Two things this must get right:
+   *
+   * - The IFrame API REPLACES the host element with the <iframe>, so
+   *   `hostRef` still points at a detached div and querying it finds
+   *   nothing. `player.getIframe()` is the supported way to reach the
+   *   real node.
+   * - That iframe is created on a microtask after construction, so it
+   *   is not guaranteed to exist on the first pass. We poll briefly.
+   *
+   * An iframe cannot take `object-fit`, so the cover maths is done here:
+   * scale by whichever axis is relatively shorter. Computing it from
+   * the measured box (rather than a hard-coded 1.5) keeps the crop
+   * minimal, which is what stops the footage looking soft. A
+   * ResizeObserver keeps it correct on mobile and on rotation.
    */
   useEffect(() => {
     const wrap = wrapRef.current;
-    if (!ready || !wrap) return;
-    const host = hostRef.current;
-    if (!host) return;
-    const frame = host.tagName === "IFRAME" ? host : host.querySelector("iframe");
-    if (!frame) return;
+    const player = playerRef.current;
+    if (!ready || !wrap || !player) return;
 
     const VIDEO_RATIO = 16 / 9;
 
     const fit = () => {
+      const frame = player.getIframe();
+      if (!frame) return false;
       const { width, height } = wrap.getBoundingClientRect();
-      if (!width || !height) return;
+      if (!width || !height) return true;
+
       const boxRatio = width / height;
+      // Must be the true cover value: any smaller and the element stops
+      // covering the box, exposing the letterbox bars as black edges.
       const scale =
         boxRatio > VIDEO_RATIO ? boxRatio / VIDEO_RATIO : VIDEO_RATIO / boxRatio;
 
@@ -186,16 +197,37 @@ export default function VideoBackground({
       frame.style.top = "50%";
       frame.style.width = "100%";
       frame.style.height = "100%";
+      frame.style.minWidth = "0";
+      frame.style.minHeight = "0";
       frame.style.border = "0";
+      frame.style.margin = "0";
+      // The video is decorative; never let it eat clicks on the
+      // Play/Mute controls rendered above it.
+      frame.style.pointerEvents = "none";
       frame.style.transformOrigin = "center center";
       frame.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      // Only the first styling pass adds the transition, so later
+      // play/pause flips do not re-trigger it.
+      if (!frame.style.transition) {
+        frame.style.transition = "opacity 700ms ease";
+      }
+      frame.style.opacity = playing ? "1" : "0";
+      return true;
     };
 
-    fit();
-    const observer = new ResizeObserver(fit);
+    // The iframe may not exist yet on the very first call.
+    let attempts = 0;
+    const ensure = () => {
+      if (fit() || attempts > 20) return;
+      attempts += 1;
+      window.setTimeout(ensure, 50);
+    };
+    ensure();
+
+    const observer = new ResizeObserver(() => fit());
     observer.observe(wrap);
     return () => observer.disconnect();
-  }, [ready]);
+  }, [ready, playing]);
 
   const togglePlay = useCallback(() => {
     const p = playerRef.current;
@@ -245,39 +277,48 @@ export default function VideoBackground({
             playing ? "opacity-0" : "opacity-100"
           }`}
         />
-        <div
-          ref={hostRef}
-          className={`pointer-events-none absolute inset-0 transition-opacity duration-700 ${
-            playing ? "opacity-100" : "opacity-0"
-          }`}
-        />
+        {/*
+          Mount point only. The IFrame API swaps this div for an
+          <iframe>, so nothing visual can live here - the iframe is
+          positioned and faded directly in the fit effect.
+        */}
+        <div ref={hostRef} />
       </div>
 
       {/*
         Readability scrim - the video is decorative, the text is not.
         Deliberately neutral (slate/black) rather than brand green: a
-        green wash turned the footage muddy. It is also weighted to the
-        left, where the copy sits, so the right two-thirds of the video
-        stays clear and the image is not flattened by a heavy flat tint.
+        green wash turned the footage muddy.
+
+        This footage is high-key - lots of near-white in the frame - so
+        white copy sat on white and vanished. The scrim therefore runs
+        dark on the left where the copy is, and clears to the right so
+        the picture still reads. The top band keeps the breadcrumb and
+        headline legible. Keep the left stop genuinely dark; do not
+        lighten it for a "cleaner" look without re-checking contrast.
       */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/55 to-slate-950/20"
+        className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/95 via-slate-950/70 to-slate-950/25"
       />
       {/* Just enough top shading to keep the breadcrumb legible. */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-slate-950/60 to-transparent"
+        className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-slate-950/70 to-transparent"
       />
 
-      <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
         {breadcrumb && <div className="mb-4">{breadcrumb}</div>}
         {title && (
-          <h1 className="text-3xl font-extrabold text-white drop-shadow-sm sm:text-4xl">
+          <h1 className="max-w-3xl text-3xl font-extrabold text-white drop-shadow-sm sm:text-4xl">
             {title}
           </h1>
         )}
-        {subtitle && <div className="mt-3 max-w-2xl text-brand-100">{subtitle}</div>}
+        {subtitle && (
+          <div className="mt-3 max-w-xl text-brand-100 [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
+            {subtitle}
+          </div>
+        )}
 
         <div className="mt-6 flex flex-wrap items-center gap-2">
           <button
