@@ -24,7 +24,7 @@ export default function Footer({
   address,
 }: Props) {
   return (
-    <footer className="border-t border-slate-200 bg-brand-950 text-slate-300">
+    <footer className="wave-bg-deep text-slate-200">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div>
           <BrandMark

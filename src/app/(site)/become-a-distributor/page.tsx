@@ -31,17 +31,17 @@ export default async function BecomeADistributorPage() {
   return (
     <>
       <Reveal />
-      <section className="bg-gradient-to-br from-brand-900 to-brand-700">
+      <section className="wave-bg border-b border-brand-100">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <nav aria-label="Breadcrumb" className="mb-4 text-sm text-brand-200">
-            <Link href="/" className="hover:text-white">Home</Link>
+          <nav aria-label="Breadcrumb" className="mb-4 text-sm text-slate-600">
+            <Link href="/" className="hover:text-brand-800">Home</Link>
             <span className="mx-2">/</span>
-            <span className="text-white">Become a Distributor</span>
+            <span className="text-brand-900">Become a Distributor</span>
           </nav>
-          <h1 className="text-3xl font-extrabold text-white sm:text-4xl">
+          <h1 className="text-3xl font-extrabold text-brand-950 sm:text-4xl">
             <EditableText contentKey="distributor.heroTitle" editMode={editMode} value={t("distributor.heroTitle")} as="span" />
           </h1>
-          <div className="mt-3 max-w-2xl text-brand-100">
+          <div className="mt-3 max-w-2xl text-slate-700">
             <EditableRichText contentKey="distributor.heroBody" editMode={editMode} value={t("distributor.heroBody")} />
           </div>
         </div>

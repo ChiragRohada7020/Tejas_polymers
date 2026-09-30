@@ -132,7 +132,7 @@ export default async function HomePage() {
       <Reveal />
 
       {/* ---- Hero ---- */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700">
+      <section className="wave-bg relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -144,13 +144,13 @@ export default async function HomePage() {
         />
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32 lg:py-40">
           <div className="max-w-2xl">
-            <p className="mb-4 inline-block rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-medium text-brand-100 backdrop-blur">
+            <p className="mb-4 inline-block rounded-full border border-brand-200 bg-white/70 px-4 py-1.5 text-sm font-medium text-brand-700 backdrop-blur">
               🌾{" "}
               <EditableText contentKey="home.heroBadge" editMode={editMode} value={t("home.heroBadge")} as="span" />
             </p>
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-brand-950 sm:text-5xl lg:text-6xl">
               <EditableText contentKey="home.heroTitleMain" editMode={editMode} value={t("home.heroTitleMain")} as="span" />{" "}
-              <span className="text-accent-400">
+              <span className="text-accent-600">
                 <EditableText contentKey="home.heroTitleAccent" editMode={editMode} value={t("home.heroTitleAccent")} as="span" />
               </span>
             </h1>
@@ -158,7 +158,7 @@ export default async function HomePage() {
               contentKey="home.heroBody"
               editMode={editMode}
               value={t("home.heroBody")}
-              className="mt-6 text-lg leading-relaxed text-brand-100"
+              className="mt-6 text-lg leading-relaxed text-slate-700"
             />
             <div className="mt-10 flex flex-wrap gap-4">
               {editMode ? (
@@ -172,7 +172,7 @@ export default async function HomePage() {
                       href={t("home.primaryCtaHref")}
                     />
                   </span>
-                  <span className="rounded-xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur">
+                  <span className="rounded-xl border border-brand-300 bg-white/70 px-7 py-3.5 text-sm font-bold text-brand-800 backdrop-blur">
                     <EditableLink
                       labelKey="home.secondaryCtaLabel"
                       hrefKey="home.secondaryCtaHref"
@@ -192,7 +192,7 @@ export default async function HomePage() {
                   </Link>
                   <Link
                     href={t("home.secondaryCtaHref")}
-                    className="rounded-xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"
+                    className="rounded-xl border border-brand-300 bg-white/70 px-7 py-3.5 text-sm font-bold text-brand-800 backdrop-blur transition hover:bg-white"
                   >
                     {t("home.secondaryCtaLabel")}
                   </Link>
@@ -204,7 +204,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---- Stats ---- */}
-      <section className="border-b border-slate-100 bg-white">
+      <section className="border-b border-brand-100 bg-white">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 py-12 text-center sm:px-6 md:grid-cols-4">
           {stats.map((s, i) => (
             <div key={i} className="reveal text-center">
@@ -258,7 +258,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---- Featured Products ---- */}
-      <section className="bg-slate-50">
+      <section className="wave-bg-soft border-y border-brand-100">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
           <div className="reveal mx-auto max-w-2xl text-center">
             <p className="text-sm font-bold uppercase tracking-widest text-brand-600">
@@ -309,13 +309,13 @@ export default async function HomePage() {
         </div>
       </section>
       {/* ---- Testimonial ---- */}
-      <section className="bg-brand-900">
+      <section className="wave-bg-deep">
         <div className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
           <blockquote className="reveal">
             <div className="text-xl font-medium leading-relaxed text-white sm:text-2xl">
               <EditableRichText contentKey="home.testimonialQuote" editMode={editMode} value={t("home.testimonialQuote")} />
             </div>
-            <footer className="mt-6 text-sm text-brand-200">
+            <footer className="mt-6 text-sm text-brand-100">
               <EditableText contentKey="home.testimonialAttribution" editMode={editMode} value={t("home.testimonialAttribution")} as="span" />
             </footer>
           </blockquote>
@@ -324,11 +324,11 @@ export default async function HomePage() {
 
       {/* ---- CTA ---- */}
       <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-        <div className="reveal rounded-2xl bg-gradient-to-r from-brand-700 to-brand-600 px-8 py-14 text-center sm:px-14">
+        <div className="reveal rounded-2xl wave-bg-deep px-8 py-14 text-center sm:px-14">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
             <EditableText contentKey="home.ctaTitle" editMode={editMode} value={t("home.ctaTitle")} as="span" />
           </h2>
-          <div className="mx-auto mt-4 max-w-xl text-brand-100">
+          <div className="mx-auto mt-4 max-w-xl text-brand-50">
             <EditableRichText contentKey="home.ctaBody" editMode={editMode} value={t("home.ctaBody")} />
           </div>
           {editMode ? (

@@ -260,7 +260,7 @@ export default function VideoBackground({
 
   if (!videoId) return null;
   return (
-    <section className="relative isolate overflow-hidden bg-brand-900">
+    <section className="wave-bg-deep relative isolate overflow-hidden">
       {/* Video layer */}
       <div className="absolute inset-0 -z-10 overflow-hidden" ref={wrapRef}>
         {/* maxres is not published for every video, so fall back. */}

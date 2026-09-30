@@ -1,21 +1,85 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #f0f9f4;
-  --color-brand-100: #dcf0e4;
-  --color-brand-200: #bbe0cb;
-  --color-brand-300: #8ecaa9;
-  --color-brand-400: #5dac83;
-  --color-brand-500: #3d8f66;
-  --color-brand-600: #2d7352;
-  --color-brand-700: #265c43;
-  --color-brand-800: #214937;
-  --color-brand-900: #1c3c2e;
-  --color-brand-950: #0d211a;
+  --color-brand-50: #f2fbf7;
+  --color-brand-100: #dff4ec;
+  --color-brand-200: #bfe8d9;
+  --color-brand-300: #92d5bd;
+  --color-brand-400: #5ebc9c;
+  --color-brand-500: #37a17f;
+  --color-brand-600: #22836a;
+  --color-brand-700: #1b6856;
+  --color-brand-800: #175345;
+  --color-brand-900: #0f3a31;
+  --color-brand-950: #072420;
+
+  /* Aqua ramp - the cool half of the identity, used for surfaces,
+     gradients and the deep anchor that keeps white text readable. */
+  --color-aqua-50: #eefbfe;
+  --color-aqua-100: #d6f4fc;
+  --color-aqua-200: #b0e9f9;
+  --color-aqua-300: #7bd8f4;
+  --color-aqua-400: #41c0e8;
+  --color-aqua-500: #1ea3d1;
+  --color-aqua-600: #1581b0;
+  --color-aqua-700: #14678e;
+  --color-aqua-800: #155671;
+  --color-aqua-900: #0d3f55;
+  --color-aqua-950: #062634;
 
   --color-accent-400: #f5b93d;
   --color-accent-500: #e8a020;
   --color-accent-600: #c98412;
+}
+
+/* ------------------------------------------------------------------
+   Wave / aurora backdrop
+   ------------------------------------------------------------------
+   The brand look is a soft mint -> white -> aqua gradient. If you drop
+   your own artwork at /images/bg1.jpeg (or .png/.webp) it is used
+   automatically and this gradient simply sits behind it, so the page
+   still looks right before the file exists and if it ever 404s.
+   ------------------------------------------------------------------ */
+:root {
+  --wave-image: url("/images/bg1.jpeg");
+}
+
+.wave-bg {
+  position: relative;
+  isolation: isolate;
+  background-color: #f4fbf7;
+  background-image:
+    var(--wave-image),
+    radial-gradient(120% 90% at 50% 8%, #ffffff 0%, #eaf9f2 32%, #d6f1ec 58%, #bfe8f6 78%, #a9ddf2 100%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Softer variant for large panels where the art would fight the copy. */
+.wave-bg-soft {
+  background-image:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.8)),
+    var(--wave-image),
+    radial-gradient(120% 90% at 50% 8%, #ffffff 0%, #eaf9f2 32%, #d6f1ec 58%, #bfe8f6 78%, #a9ddf2 100%);
+}
+
+/* Deep gradient band for sections that must carry white text. */
+.wave-bg-deep {
+  background-image:
+    linear-gradient(135deg, #0f3a31 0%, #14678e 55%, #1ea3d1 100%);
+}
+
+/* Hairline that reads as a waterline rather than a hard border. */
+.wave-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(37, 168, 140, 0.45) 20%,
+    rgba(30, 163, 209, 0.45) 80%,
+    transparent
+  );
 }
 
 html {
@@ -60,12 +124,12 @@ body.site-editing [data-content-key] {
 
 body.site-editing [data-content-key]:hover,
 body.site-editing [data-content-key]:focus {
-  outline: 2px solid #2d7352;
+  outline: 2px solid #22836a;
   background-color: rgba(45, 115, 82, 0.06);
 }
 
 body.site-editing img[data-content-key]:hover {
-  outline: 2px solid #2d7352;
+  outline: 2px solid #22836a;
   outline-offset: 4px;
   cursor: pointer;
 }
@@ -101,7 +165,7 @@ body.site-editing a:hover [data-link-key] {
 }
 
 .site-edit-toolbar button:hover {
-  background: #f0f9f4;
-  color: #265c43;
+  background: #f2fbf7;
+  color: #1b6856;
 }
 
