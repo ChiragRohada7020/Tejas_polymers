@@ -1,6 +1,33 @@
 import { connectDB } from "@/lib/db";
 import { Category, type Category as CategoryDoc } from "@/lib/models/Category";
 import { Product, type IProduct } from "@/lib/models/Product";
+import type { Locale } from "@/lib/i18n";
+
+/**
+ * Returns the product with its Marathi copy swapped in, falling back to the
+ * English field per-field.
+ *
+ * Fallback is per-field rather than per-record on purpose: a product whose
+ * name has been translated but whose long description has not should still
+ * show a Marathi name and an English description, not silently revert the
+ * whole record to English. Returns a new object; the cached document is never
+ * mutated.
+ */
+export function localizeProduct(product: IProduct, locale: Locale): IProduct {
+  if (locale !== "mr") return product;
+  const mr = product.mr;
+  if (!mr) return product;
+
+  const pick = (translated: string | undefined, fallback: string) =>
+    translated && translated.trim() ? translated : fallback;
+
+  return {
+    ...product,
+    name: pick(mr.name, product.name),
+    shortDescription: pick(mr.shortDescription, product.shortDescription),
+    description: pick(mr.description, product.description),
+  };
+}
 
 /**
  * Cached catalogue reads.

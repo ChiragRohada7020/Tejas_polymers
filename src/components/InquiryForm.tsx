@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "@/components/site/LocaleContext";
+import { ui } from "@/lib/strings";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -15,6 +17,10 @@ export default function InquiryForm({
   variant?: "general" | "distributor" | "product";
   compact?: boolean;
 }) {
+  // Read from context rather than a prop: this form appears on the contact
+  // page, the distributor page and every product detail page, and a missing
+  // prop would silently render an English form on a Marathi page.
+  const locale = useLocale();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
 
@@ -34,12 +40,12 @@ export default function InquiryForm({
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(body?.error || "Something went wrong. Please try again.");
+        throw new Error(body?.error || ui("formError", locale));
       }
       form.reset();
       setStatus("success");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(err instanceof Error ? err.message : ui("formError", locale));
       setStatus("error");
     }
   }
@@ -50,17 +56,21 @@ export default function InquiryForm({
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-600 text-2xl text-white">
           ✓
         </div>
-        <h3 className="mt-4 text-lg font-semibold text-brand-900">Thank you!</h3>
+        <h3 className="mt-4 text-lg font-semibold text-brand-900">
+          {ui("formThankYou", locale)}
+        </h3>
         <p className="mt-2 text-sm text-slate-600">
-          Your {variant === "distributor" ? "distributor application" : "inquiry"} has been
-          received. Our sales team will get back to you within 1–2 business days.
+          {ui(
+            variant === "distributor" ? "formSuccessDistributor" : "formSuccessGeneral",
+            locale
+          )}
         </p>
         <button
           type="button"
           onClick={() => setStatus("idle")}
           className="mt-4 text-sm font-semibold text-brand-700 underline hover:text-brand-800"
         >
-          Send another message
+          {ui("formSendAnother", locale)}
         </button>
       </div>
     );
@@ -78,40 +88,40 @@ export default function InquiryForm({
 
       <div className={compact ? "space-y-4" : "grid gap-4 sm:grid-cols-2"}>
         <div>
-          <label htmlFor="inq-name" className={labelCls}>Full Name *</label>
-          <input id="inq-name" name="name" required className={inputCls} placeholder="Your name" />
+          <label htmlFor="inq-name" className={labelCls}>{ui("formFullName", locale)}</label>
+          <input id="inq-name" name="name" required className={inputCls} placeholder={ui("formYourName", locale)} />
         </div>
         <div>
-          <label htmlFor="inq-email" className={labelCls}>Email *</label>
+          <label htmlFor="inq-email" className={labelCls}>{ui("labelEmail", locale)} *</label>
           <input id="inq-email" name="email" type="email" required className={inputCls} placeholder="you@company.com" />
         </div>
         <div>
-          <label htmlFor="inq-phone" className={labelCls}>Phone / WhatsApp</label>
+          <label htmlFor="inq-phone" className={labelCls}>{ui("labelPhoneWhatsApp", locale)}</label>
           <input id="inq-phone" name="phone" className={inputCls} placeholder="+91 ..." />
         </div>
         <div>
           <label htmlFor="inq-company" className={labelCls}>
-            {variant === "distributor" ? "Company / Firm Name" : "Company (optional)"}
+            {ui(variant === "distributor" ? "formCompanyFirm" : "formCompanyOptional", locale)}
           </label>
-          <input id="inq-company" name="company" className={inputCls} placeholder="Company name" />
+          <input id="inq-company" name="company" className={inputCls} placeholder={ui("formCompanyName", locale)} />
         </div>
         {variant === "distributor" && (
           <div className="sm:col-span-2">
-            <label htmlFor="inq-country" className={labelCls}>Country / Region you want to distribute in *</label>
-            <input id="inq-country" name="country" required className={inputCls} placeholder="e.g. Kenya, Punjab (India), Brazil" />
+            <label htmlFor="inq-country" className={labelCls}>{ui("formDistributeIn", locale)}</label>
+            <input id="inq-country" name="country" required className={inputCls} placeholder={ui("formDistributeExample", locale)} />
           </div>
         )}
         {variant !== "distributor" && (
           <div className={variant === "general" ? "sm:col-span-2" : ""}>
-            <label htmlFor="inq-country" className={labelCls}>Country (optional)</label>
-            <input id="inq-country" name="country" className={inputCls} placeholder="Your country" />
+            <label htmlFor="inq-country" className={labelCls}>{ui("formCountryOptional", locale)}</label>
+            <input id="inq-country" name="country" className={inputCls} placeholder={ui("formYourCountry", locale)} />
           </div>
         )}
       </div>
 
       <div>
         <label htmlFor="inq-message" className={labelCls}>
-          {variant === "distributor" ? "Tell us about your business *" : "Message *"}
+          {ui(variant === "distributor" ? "formTellBusiness" : "formMessage", locale)}
         </label>
         <textarea
           id="inq-message"
@@ -119,11 +129,10 @@ export default function InquiryForm({
           required
           rows={variant === "distributor" ? 4 : 5}
           className={inputCls}
-          placeholder={
-            variant === "distributor"
-              ? "Existing business, customer network, years in agri trade, brands you carry..."
-              : "Tell us what you need — quantities, product models, delivery location..."
-          }
+          placeholder={ui(
+            variant === "distributor" ? "formBusinessPlaceholder" : "formMessagePlaceholder",
+            locale
+          )}
         />
       </div>
 
@@ -139,10 +148,11 @@ export default function InquiryForm({
         className="w-full rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {status === "submitting"
-          ? "Sending..."
-          : variant === "distributor"
-            ? "Apply to Become a Distributor"
-            : "Send Inquiry"}
+          ? ui("formSending", locale)
+          : ui(
+              variant === "distributor" ? "formApplyDistributor" : "formSendInquiry",
+              locale
+            )}
       </button>
     </form>
   );

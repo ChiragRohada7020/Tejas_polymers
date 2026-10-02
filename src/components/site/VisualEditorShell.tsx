@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useEditMode } from "@/components/site/EditModeContext";
+import { DEFAULT_LOCALE, LOCALE_META, type Locale } from "@/lib/i18n";
 
 type EditorState = {
   dirty: boolean;
@@ -41,6 +42,19 @@ function collectItems(): { key: string; value: string }[] {
   }
 
   return items;
+}
+
+/**
+ * The language the editor is currently editing.
+ *
+ * Read from the URL (/mr/about -> "mr") rather than threaded through every
+ * Editable* component as a prop: the page is already rendering exactly one
+ * language, so its own path is the authoritative answer, and this way the
+ * editor can never write Marathi into the English bucket by accident.
+ */
+function currentLocale(): Locale {
+  const first = window.location.pathname.split("/").filter(Boolean)[0];
+  return first === "mr" || first === "en" ? first : DEFAULT_LOCALE;
 }
 
 /**
@@ -105,7 +119,7 @@ export default function VisualEditorShell() {
       const response = await fetch("/api/admin/site-content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: collectItems() }),
+        body: JSON.stringify({ items: collectItems(), locale: currentLocale() }),
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
@@ -137,7 +151,9 @@ export default function VisualEditorShell() {
 
   return (
     <div className="fixed bottom-4 left-1/2 z-[100] flex w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white/95 px-4 py-3 shadow-xl backdrop-blur">
-      <span className="rounded-full bg-brand-600 px-2.5 py-1 text-xs font-bold text-white">Editing</span>
+      <span className="rounded-full bg-brand-600 px-2.5 py-1 text-xs font-bold text-white">
+        Editing &middot; {LOCALE_META[currentLocale()].label}
+      </span>
       <span className="text-xs text-slate-500">
         {state.saving
           ? "Saving..."

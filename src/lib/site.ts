@@ -7,6 +7,17 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.tejaspo
 export const SITE_DESCRIPTION =
   "Krusheebindoo by Tejas Polymers manufactures the full range of inline and online drip irrigation products from Pachora, Jalgaon, Maharashtra. IS 13488 certified flat inline drip laterals, on-line emitters, filters and fittings that cut irrigation water use by up to 60%.";
 
+/**
+ * Marathi equivalents of the above, for the default locale.
+ *
+ * These feed <title>/description/hreflang, so they are part of the SEO
+ * surface rather than decoration: a Marathi searcher searching in Marathi
+ * should get a Marathi result snippet. Transliterated product names are
+ * deliberately kept in Latin where that is how the trade actually writes them.
+ */
+export const SITE_DESCRIPTION_MR =
+  "तेजा पॉलिमर्सचे कृष्हीबिंडू हे पाचोरा, जळगाव, महाराष्ट्रातीन इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादनांची संपूर्ण श्रृंखला तयार करते. IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल (12 मिमी व 16 मिमी), ऑनलाइन एमिटर, फिल्टर व फिटिंग्ज — सिंचनाच्या पाण्याची ६०% पर्यंत बचत करणारे.";
+
 export const CONTACT = {
   email: "tejaspolymers0101@gmail.com",
   /** Used in email templates for the "Browse our products" CTA. */
@@ -56,4 +67,30 @@ export const KEYWORDS = [
   "drip irrigation fittings and accessories",
   "water saving irrigation equipment",
   "farm irrigation equipment distributor",
+];
+
+/**
+ * Marathi keyword set for the default locale.
+ *
+ * Mixes Marathi and Latin product terms deliberately: an actual Marathi
+ * dealer types "फ्लॅट इनलाइन ठिबक" but also "IS 13488" and brand names, so
+ * covering both is what real query logs look like. Kept separate from
+ * KEYWORDS rather than merged, because mixing both languages into one tag
+ * list on a single URL would tell Google the page targets both at once.
+ */
+export const KEYWORDS_MR = [
+  "ठिबक सिंचन निर्माता",
+  "ठिबक सिंचन उपकरण पुरवठादार महाराष्ट्र",
+  "फ्लॅट इनलाइन ठिबक 16 मिमी",
+  "फ्लॅट इनलाइन ठिबक 12 मिमी",
+  "ऑनलाइन एमिटर पुरवठा",
+  "IS 13488 प्रमाणित ठिबक पाइप",
+  "पाचोरा ठिबक सिंचन उत्पादने",
+  "जळगाव ठिबक सिंचन पुरवठादार",
+  "कृष्हीबिंडू ठिबक सिंचन",
+  "तेजा पॉलिमर्स",
+  "डिस्क फिल्टर आणि स्क्रीन फिल्टर",
+  "ठिबक सिंचण फिटिंग्ज",
+  "पाणी वाचवणारे सिंचन उपकरण",
+  "शेती सिंचन उपकरण वितरक",
 ];

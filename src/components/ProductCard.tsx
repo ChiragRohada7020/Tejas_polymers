@@ -2,14 +2,20 @@ import Link from "next/link";
 import type { IProduct } from "@/lib/models/Product";
 import AdminChrome from "@/components/site/AdminChrome";
 import SafeImage from "@/components/SafeImage";
+import { localePath, type Locale } from "@/lib/i18n";
+import { ui, minOrderLabel } from "@/lib/strings";
 
 export default function ProductCard({
   product,
+  locale,
   editMode = false,
 }: {
+  /** Must already have been passed through localizeProduct() by the caller. */
   product: IProduct;
+  locale: Locale;
   editMode?: boolean;
 }) {
+  const detailHref = localePath(locale, `/products/${product.slug}`);
   return (
     <article className="reveal group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
       <div className="relative aspect-[4/3] overflow-hidden bg-brand-50">
@@ -20,7 +26,7 @@ export default function ProductCard({
         />
         {product.featured && (
           <span className="absolute left-3 top-3 rounded-full bg-accent-500 px-2.5 py-1 text-xs font-bold text-brand-950">
-            Featured
+            {ui("featured", locale)}
           </span>
         )}
         <AdminChrome>
@@ -40,7 +46,7 @@ export default function ProductCard({
 
       <div className="flex flex-1 flex-col p-5">
         <h3 className="text-base font-semibold text-brand-900">
-          <Link href={`/products/${product.slug}`} className="hover:text-brand-600">
+          <Link href={detailHref} className="hover:text-brand-600">
             {product.name}
           </Link>
         </h3>
@@ -48,7 +54,9 @@ export default function ProductCard({
 
         <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
           <span className="text-xs text-slate-500">
-            {product.minOrderQty ? `MOQ: ${product.minOrderQty}` : "Bulk orders welcome"}
+            {product.minOrderQty
+              ? `${ui("moq", locale)}: ${minOrderLabel(product.minOrderQty, locale)}`
+              : ui("bulkOrdersWelcome", locale)}
           </span>
           <div className="flex items-center gap-2">
             <AdminChrome>
@@ -62,10 +70,10 @@ export default function ProductCard({
               </Link>
             </AdminChrome>
             <Link
-              href={`/products/${product.slug}`}
+              href={detailHref}
               className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-700"
             >
-              View Details
+              {ui("viewDetails", locale)}
             </Link>
           </div>
         </div>

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { useIsEditing } from "@/components/site/EditModeContext";
+import { useLocale } from "@/components/site/LocaleContext";
+import { localePath } from "@/lib/i18n";
 
 type BaseProps = {
   contentKey: string;
@@ -170,12 +172,22 @@ export function EditableLink({
 }) {
   const editing = useIsEditing();
   const labelRef = useRef<HTMLSpanElement | null>(null);
+  const locale = useLocale();
+
+  /*
+   * `href` is the locale-neutral value an admin edits and what gets persisted
+   * ("/products"). `displayHref` is what the browser navigates to. Keeping
+   * those separate is what lets one stored link serve both languages without
+   * an admin edit on the Marathi page silently rewriting the English one to
+   * "/mr/products".
+   */
+  const displayHref = localePath(locale, href);
 
   if (!editing) {
     // Render a next/link Link, not a bare <a>, so that client-side
     // navigation and prefetching still work for normal visitors.
     return (
-      <Link href={href} className={className}>
+      <Link href={displayHref} className={className}>
         {children ?? label}
       </Link>
     );
@@ -201,7 +213,9 @@ export function EditableLink({
     if (next === null) return;
     holder.dataset.linkHref = next;
     const anchor = holder.closest("a");
-    if (anchor) anchor.setAttribute("href", withEditParam(next, editing));
+    // Persist the raw, locale-neutral value in dataset; only the live anchor
+    // gets the locale-prefixed version.
+    if (anchor) anchor.setAttribute("href", withEditParam(localePath(locale, next), editing));
     // Trigger an input event so VisualEditorShell detects the change
     holder.dispatchEvent(new Event("input", { bubbles: true }));
   }
@@ -209,9 +223,9 @@ export function EditableLink({
   return (
     <span className="inline-flex items-center gap-1.5">
       <a
-        href={withEditParam(href, editing)}
+        href={withEditParam(displayHref, editing)}
         className={className}
-        title={`Go to ${href} (edit mode stays on)`}
+        title={`Go to ${displayHref} (edit mode stays on)`}
       >
         <span
           ref={labelRef}

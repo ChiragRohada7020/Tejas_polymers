@@ -3,30 +3,60 @@ import Link from "next/link";
 import InquiryForm from "@/components/InquiryForm";
 import Reveal from "@/components/Reveal";
 import { EditableRichText, EditableText } from "@/components/site/Editable";
-import { content, getSiteContentMap } from "@/lib/site-content";
+import { getSiteContentMap, translator } from "@/lib/site-content";
+import {
+  DEFAULT_LOCALE,
+  isKnownLocale,
+  localeAlternates,
+  localePath,
+  type Locale,
+} from "@/lib/i18n";
+import { ui } from "@/lib/strings";
 
 export const revalidate = 60;
   // Edit state is resolved client-side (see EditModeContext).
   const editMode = false;
 
-export const metadata: Metadata = {
-  title: "Become a Distributor — Tejas Polymers Irrigation Equipment",
-  description:
-    "Become a Tejas Polymers distributor. Factory-direct pricing on irrigation equipment and farm machinery, territory support and reliable supply of spare parts.",
-  keywords: [
-    "agriculture equipment distributor",
-    "become a distributor",
-    "irrigation equipment dealer opportunity",
-    "farm machinery distributor India",
-  ],
-  alternates: { canonical: "/become-a-distributor" },
-};
+type DistributorProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: DistributorProps): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+  const isMr = locale === "mr";
+
+  const title = isMr
+    ? "डिस्ट्रिब्यूटर व्हा — तेजा पॉलिमर्स सिंचन उपकरणे"
+    : "Become a Distributor — Tejas Polymers Irrigation Equipment";
+  const description = isMr
+    ? "तेजा पॉलिमर्सचे डिस्ट्रिब्यूटर व्हा. सिंचन उपकरणे व शेती अवजारांवर थेट कारखान्यादून किंमत, क्षेत्रासाठी सहाय्य व स्पेअर पार्ट्सची खात्रीशीर उपलब्धता."
+    : "Become a Tejas Polymers distributor. Factory-direct pricing on irrigation equipment and farm machinery, territory support and reliable supply of spare parts.";
+
+  return {
+    title,
+    description,
+    keywords: isMr
+      ? ["कृषी उपकरण वितरक", "डिस्ट्रिब्यूटर व्हा", "सिंचन उपकरण डीलर संधी", "शेती अवजारे वितरक"]
+      : [
+          "agriculture equipment distributor",
+          "become a distributor",
+          "irrigation equipment dealer opportunity",
+          "farm machinery distributor India",
+        ],
+    alternates: {
+      canonical: `/${locale}/become-a-distributor`,
+      languages: localeAlternates("/become-a-distributor", true),
+    },
+  };
+}
 
 const BENEFIT_ICONS = ["💰", "🛡️", "📦", "📣"];
 
-export default async function BecomeADistributorPage() {
+export default async function BecomeADistributorPage({ params }: DistributorProps) {
+  const { locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+
   const map = await getSiteContentMap();
-  const t = (key: string) => content(map, key);
+  const t = translator(map, locale);
 
   return (
     <>
@@ -34,9 +64,9 @@ export default async function BecomeADistributorPage() {
       <section className="wave-bg border-b border-brand-100">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <nav aria-label="Breadcrumb" className="mb-4 text-sm text-slate-600">
-            <Link href="/" className="hover:text-brand-800">Home</Link>
+            <Link href={localePath(locale, "/")} className="hover:text-brand-800">{ui("breadcrumbHome", locale)}</Link>
             <span className="mx-2">/</span>
-            <span className="text-brand-900">Become a Distributor</span>
+            <span className="text-brand-900">{ui("footerBecomeDistributor", locale)}</span>
           </nav>
           <h1 className="text-3xl font-extrabold text-brand-950 sm:text-4xl">
             <EditableText contentKey="distributor.heroTitle" editMode={editMode} value={t("distributor.heroTitle")} as="span" />

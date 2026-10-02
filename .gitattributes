@@ -1,0 +1,19 @@
+# Normalise line endings in the working tree to LF.
+#
+# Without this, Windows checkouts land as CRLF while the index stays LF, so
+# every file differs from the repo in invisible ways and tooling that
+# matches on exact text (including the editor used for code changes) fails
+# to find content that plainly looks identical. Pinning the working tree
+# keeps files byte-for-byte identical across machines and in CI.
+* text=auto eol=lf
+
+# Images are matched by `text=auto` on content, but be explicit so a
+# misdetection can never rewrite a photo.
+*.jpg   binary
+*.jpeg  binary
+*.png   binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.svg   text eol=lf
+*.mp4   binary

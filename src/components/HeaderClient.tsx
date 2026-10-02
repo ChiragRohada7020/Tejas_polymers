@@ -6,9 +6,13 @@ import { useEffect, useState } from "react";
 import { EditableLink, EditableText } from "@/components/site/Editable";
 import { useIsEditing } from "@/components/site/EditModeContext";
 import EditableMedia from "@/components/site/EditableMedia";
-import type { NavItem } from "@/app/(site)/layout";
+import { ui } from "@/lib/strings";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { localePath, type Locale } from "@/lib/i18n";
+import type { NavItem } from "@/app/[locale]/(site)/layout";
 
 export type HeaderProps = {
+  locale: Locale;
   logoImage: string;
   logoAlt: string;
   wordmarkStart: string;
@@ -78,12 +82,37 @@ export function BrandMark({
 }
 
 export default function HeaderClient(props: HeaderProps) {
-  const { nav, ctaLabel, ctaHref } = props;
+  const { nav, ctaLabel, ctaHref, locale } = props;
   // Nav/CTA render as editable links only while the editor is switched on.
   const editing = useIsEditing();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  /**
+   * Which nav item is "current".
+   *
+   * Locale prefixes make naive prefix matching wrong: the Home link is now
+   * "/mr", which is a string prefix of "/mr/products", so a simple
+   * startsWith would highlight Home on every single page. A locale root only
+   * counts as active on an exact match; every other item matches its own
+   * segment boundary.
+   */
+  /*
+   * Nav hrefs arrive locale-neutral from the server (so the visual editor
+   * stores "/products", never "/mr/products") and get their prefix here -
+   * the one place that actually renders them.
+   */
+  const navHref = (href: string) => localePath(locale, href);
+
+  const localeRoot = `/${locale}`;
+  const trimEnd = (p: string) => (p.length > 1 ? p.replace(/\/+$/, "") : p);
+  const isActive = (href: string) => {
+    const target = trimEnd(navHref(href));
+    const current = trimEnd(pathname);
+    if (current === target) return true;
+    return target !== localeRoot && current.startsWith(`${target}/`);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -111,14 +140,14 @@ export default function HeaderClient(props: HeaderProps) {
   return (
     <header className={headerClass}>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" title={`${props.wordmarkStart} ${props.wordmarkEnd} — home`}>
+        <Link href={navHref("/")} title={`${props.wordmarkStart} ${props.wordmarkEnd} — home`}>
           <BrandMark {...props} />
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
           {nav.map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const active = isActive(item.href);
             return editing ? (
               <span key={item.hrefKey} className="inline-flex items-center">
                 <EditableLink
@@ -130,11 +159,13 @@ export default function HeaderClient(props: HeaderProps) {
                 />
               </span>
             ) : (
-              <Link key={item.hrefKey} href={item.href} prefetch className={desktopLink(active)}>
+              <Link key={item.hrefKey} href={navHref(item.href)} prefetch className={desktopLink(active)}>
                 {item.label}
               </Link>
             );
           })}
+
+          <LanguageSwitcher locale={locale} className="ml-2 hidden md:inline-flex" />
 
           {editing ? (
             <span className="ml-3 inline-flex items-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm">
@@ -147,7 +178,7 @@ export default function HeaderClient(props: HeaderProps) {
             </span>
           ) : (
             <Link
-              href={ctaHref}
+              href={navHref(ctaHref)}
               className="ml-3 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
             >
               {ctaLabel}
@@ -155,13 +186,17 @@ export default function HeaderClient(props: HeaderProps) {
           )}
         </nav>
 
+        {/* Language stays in the top bar on mobile rather than being buried
+            behind the hamburger, so both options are always one tap away. */}
+        <LanguageSwitcher locale={locale} className="mr-2 md:hidden" />
+
         {/* Mobile toggle */}
         <button
           type="button"
           onClick={() => setOpen(!open)}
           className="inline-flex h-10 w-10 items-center justify-center rounded-md text-slate-700 hover:bg-slate-100 md:hidden"
           aria-expanded={open}
-          aria-label="Toggle navigation menu"
+          aria-label={open ? ui("closeMenu", locale) : ui("openMenu", locale)}
         >
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             {open ? (
@@ -177,7 +212,7 @@ export default function HeaderClient(props: HeaderProps) {
       {open && (
         <nav className="border-t border-slate-200 bg-white px-4 pb-4 md:hidden" aria-label="Mobile navigation">
           {nav.map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const active = isActive(item.href);
             return editing ? (
               <span key={item.hrefKey} className="block">
                 <EditableLink
@@ -189,11 +224,12 @@ export default function HeaderClient(props: HeaderProps) {
                 />
               </span>
             ) : (
-              <Link key={item.hrefKey} href={item.href} prefetch className={mobileLink(active)}>
+              <Link key={item.hrefKey} href={navHref(item.href)} prefetch className={mobileLink(active)}>
                 {item.label}
               </Link>
             );
           })}
+
           {editing ? (
             <span className="mt-2 block">
               <EditableLink
@@ -206,7 +242,7 @@ export default function HeaderClient(props: HeaderProps) {
             </span>
           ) : (
             <Link
-              href={ctaHref}
+              href={navHref(ctaHref)}
               className="mt-2 block rounded-lg bg-brand-600 px-4 py-3 text-center text-sm font-semibold text-white"
             >
               {ctaLabel}

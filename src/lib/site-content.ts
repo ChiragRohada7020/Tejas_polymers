@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/db";
 import { BRAND_NAME, CONTACT, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { LOCALES, type Locale } from "@/lib/i18n";
 
 export type ContentKind = "text" | "rich" | "image" | "link";
 
@@ -79,12 +80,6 @@ export const CONTENT_DEFS: ContentDef[] = [
   R(
     "home.categoriesBody",
     "Four specialist ranges manufactured in-house: laterals, emitters, filters and the fittings that hold a system together."
-  ),
-  T("home.featuredEyebrow", "Featured Products", 80),
-  T("home.featuredTitle", "Our Best Sellers", 120),
-  R(
-    "home.featuredBody",
-    "The rolls and emitters our dealers reorder most, proven across grape, pomegranate, banana, sugarcane and cotton country."
   ),
   T("home.featuredEyebrow", "Featured Products", 80),
   T("home.featuredTitle", "Our Best Sellers", 120),
@@ -212,7 +207,156 @@ export const CONTENT_DEF_MAP: Record<string, ContentDef> = Object.fromEntries(
   CONTENT_DEFS.map((d) => [d.key, d])
 );
 
-export type ContentMap = Record<string, string>;
+/**
+ * Marathi defaults for every editable string.
+ *
+ * Kept separate from CONTENT_DEFS rather than widening ContentDef with a
+ * second field, for two reasons: the English defaults stay readable as the
+ * single source of truth for the English site, and the Marathi block becomes
+ * one obviously-delimited region that is trivial to review with a translator
+ * or to hand to the client.
+ *
+ * A key missing from this map falls back to its English default - it renders
+ * in English rather than blank, so an incomplete translation degrades
+ * gracefully instead of producing an empty page.
+ */
+export const MARATHI_DEFAULTS: Record<string, string> = {
+  // Brand & navigation. The wordmark (brand.wordmarkStart/End) is the trade
+  // name and is deliberately left in Latin - transliterating a brand is how
+  // shoppers end up unable to search for it.
+  "brand.logoAlt": "कृष्हीबिंडू लोगो",
+  "header.nav.home.label": "मुख्यपृष्ठ",
+  "header.nav.products.label": "उत्पादने",
+  "header.nav.about.label": "आमच्याबद्दल",
+  "header.nav.distributor.label": "डिस्ट्रिब्यूटर व्हा",
+  "header.nav.contact.label": "संपर्क",
+  "header.cta.label": "भाव मिळवा",
+
+  // Home
+  "home.heroBadge": "कृष्हीबिंडू - IS 13488 प्रमाणित - महाराष्ट्रातील जळगाव येथे निर्मित",
+  "home.heroTitleMain": "प्रत्येक थेंब, थेट",
+  "home.heroTitleAccent": "मुळांच्या क्षेत्रापर्यंत",
+  "home.heroBody": "तेजा पॉलिमर्सचे कृष्हीबिंडू हे इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादनांची संपूर्ण श्रृंखला तयार करते: IS 13488 प्रमाणित फ्लॅट इनलाइन लेटरल, ऑनलाइन एमिटर, फिल्टर व फिटिंग्ज. ६०% पर्यंत कमी पाणी, झाडाला नेमलेल्या ठिकाणी.",
+  "home.primaryCtaLabel": "उत्पादने पहा",
+  "home.secondaryCtaLabel": "डिस्ट्रिब्यूटर व्हा",
+  // Stat VALUES (60%, IS 13488, 5000m, 4 LPH) are intentionally absent -
+  // they are numerals and units and are identical in both languages.
+  "home.stats.0.label": "पर्यंत पाणी बचत",
+  "home.stats.1.label": "प्रमाणित मानक",
+  "home.stats.2.label": "रोलची लांबी",
+  "home.stats.3.label": "एमिटर प्रवाह",
+  "home.categoriesEyebrow": "उत्पादन श्रेणी",
+  "home.categoriesTitle": "ठिबक सिस्टमला लागणारे सर्व काही",
+  "home.categoriesBody": "कारखानातच तयार केलेल्या चार विशेष श्रेणी: लेटरल, एमिटर, फिल्टर आणि सिस्टम जुळवणारी फिटिंग्ज.",
+  "home.featuredEyebrow": "निवडक उत्पादने",
+  "home.featuredTitle": "आमची सर्वाधिक विक्री",
+  "home.featuredBody": "सर्वाधिक पुन्हा मागणी होणारी उपकरणे - शेतात सिद्ध झालेली आणि मालकांनी संपूर्ण प्रदेशात साठवलेली.",
+  "home.whyTitle": "शेतकरी कृष्हीबिंडू का निवडतात",
+  "home.why.0.title": "६०% पर्यंत कमी पाणी",
+  "home.why.0.text": "पाणी ओळीभर पसरत नाही, मुळांच्या क्षेत्रापर्यंत जाते. कमी पाणी उपसा, पंप करण्यासाठी कमी वीज, आणि झाडांमध्ये वाष्पीकरणात काहीही नाही.",
+  "home.why.1.title": "IS 13488 प्रमाणित",
+  "home.why.1.text": "प्रत्येक लेटरल IS 13488:2008 प्रमाणानुसार Class 2 UV-प्रतिरोधक LDPE मधून तयार केलेला आहे, म्हणजे प्रवाह हंगामानंतर हंगाम ४ LPH ला टिकून राहतो.",
+  "home.why.2.title": "समान ओलावा",
+  "home.why.2.text": "३०, ४० किंवा ६० सेंटीमीटर अंतरावर कारखान्यातच बसवलेले एमिटर प्रत्येक झाडाला एकच मापदान देतात. ओळीभर ओले किंवा कोरडे भाग नाहीत.",
+  "home.why.3.title": "भारतीय शेतीसाठी तयार",
+  "home.why.3.text": "महाराष्ट्रातील जमिनी, पाण्याच्या प्रती आणि लांब उन्हाळ्याच्या परिस्थितीसाठी तयार केलेले, आणि त्यावर काम करणाऱ्या शेतकऱ्यांच्या अडचणींनुसार.",
+  "home.testimonialQuote": "कृष्हीबिंडूने आमच्या सिंचनाची पद्धत बदलली. पाण्याचा वापर कमी झाला, संपूर्ण ब्लॉकमध्ये उत्पादन सारखेच राहिले, आणि ५००० मीटरचा रोल त्याच्या किमतीत खूप दूरपर्यंत पोहोचतो.",
+  "home.testimonialAttribution": "शेतकरी, जळगाव विभाग",
+  "home.ctaTitle": "या हंगामीत पाण्याचे बिल कापीत घ्या",
+  "home.ctaBody": "तुमचे पीक, क्षेत्र व झाडांतील अंतर कळवा; आम्ही योग्य लेटरल, एमिटर अंतर व फिल्टर शिफारस करू आणि मालकांसाठी डिस्ट्रिब्यूटर किंमत देतो.",
+  "home.ctaButton": "शिफारस मिळवा",
+  // Footer. Email, phone and postal address stay as-is: they are an address
+  // and a phone number, and transliterating a postal address makes it harder
+  // to find rather than easier.
+  "footer.aboutBlurb": "तेजा पॉलिमर्सचे कृष्हीबिंडू हे IS 13488 प्रमाणित इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादने गोरडाखेडा, पाचोरा, जळगाव येथील कारखान्यातून तयार करते.",
+
+  // Contact
+  "contact.heroTitle": "आमच्याशी संपर्क साधा",
+  "contact.heroBody": "उत्पादन तपशील, थोक किंमत किंवा डिस्ट्रिब्यूटरशिपबद्दल प्रश्न आहेत? ८०८०३ ३७८१३ यावर आमच्याशी संपर्क साधा किंवा संदेश पाठवा; आम्ही १-२ कार्यदिवसांत उत्तर देतो.",
+  "contact.infoTitle": "संपर्क माहिती",
+  "contact.hours": "सोमवार - शनिवार, सकाळी ९:०० - सायंकाळी ६:०० (IST)",
+  "contact.distributorTitle": "डिस्ट्रिब्यूटर व्हायचे आहे?",
+  "contact.distributorBody": "जलद प्रक्रिया होण्यासाठी आमच्या समर्पित अर्ज फॉर्मचा वापर करा.",
+  "contact.distributorCta": "डिस्ट्रिब्यूटर व्हा",
+  "contact.formTitle": "आम्हाला संदेश पाठवा",
+  "contact.formBody": "तुमचे पीक, क्षेत्र व गरज भरा; आमची टीम किंमत व उपलब्धता सहित परत संपर्क करेल.",
+
+  // About
+  // "उत्पादक" (producer/manufacturer) rather than "निर्माता": in Marathi
+  // "निर्माता" works as an adjective ("निर्माता कंपनी"), but standing alone
+  // as a noun it reads as an incomplete phrase.
+  "about.heroTitle": "ठिबक सिंचन उत्पादक. प्रत्येक थेंबाचे काळजीपालन.",
+  "about.heroBody": "कृष्हीबिंडू हे तेजा पॉलिमर्सचा ठिबक सिंचन ब्रँड आहे — महाराष्ट्रातील जळगाव जिल्ह्यातील पाचोरा येथील गोरडाखेडा येथे इनलाइन व ऑनलाइन ठिबक उत्पादनांची संपूर्ण श्रृंखला तयार करणारा निर्माता.",
+  "about.storyTitle": "आमची ओळख",
+  "about.storyBody": "<p>तेजा पॉलिमर्स सर्व्हे नं. १५२/३, सुगरान डेअरीच्या मागे, गोरडाखेडा, पाचोरा येथील कारखान्यातून कृष्हीबिंडू श्रृंखलेतील इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादने तयार करते. आम्ही IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन ड्रिपर्स व दाब-भरित एमिटर, स्क्रीन व डिस्क फिल्टर, आणि सिस्टम पूर्ण करणारी फिटिंग्ज तयार करतो.</p><p class=\"mt-4\">महाराष्ट्रातील शेतांना हा प्रश्न चांगलाच माहीत आहे: पीक जेवढ्या वेळेला पाणी लागेल तेवढे पाणी नेहमी असत नाही, आणि पंप केलेले पाणी झाडाला पूर्ण वापरले जात नाही. आमचा उपाय साधा इंजिनियरिंग आहे — तासाला ४ लिटर मापून, मुळांच्या क्षेत्रापर्यंत नेऊन, ओळीभर समान पद्धतीने पुन्हा. नीट केल्यास पाण्याची बचत इथूनच येते, आणि ही बचत उत्पादनापेक्षा जास्त वीज बिलात दिसते.</p><p class=\"mt-4\">प्रत्येक रोल मानकानुसार तपासलेला आणि चिन्हांकित आपल्या ओळीतून जातो, कारण बंद पडलेला एमिटर म्हणजे स्वतःचा खर्च वसूल करणारे सिस्टम आणि खरेदी करणाऱ्या शेतकऱ्याची निराशा यातला फरक आहे.</p>",
+  "about.stats.0.label": "प्रमाणित मानक",
+  "about.stats.1.label": "पाणी बचत",
+  "about.stats.2.label": "रोलची लांबी",
+  "about.stats.3.label": "एमिटर प्रवाह",
+  "about.valuesTitle": "आमची ध्येये",
+  "about.values.0.title": "शेताच्या आधीची नांदणी",
+  "about.values.0.text": "खरोखर लावलेल्या अंतरानुसार आपण आकार ठरवतो — द्राक्ष व डाळिंब ३० सेंटीमीटर, ऊस व कापूस ४० ते ६० सेंटीमीटर. पिकाला चालणारा आकार, केवळ मोठा आकार यापेक्षा चांगला.",
+  "about.values.1.title": "IS 13488 प्रमाणाने तयार",
+  "about.values.1.text": "Class 2 UV-प्रतिरोधक LDPE, तपासलेला प्रवाह व नियंत्रित भिंतीची जाडी, म्हणजे या हंगामी घेतलेला रोल तीन हंगामांनंतरही ४ LPH ला टिकून राहतो.",
+  "about.values.2.title": "संपूर्ण सिस्टम पुरवठा",
+  "about.values.2.text": "लेटरल, एमिटर, फिल्टर व फिटिंग्ज एकाच निर्मात्याकडून, म्हणजे ब्लॉकातील प्रत्येक भाग एकच दाब व्यवस्था व एकच जबाबदारी सामोबात.",
+  "about.factoryCtaTitle": "आमच्या कारखान्याला भेट द्यायची आहे?",
+  "about.factoryCtaBody": "मालक व डिस्ट्रिब्यूटरांचे स्वागत. गोरडाखेडा कारखाना भेट देऊन उत्पादन ओळ व तयार रोल प्रत्यक्ष पाहण्यासाठी आमच्याशी संपर्क साधा.",
+  "about.factoryCtaButton": "संपर्क साधा",
+  // Distributor. The two list bodies are stored as sanitised HTML, so the
+  // markup must be preserved exactly - only the text inside each tag is
+  // translated.
+  "distributor.heroTitle": "तुमच्या जिल्ह्यात कृष्हीबिंडू विका",
+  "distributor.heroBody": "भारतीय कृषीत ठिबक हा सर्वात वेगाने वाढणारा भाग आहे आणि शेतकरी विश्वासार्ह स्थानिक पुरवठादार शोधत आहेत. कारखान्यातून थेट किंमतीत कृष्हीबिंडू साठवा, तुमच्या विभागासाठी सविष्ट संरक्षण व पूर्ण विक्रीपश्चात सहाय्य मिळेल. अर्ज मोफत, आणि आम्ही ४८ तासांत निर्णय देतो.",
+  "distributor.benefits.0.title": "कारखान्यातून थेट किंमत",
+  "distributor.benefits.0.text": "पाचोरा येथील आमच्या कारखान्यातून थेट निर्माता दराने खरेदी करा; निवृत्त विक्रीसाठी निकूळ असलेले भाव आम्ही ठरवून देतो.",
+  "distributor.benefits.1.title": "विभागासाठी सविष्ट संरक्षण",
+  "distributor.benefits.1.text": "मान्यता मिळाल्यानंतर तुमच्या विभागासाठी सविष्ट वितरण हक्क, म्हणजे जवळच्या दुसऱ्या मालकाशी स्पर्धा करावी लागत नाही.",
+  "distributor.benefits.2.title": "विक्रीस चालणारी उत्पादन श्रृंखला",
+  "distributor.benefits.2.text": "लेटरल, एमिटर, फिल्टर व फिटिंग्ज एका ब्रँडाखाली, म्हणजे तुमच्या ग्राहकांना एकच पुरवठादाराकडून संपूर्ण सिस्टम मिळतो.",
+  "distributor.benefits.3.title": "जाहीर व विक्री सहाय्य",
+  "distributor.benefits.3.text": "उत्पादनांची छायाचित्रे, डेमो साहित्य, बॅनर आणि विक्री प्रशिक्षण, जेणेकरून शेतकऱ्यांना तपशील सहज सांगता येतील.",
+  "distributor.lookingTitle": "आम्ही कोणाला शोधतोय",
+  "distributor.lookingList": "<ul class=\"space-y-4\"><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\">✓</span> कृषी निविष्ठा, हार्डवेअर किंवा उपकरणे या क्षेत्रात आधीच असलेला व्यवसाय</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\">✓</span> माल साठवण्यासाठी गोदाम किंवा शोरुम जागा</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\">✓</span> जोडणी व मूलभूत सेवा देण्यासाठी तांत्रिक कर्मचारी</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\">✓</span> दीर्घकालीन बाजार उपस्थिती निर्माण करण्याची इच्छा</li></ul>",
+  "distributor.processTitle": "प्रक्रिया कशी आहे",
+  "distributor.processList": "<ol class=\"space-y-3\"><li class=\"flex gap-2\"><span class=\"font-semibold text-brand-700\">1.</span> <span>अर्ज फॉर्म भरा</span></li><li class=\"flex gap-2\"><span class=\"font-semibold text-brand-700\">2.</span> <span>आमची टीम तपासणी करून ४८ तासांत संपर्क करेल</span></li><li class=\"flex gap-2\"><span class=\"font-semibold text-brand-700\">3.</span> <span>किंमतपत्रक, कॅटलॉग व तुमच्या विभागाच्या संज्ञा मिळतील</span></li><li class=\"flex gap-2\"><span class=\"font-semibold text-brand-700\">4.</span> <span>चाचणी ऑर्डर द्या आणि विक्री सुरू करा</span></li></ol>",
+  "distributor.formTitle": "डिस्ट्रिब्यूटर अर्ज",
+  "distributor.formSubtitle": "तुमच्या व्यवसायाबद्दल सांगा — कोणतीही बांधन किंवा शुल्क नाही.",
+
+  // Products catalogue
+  "products.heroTitle": "ठिबक सिंचन उत्पादने",
+  "products.heroBody": "कृष्हीबिंडूची संपूर्ण श्रृंखला: १२ मिमी व १६ मिमी IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन ड्रिपर्स व दाब-भरित एमिटर, स्क्रीन व डिस्क फिल्टर, आणि सिस्टम पूर्ण करणारी फिटिंग्ज. मालकांसाठी थोक किंमत उपलब्ध.",
+  "products.ctaTitle": "तुमच्या पिकासाठी कोणता आकार चालेल याची खात्री नाही?",
+  "products.ctaBody": "तुमचे पीक, क्षेत्र व झाडांतील अंतर कळवा. आम्ही लेटरल व्यास, एमिटर अंतर व फिल्टरचा प्रकार शिफारस करू आणि संपूर्ण सिस्टमचा भाव देऊ.",
+  "products.ctaButton": "डिस्ट्रिब्यूटर किंमत मागवा",
+};
+
+function isLocaleKey(value: unknown): value is Locale {
+  return typeof value === "string" && (LOCALES as readonly string[]).includes(value);
+}
+
+/**
+ * The built-in default for a key in a given locale, before any admin
+ * override. Marathi falls back to English; English never falls back to
+ * Marathi, so a half-finished Marathi translation cannot leak Devanagari into
+ * the English site.
+ */
+export function defaultFor(key: string, locale: Locale): string {
+  if (locale === "mr") {
+    const mr = MARATHI_DEFAULTS[key];
+    if (mr) return mr;
+  }
+  return CONTENT_DEF_MAP[key]?.defaultValue ?? "";
+}
+
+/**
+ * Per-locale buckets of stored values.
+ *
+ * Both languages come back from a SINGLE query so adding a language did not
+ * double the database round trips on every page render - the hot path cost
+ * is identical to the previous single-language version.
+ */
+export type ContentMap = Record<Locale, Record<string, string>>;
 
 /**
  * In-process cache for the site content.
@@ -234,9 +378,51 @@ export function invalidateSiteContentCache(): void {
   globalCache.siteContentCache = undefined;
 }
 
-export function content(map: ContentMap | undefined, key: string): string {
-  if (!map) return CONTENT_DEF_MAP[key]?.defaultValue ?? "";
-  return map[key] ?? CONTENT_DEF_MAP[key]?.defaultValue ?? "";
+/**
+ * Resolves one editable string for a locale.
+ *
+ * Order of precedence:
+ *   1. the value an admin saved for THAT locale
+ *   2. the built-in default for THAT locale
+ *   3. the value an admin saved for English (only when reading Marathi)
+ *   4. the built-in English default
+ *
+ * Step 2 before step 3 is the subtle one and it matters a lot. Every row in
+ * the database is currently English, because that is all that existed before
+ * bilingual editing. If the English stored value were consulted first, every
+ * Marathi page would silently render English - the fallback would fire for
+ * all 110 keys and the Marathi defaults in MARATHI_DEFAULTS would never be
+ * reached. Preferring the locale's own default means a Marathi page shows
+ * Marathi as soon as the code ships a Marathi default, and only falls back
+ * to English for keys that genuinely have no Marathi translation yet.
+ *
+ * A stored empty string still wins - that is an admin deliberately clearing
+ * a field, and must not be second-guessed by falling back to a default.
+ */
+export function content(
+  map: ContentMap | undefined,
+  locale: Locale,
+  key: string
+): string {
+  const stored = map?.[locale]?.[key];
+  if (typeof stored === "string") return stored;
+
+  if (locale === "mr") {
+    const mr = MARATHI_DEFAULTS[key];
+    if (mr) return mr;
+  }
+
+  if (locale !== "en") {
+    const english = map?.en?.[key];
+    if (typeof english === "string") return english;
+  }
+
+  return defaultFor(key, locale);
+}
+
+/** Locale-aware convenience wrapper: `t("home.heroTitle")` inside a page. */
+export function translator(map: ContentMap | undefined, locale: Locale) {
+  return (key: string): string => content(map, locale, key);
 }
 
 export async function getSiteContentMap(): Promise<ContentMap> {
@@ -246,10 +432,16 @@ export async function getSiteContentMap(): Promise<ContentMap> {
   }
 
   await connectDB();
-  const docs = await SiteContent.find().select("key value").lean();
-  const map: ContentMap = {};
+  const docs = await SiteContent.find().select("key value locale").lean();
+
+  const map: ContentMap = { mr: {}, en: {} };
   for (const doc of docs) {
-    map[(doc as unknown as { key: string }).key] = (doc as unknown as { value: string }).value;
+    const row = doc as unknown as { key: string; value: string; locale?: string };
+    // Rows written before bilingual editing have no locale field and hold
+    // English copy, so anything unrecognised is filed under "en" rather than
+    // silently becoming the Marathi default.
+    const bucket = isLocaleKey(row.locale) ? row.locale : "en";
+    map[bucket][row.key] = row.value;
   }
 
   globalCache.siteContentCache = { map, expiresAt: Date.now() + CACHE_TTL_MS };

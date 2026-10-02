@@ -4,30 +4,60 @@ import Reveal from "@/components/Reveal";
 import VideoBackground from "@/components/VideoBackground";
 import AnimatedStat from "@/components/AnimatedStat";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
-import { content, getSiteContentMap } from "@/lib/site-content";
+import { getSiteContentMap, translator } from "@/lib/site-content";
+import {
+  DEFAULT_LOCALE,
+  isKnownLocale,
+  localeAlternates,
+  localePath,
+  type Locale,
+} from "@/lib/i18n";
+import { ui } from "@/lib/strings";
 
 export const revalidate = 60;
   // Edit state is resolved client-side (see EditModeContext).
   const editMode = false;
 
-export const metadata: Metadata = {
-  title: "About Us — Irrigation Equipment Supplier in Pachora, Maharashtra",
-  description:
-    "Learn about Tejas Polymers: an irrigation equipment supplier and agricultural machinery manufacturer based in Pachora, Maharashtra, supplying dependable farming equipment and spare parts to dealers and farmers across the region.",
-  keywords: [
-    "irrigation equipment manufacturer Maharashtra",
-    "farm machinery supplier Pachora",
-    "agriculture equipment company Jalgaon",
-    "drip irrigation supplier",
-  ],
-  alternates: { canonical: "/about" },
-};
+type AboutProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: AboutProps): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+  const isMr = locale === "mr";
+
+  const title = isMr
+    ? "आमच्याबद्दल — पाचोरा, महाराष्ट्रातील सिंचन उपकरण पुरवठादार"
+    : "About Us — Irrigation Equipment Supplier in Pachora, Maharashtra";
+  const description = isMr
+    ? "तेजा पॉलिमर्सबद्दल जाणून घ्या: पाचोरा, महाराष्ट्रातीन सिंचन उपकरण पुरवठादार व कृषी अवजारे निर्माता, जे मालक व शेतकरी यांना दुर्लभ नसणारी शेती उपकरणे व स्पेअर पार्ट्स पुरवते."
+    : "Learn about Tejas Polymers: an irrigation equipment supplier and agricultural machinery manufacturer based in Pachora, Maharashtra, supplying dependable farming equipment and spare parts to dealers and farmers across the region.";
+
+  return {
+    title,
+    description,
+    keywords: isMr
+      ? ["ठिबक सिंचन निर्माता महाराष्ट्र", "पाचोरा शेती अवजारे पुरवठादार", "जळगाव कृषी कंपनी"]
+      : [
+          "irrigation equipment manufacturer Maharashtra",
+          "farm machinery supplier Pachora",
+          "agriculture equipment company Jalgaon",
+          "drip irrigation supplier",
+        ],
+    alternates: {
+      canonical: `/${locale}/about`,
+      languages: localeAlternates("/about", true),
+    },
+  };
+}
 
 const VALUE_ICONS = ["🎯", "🤝", "♻️"];
 
-export default async function AboutPage() {
+export default async function AboutPage({ params }: AboutProps) {
+  const { locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+
   const map = await getSiteContentMap();
-  const t = (key: string) => content(map, key);
+  const t = translator(map, locale);
 
   return (
     <>
@@ -37,11 +67,11 @@ export default async function AboutPage() {
         videoId="KnSEkZDC1Ho"
         breadcrumb={
           <nav aria-label="Breadcrumb" className="text-sm text-brand-200">
-            <Link href="/" className="hover:text-white">
-              Home
+            <Link href={localePath(locale, "/")} className="hover:text-white">
+              {ui("breadcrumbHome", locale)}
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-white">About Us</span>
+            <span className="text-white">{t("about.heroTitle")}</span>
           </nav>
         }
         title={
@@ -128,7 +158,7 @@ export default async function AboutPage() {
             </span>
           ) : (
             <Link
-              href={t("about.factoryCtaHref")}
+              href={localePath(locale, t("about.factoryCtaHref"))}
               className="mt-8 inline-block rounded-xl bg-brand-600 px-8 py-3.5 text-sm font-bold text-white shadow transition hover:bg-brand-700"
             >
               {t("about.factoryCtaButton")}

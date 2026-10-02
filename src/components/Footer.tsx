@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { EditableRichText, EditableText } from "@/components/site/Editable";
 import { BrandMark } from "@/components/HeaderClient";
+import { localePath, type Locale } from "@/lib/i18n";
+import { ui } from "@/lib/strings";
 
 type Props = {
+  locale: Locale;
   logoImage: string;
   logoAlt: string;
   wordmarkStart: string;
@@ -14,6 +17,7 @@ type Props = {
 };
 
 export default function Footer({
+  locale,
   logoImage,
   logoAlt,
   wordmarkStart,
@@ -23,6 +27,8 @@ export default function Footer({
   phone,
   address,
 }: Props) {
+  /** Keeps a visitor inside the language they are currently reading. */
+  const href = (path: string) => localePath(locale, path);
   return (
     <footer className="wave-bg-deep text-slate-200">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
@@ -42,27 +48,33 @@ export default function Footer({
         </div>
 
         <nav aria-label="Footer products">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Products</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+            {ui("footerProducts", locale)}
+          </h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link prefetch className="hover:text-white" href="/products?category=flat-inline-drip">Flat Inline Drip</Link></li>
-            <li><Link prefetch className="hover:text-white" href="/products?category=online-drip-emitters">Online Drip &amp; Emitters</Link></li>
-            <li><Link prefetch className="hover:text-white" href="/products?category=filters">Filters</Link></li>
-            <li><Link prefetch className="hover:text-white" href="/products?category=fittings-accessories">Fittings &amp; Accessories</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/products?category=flat-inline-drip")}>{ui("catFlatInlineDrip", locale)}</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/products?category=online-drip-emitters")}>{ui("catOnlineDrip", locale)}</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/products?category=filters")}>{ui("catFilters", locale)}</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/products?category=fittings-accessories")}>{ui("catFittings", locale)}</Link></li>
           </ul>
         </nav>
 
         <nav aria-label="Footer company">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Company</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+            {ui("footerCompany", locale)}
+          </h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link prefetch className="hover:text-white" href="/about">About Us</Link></li>
-            <li><Link prefetch className="hover:text-white" href="/become-a-distributor">Become a Distributor</Link></li>
-            <li><Link prefetch className="hover:text-white" href="/contact">Contact</Link></li>
-            <li><Link prefetch className="hover:text-white" href="/products">All Products</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/about")}>{ui("footerAbout", locale)}</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/become-a-distributor")}>{ui("footerBecomeDistributor", locale)}</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/contact")}>{ui("footerContact", locale)}</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/products")}>{ui("allProducts", locale)}</Link></li>
           </ul>
         </nav>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Contact</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+            {ui("footerContact", locale)}
+          </h3>
           <ul className="mt-4 space-y-2 text-sm text-slate-400">
             <li>
               📧 <EditableText contentKey="footer.contact.email" value={email} as="span" />
@@ -78,7 +90,7 @@ export default function Footer({
       </div>
 
       <div className="border-t border-white/10 py-6 text-center text-xs text-slate-400">
-        © {new Date().getFullYear()} {wordmarkStart} {wordmarkEnd}. All rights reserved.
+        © {new Date().getFullYear()} {wordmarkStart} {wordmarkEnd}. {ui("allRightsReserved", locale)}
       </div>
     </footer>
   );

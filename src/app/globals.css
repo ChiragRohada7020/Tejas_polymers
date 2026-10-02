@@ -1,6 +1,20 @@
 @import "tailwindcss";
 
 @theme {
+  /*
+   * Bilingual font stack.
+   *
+   * Inter carries Latin, Noto Sans Devanagari carries Devanagari. CSS font
+   * stacks resolve per glyph, so a mixed line - the brand name, "IS 13488",
+   * "4 LPH" sitting inside Marathi prose - renders every character in the
+   * correct face automatically, with no per-element language handling.
+   *
+   * Order matters: Inter first so Latin keeps its existing metrics and the
+   * English site is visually unchanged; Devanagari only picks up glyphs
+   * Inter does not have.
+   */
+  --font-sans: var(--font-inter), var(--font-devanagari), ui-sans-serif, system-ui, sans-serif;
+
   --color-brand-50: #f2fbf7;
   --color-brand-100: #dff4ec;
   --color-brand-200: #bfe8d9;

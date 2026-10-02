@@ -1,80 +1,118 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCachedProductBySlug, getCachedProducts } from "@/lib/catalog";
+import { getCachedProductBySlug, getCachedProducts, localizeProduct } from "@/lib/catalog";
 import InquiryForm from "@/components/InquiryForm";
 import ProductCard from "@/components/ProductCard";
 import SafeImage from "@/components/SafeImage";
 import Reveal from "@/components/Reveal";
 import { BRAND_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
+import { categoryName } from "@/lib/models/Category";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_META,
+  isKnownLocale,
+  localeAlternates,
+  localePath,
+  type Locale,
+} from "@/lib/i18n";
+import { ui, specLabel, priceLabel, minOrderLabel } from "@/lib/strings";
 import AdminChrome from "@/components/site/AdminChrome";
 
 export const revalidate = 60;
   // Edit state is resolved client-side (see EditModeContext).
   const editMode = false;
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ slug: string; locale: string }> };
 
 async function getProduct(slug: string) {
   return getCachedProductBySlug(slug);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+
   const data = await getProduct(slug);
-  if (!data) return { title: "Product not found" };
+  if (!data) return { title: ui("productNotFound", locale) };
+
+  // Metadata follows the page's language, so the search snippet a Marathi
+  // query returns is the Marathi description rather than the English one.
   const { product, category } = data;
-  const title = `${product.name} - ${category?.name ?? "Drip Irrigation Product"} | ${BRAND_NAME}`;
+  const localized = localizeProduct(product, locale);
+  const path = `/products/${product.slug}`;
+  const title = `${localized.name} - ${
+    categoryName(category, locale) || ui("dripIrrigationProduct", locale)
+  } | ${BRAND_NAME}`;
+
   return {
     title,
-    description: product.shortDescription,
-    alternates: { canonical: `/products/${product.slug}` },
+    description: localized.shortDescription,
+    alternates: {
+      canonical: localePath(locale, path),
+      languages: localeAlternates(path, true, SITE_URL),
+    },
     openGraph: {
       title,
-      description: product.shortDescription,
-      url: `/products/${product.slug}`,
+      description: localized.shortDescription,
+      url: localePath(locale, path),
       type: "website",
       images: product.imageUrl
-        ? [{ url: product.imageUrl, alt: product.name }]
-        : [{ url: "/images/og/tejas-polymers.jpg", alt: product.name }],
+        ? [{ url: product.imageUrl, alt: localized.name }]
+        : [{ url: "/images/og/tejas-polymers.jpg", alt: localized.name }],
     },
   };
 }
 
 export default async function ProductDetailPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug, locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+
   const data = await getProduct(slug);
   if (!data) notFound();
 
-  const { product, category } = data;
+  const { product: rawProduct, category } = data;
+  const product = localizeProduct(rawProduct, locale);
   const all = await getCachedProducts();
   const related = all
-    .filter((p) => p.category === product.category && p.slug !== product.slug)
-    .slice(0, 3);
+    .filter((p) => p.category === rawProduct.category && p.slug !== rawProduct.slug)
+    .slice(0, 3)
+    .map((p) => localizeProduct(p, locale));
+
+  /*
+   * JSON-LD is rebuilt per locale.
+   *
+   * The absolute URLs must include the locale segment or every language
+   * emits the same @id, and Google treats identical structured data across
+   * different URLs as conflicting rather than as translations. Names come
+   * from the localized product so the rich result matches the visible page.
+   */
+  const productPath = localePath(locale, `/products/${product.slug}`);
 
   const productLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "@id": `${SITE_URL}/products/${product.slug}#product`,
+    "@id": `${SITE_URL}${productPath}#product`,
     name: product.name,
     description: product.shortDescription,
     image: product.imageUrl ? `${SITE_URL}${product.imageUrl}` : `${SITE_URL}/images/og/tejas-polymers.jpg`,
-    category: category?.name,
+    category: categoryName(category, locale) || undefined,
     sku: product.slug,
+    inLanguage: LOCALE_META[locale].htmlLang,
     brand: { "@type": "Brand", name: BRAND_NAME },
     manufacturer: {
       "@type": "Organization",
-      "@id": `${SITE_URL}/#business`,
+      "@id": `${SITE_URL}/${locale}#business`,
       name: SITE_NAME,
       alternateName: BRAND_NAME,
-      url: SITE_URL,
+      url: `${SITE_URL}/${locale}`,
     },
     offers: {
       "@type": "Offer",
-      url: `${SITE_URL}/products/${product.slug}`,
+      url: `${SITE_URL}${productPath}`,
       priceCurrency: "INR",
       availability: "https://schema.org/InStock",
-      seller: { "@id": `${SITE_URL}/#business` },
+      seller: { "@id": `${SITE_URL}/${locale}#business` },
     },
   };
 
@@ -82,15 +120,25 @@ export default async function ProductDetailPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Products", item: `${SITE_URL}/products` },
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: ui("breadcrumbHome", locale),
+        item: `${SITE_URL}/${locale}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: ui("breadcrumbProducts", locale),
+        item: `${SITE_URL}${localePath(locale, "/products")}`,
+      },
       ...(category
         ? [
             {
               "@type": "ListItem",
               position: 3,
-              name: category.name,
-              item: `${SITE_URL}/products?category=${category.slug}`,
+              name: categoryName(category, locale),
+              item: `${SITE_URL}${localePath(locale, `/products?category=${category.slug}`)}`,
             },
           ]
         : []),
@@ -98,7 +146,7 @@ export default async function ProductDetailPage({ params }: Props) {
         "@type": "ListItem",
         position: category ? 4 : 3,
         name: product.name,
-        item: `${SITE_URL}/products/${product.slug}`,
+        item: `${SITE_URL}${productPath}`,
       },
     ],
   };
@@ -139,14 +187,14 @@ export default async function ProductDetailPage({ params }: Props) {
         </AdminChrome>
 
         <nav aria-label="Breadcrumb" className="mb-8 text-sm text-slate-500">
-          <Link href="/" className="hover:text-brand-700">Home</Link>
+          <Link href={localePath(locale, "/")} className="hover:text-brand-700">{ui("breadcrumbHome", locale)}</Link>
           <span className="mx-2">/</span>
-          <Link href="/products" className="hover:text-brand-700">Products</Link>
+          <Link href={localePath(locale, "/products")} className="hover:text-brand-700">{ui("breadcrumbProducts", locale)}</Link>
           {category && (
             <>
               <span className="mx-2">/</span>
-              <Link href={`/products?category=${category.slug}`} className="hover:text-brand-700">
-                {category.name}
+              <Link href={localePath(locale, `/products?category=${category.slug}`)} className="hover:text-brand-700">
+                {categoryName(category, locale)}
               </Link>
             </>
           )}
@@ -166,10 +214,10 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="reveal">
             {category && (
               <Link
-                href={`/products?category=${category.slug}`}
+                href={localePath(locale, `/products?category=${category.slug}`)}
                 className="inline-block rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700"
               >
-                {category.name}
+                {categoryName(category, locale)}
               </Link>
             )}
             <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-900 sm:text-4xl">
@@ -179,13 +227,17 @@ export default async function ProductDetailPage({ params }: Props) {
 
             <div className="mt-6 rounded-xl border border-brand-100 bg-brand-50 p-4">
               <p className="text-sm text-slate-600">
-                {product.price && /₹/.test(product.price) ? "M.R.P. (ex-works)" : "Price"}
+                {product.price && /₹/.test(product.price)
+                  ? ui("mrpExWorks", locale)
+                  : ui("price", locale)}
               </p>
               <p className="mt-1 text-xl font-bold text-brand-800">
-                {product.price || "Contact us for pricing"}
+                {priceLabel(product.price, locale)}
               </p>
               {product.minOrderQty && (
-                <p className="mt-1 text-sm text-slate-500">Minimum order: {product.minOrderQty}</p>
+                <p className="mt-1 text-sm text-slate-500">
+                  {ui("minimumOrder", locale)}: {minOrderLabel(product.minOrderQty, locale)}
+                </p>
               )}
             </div>
 
@@ -196,7 +248,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   .map(([key, value]) => (
                     <div key={key} className="border-b border-slate-100 pb-2">
                       <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                        {key}
+                        {specLabel(key, locale)}
                       </dt>
                       <dd className="mt-0.5 font-medium text-slate-800">{String(value)}</dd>
                     </div>
@@ -208,18 +260,18 @@ export default async function ProductDetailPage({ params }: Props) {
 
         <div className="mt-16 grid gap-10 lg:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-bold text-brand-900">Product Description</h2>
+            <h2 className="text-2xl font-bold text-brand-900">{ui("productDescription", locale)}</h2>
             <p className="mt-4 leading-relaxed text-slate-600">{product.description}</p>
           </div>
           {product.specs && Object.keys(product.specs).length > 0 && (
             <div>
-              <h2 className="text-2xl font-bold text-brand-900">Full Specifications</h2>
+              <h2 className="text-2xl font-bold text-brand-900">{ui("fullSpecifications", locale)}</h2>
               <table className="mt-4 w-full text-sm">
                 <tbody>
                   {Object.entries(product.specs).map(([key, value]) => (
                     <tr key={key} className="border-b border-slate-100">
                       <th scope="row" className="py-3 pr-4 text-left font-medium text-slate-500">
-                        {key}
+                        {specLabel(key, locale)}
                       </th>
                       <td className="py-3 text-right font-medium text-slate-800">{String(value)}</td>
                     </tr>
@@ -232,15 +284,28 @@ export default async function ProductDetailPage({ params }: Props) {
 
         <div className="mt-16 grid gap-10 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-10 lg:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-bold text-brand-900">Interested in {product.name}?</h2>
+            <h2 className="text-2xl font-bold text-brand-900">
+              {locale === "mr"
+                ? `${product.name} मध्ये रुची आहे?`
+                : `Interested in ${product.name}?`}
+            </h2>
             <p className="mt-3 leading-relaxed text-slate-600">
-              Request a quote or distributor terms for this product. Our export team responds
-              within 1 business day with pricing, MOQ and shipping options for your region.
+              {locale === "mr"
+                ? "या उत्पादनासाठी भाव किंवा डिस्ट्रिब्यूटर नियम जाणून घ्या. आमची निर्यात संघ १ कार्यदिवसात किंमत, किमान ऑर्डर व शिपिंग पर्यायांसह उत्तर देते."
+                : "Request a quote or distributor terms for this product. Our export team responds within 1 business day with pricing, MOQ and shipping options for your region."}
             </p>
             <ul className="mt-6 space-y-2 text-sm text-slate-600">
-              <li>Factory-direct pricing</li>
-              <li>Export packaging &amp; documentation</li>
-              <li>Warranty &amp; spare parts support</li>
+              <li>{locale === "mr" ? "कारखान्यातून थेट किंमत" : "Factory-direct pricing"}</li>
+              <li>
+                {locale === "mr"
+                  ? "निर्यात पॅकिंग व कागदपत्रे"
+                  : "Export packaging & documentation"}
+              </li>
+              <li>
+                {locale === "mr"
+                  ? "वॉरंटी व स्पेअर पार्ट्स सहाय्य"
+                  : "Warranty & spare parts support"}
+              </li>
             </ul>
           </div>
           <InquiryForm productId={String(product._id)} productName={product.name} variant="product" />
@@ -248,10 +313,10 @@ export default async function ProductDetailPage({ params }: Props) {
 
         {related.length > 0 && (
           <section className="mt-20">
-            <h2 className="text-2xl font-bold text-brand-900">Related Products</h2>
+            <h2 className="text-2xl font-bold text-brand-900">{ui("relatedProducts", locale)}</h2>
             <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
-                <ProductCard key={String(p._id)} product={p} editMode={editMode} />
+                <ProductCard key={String(p._id)} product={p} locale={locale} editMode={editMode} />
               ))}
             </div>
           </section>

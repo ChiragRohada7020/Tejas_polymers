@@ -16,8 +16,19 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   await connectDB();
-  const docs = await SiteContent.find().select("key value updatedAt").lean();
+  const docs = await SiteContent.find().select("key value locale updatedAt").lean();
   return NextResponse.json({ items: docs });
+}
+
+/**
+ * Reads the locale off a request payload, falling back to English.
+ *
+ * The fallback matters: rows written before bilingual editing have no locale
+ * and hold English copy, so an old or malformed payload must keep writing to
+ * the English bucket rather than silently overwriting Marathi.
+ */
+function resolvePayloadLocale(raw: unknown): "mr" | "en" {
+  return raw === "mr" || raw === "en" ? raw : "en";
 }
 
 export async function PUT(request: Request) {
@@ -37,6 +48,8 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Provide 1–200 content items." }, { status: 400 });
   }
 
+  const locale = resolvePayloadLocale((body as { locale?: unknown }).locale);
+
   await connectDB();
   let saved = 0;
 
@@ -53,7 +66,13 @@ export async function PUT(request: Request) {
     else value = sanitizeImagePath(raw) ?? "";
 
     if (value === null) continue;
-    await SiteContent.updateOne({ key }, { $set: { value, kind: def.kind } }, { upsert: true });
+    // The filter must include locale, otherwise the upsert matches the other
+    // language's row and overwrites the wrong translation.
+    await SiteContent.updateOne(
+      { key, locale },
+      { $set: { value, kind: def.kind, locale } },
+      { upsert: true }
+    );
     saved += 1;
   }
 
@@ -62,5 +81,5 @@ export async function PUT(request: Request) {
   // waiting out the TTL.
   invalidateSiteContentCache();
 
-  return NextResponse.json({ ok: true, saved });
+  return NextResponse.json({ ok: true, saved, locale });
 }

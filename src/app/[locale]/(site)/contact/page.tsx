@@ -4,33 +4,62 @@ import InquiryForm from "@/components/InquiryForm";
 import Reveal from "@/components/Reveal";
 import { EditableRichText, EditableText } from "@/components/site/Editable";
 import { AREA_SERVED, CONTACT, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
-import { content, getSiteContentMap } from "@/lib/site-content";
+import { getSiteContentMap, translator } from "@/lib/site-content";
+import {
+  DEFAULT_LOCALE,
+  isKnownLocale,
+  localeAlternates,
+  localePath,
+  type Locale,
+} from "@/lib/i18n";
+import { ui } from "@/lib/strings";
 
 export const revalidate = 60;
   // Edit state is resolved client-side (see EditModeContext).
   const editMode = false;
 
-export const metadata: Metadata = {
-  title: "Contact Us — Irrigation Equipment Supplier in Pachora, Maharashtra",
-  description:
-    "Contact Tejas Polymers for irrigation equipment quotes, distributor pricing and spare parts. Visit us at Jalgaon Road, Goradakheda, Pachora, Maharashtra 424201. We respond within 1-2 business days.",
-  keywords: [
-    "irrigation equipment supplier contact",
-    "farm equipment dealer Pachora",
-    "agriculture machinery supplier Jalgaon",
-    "drip irrigation price list",
-  ],
-  alternates: { canonical: "/contact" },
+type ContactProps = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ product?: string }>;
 };
 
-export default async function ContactPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ product?: string }>;
-}) {
+export async function generateMetadata({ params }: ContactProps): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+  const isMr = locale === "mr";
+
+  const title = isMr
+    ? "संपर्क करा — पाचोरा, महाराष्ट्रातील सिंचन उपकरण पुरवठादार"
+    : "Contact Us — Irrigation Equipment Supplier in Pachora, Maharashtra";
+  const description = isMr
+    ? "सिंचन उपकरणांच्या भाव, डिस्ट्रिब्यूटर किंमत व स्पेअर पार्ट्ससाठी तेजा पॉलिमर्सशी संपर्क साधा. जळगाव रोड, गोरडाखेडा, पाचोरा, महाराष्ट्र ४२४२०१. आम्ही १-२ कार्यदिवसांत उत्तर देतो."
+    : "Contact Tejas Polymers for irrigation equipment quotes, distributor pricing and spare parts. Visit us at Jalgaon Road, Goradakheda, Pachora, Maharashtra 424201. We respond within 1-2 business days.";
+
+  return {
+    title,
+    description,
+    keywords: isMr
+      ? ["सिंचन उपकरण पुरवठादार संपर्क", "पाचोरा शेती उपकरण डीलर", "जळगाव कृषी अवजारे पुरवठादार", "ठिबक सिंचन किंमतपत्रक"]
+      : [
+          "irrigation equipment supplier contact",
+          "farm equipment dealer Pachora",
+          "agriculture machinery supplier Jalgaon",
+          "drip irrigation price list",
+        ],
+    alternates: {
+      canonical: `/${locale}/contact`,
+      languages: localeAlternates("/contact", true),
+    },
+  };
+}
+
+export default async function ContactPage({ params, searchParams }: ContactProps) {
+  const { locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+
   const { product } = await searchParams;
   const map = await getSiteContentMap();
-  const t = (key: string) => content(map, key);
+  const t = translator(map, locale);
   const email = t("footer.contact.email") || CONTACT.email;
   const phone = t("footer.contact.phone") || CONTACT.phone;
   const address = t("footer.contact.address") || CONTACT.address;
@@ -122,9 +151,9 @@ export default async function ContactPage({
       <section className="wave-bg border-b border-brand-100">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <nav aria-label="Breadcrumb" className="mb-4 text-sm text-slate-600">
-            <Link href="/" className="hover:text-brand-800">Home</Link>
+            <Link href={localePath(locale, "/")} className="hover:text-brand-800">{ui("breadcrumbHome", locale)}</Link>
             <span className="mx-2">/</span>
-            <span className="text-brand-900">Contact</span>
+            <span className="text-brand-900">{ui("footerContact", locale)}</span>
           </nav>
           <h1 className="text-3xl font-extrabold text-brand-950 sm:text-4xl">
             <EditableText contentKey="contact.heroTitle" editMode={editMode} value={t("contact.heroTitle")} as="span" />
@@ -143,25 +172,25 @@ export default async function ContactPage({
             </h2>
             <dl className="mt-6 space-y-5 text-sm">
               <div>
-                <dt className="font-semibold text-slate-500">Email</dt>
+                <dt className="font-semibold text-slate-500">{ui("labelEmail", locale)}</dt>
                 <dd className="mt-1 text-slate-800">
                   <EditableText contentKey="footer.contact.email" editMode={editMode} value={email} as="span" />
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold text-slate-500">Phone / WhatsApp</dt>
+                <dt className="font-semibold text-slate-500">{ui("labelPhoneWhatsApp", locale)}</dt>
                 <dd className="mt-1 text-slate-800">
                   <EditableText contentKey="footer.contact.phone" editMode={editMode} value={phone} as="span" />
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold text-slate-500">Factory Address</dt>
+                <dt className="font-semibold text-slate-500">{ui("labelFactoryAddress", locale)}</dt>
                 <dd className="mt-1 text-slate-800">
                   <EditableText contentKey="footer.contact.address" editMode={editMode} value={address} as="span" />
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold text-slate-500">Working Hours</dt>
+                <dt className="font-semibold text-slate-500">{ui("labelWorkingHours", locale)}</dt>
                 <dd className="mt-1 text-slate-800">
                   <EditableText contentKey="contact.hours" editMode={editMode} value={t("contact.hours")} as="span" />
                 </dd>
@@ -185,7 +214,7 @@ export default async function ContactPage({
                 />
               </div>
               <Link
-                href="/become-a-distributor"
+                href={localePath(locale, "/become-a-distributor")}
                 className="mt-3 inline-block text-sm font-semibold text-brand-700 underline hover:text-brand-800"
               >
                 <EditableText

@@ -2,6 +2,8 @@
 
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocale } from "@/components/site/LocaleContext";
+import { ui } from "@/lib/strings";
 
 type Props = {
   /** YouTube video id, e.g. "KnSEkZDC1Ho". */
@@ -74,6 +76,7 @@ export default function VideoBackground({
   breadcrumb,
   videoLabel,
 }: Props) {
+  const locale = useLocale();
   const hostRef = useRef<HTMLDivElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<YouTubePlayer | null>(null);
@@ -324,25 +327,29 @@ export default function VideoBackground({
           <button
             type="button"
             onClick={togglePlay}
-            aria-label={playing ? "Pause background video" : "Play background video"}
+            aria-label={
+              playing
+                ? `${ui("labelVideoPause", locale)} — ${ui("labelBackgroundVideo", locale)}`
+                : `${ui("labelVideoPlay", locale)} — ${ui("labelBackgroundVideo", locale)}`
+            }
             className="inline-flex items-center gap-2 rounded-lg bg-white/15 px-3 py-2 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
-            {playing ? "Pause" : "Play"}
+            {ui(playing ? "labelVideoPause" : "labelVideoPlay", locale)}
           </button>
           <button
             type="button"
             onClick={toggleMute}
-            aria-label={muted ? "Unmute background video" : "Mute background video"}
+            aria-label={ui(muted ? "labelVideoUnmute" : "labelVideoMute", locale)}
             className="inline-flex items-center gap-2 rounded-lg bg-white/15 px-3 py-2 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             <span aria-hidden="true">{muted ? "🔇" : "🔊"}</span>
-            {muted ? "Unmute" : "Mute"}
+            {ui(muted ? "labelVideoUnmute" : "labelVideoMute", locale)}
           </button>
         </div>
 
         {/* Screen-reader only description of the decorative video. */}
-        <p className="sr-only">{videoLabel ?? "Background video"}</p>
+        <p className="sr-only">{videoLabel ?? ui("labelBackgroundVideo", locale)}</p>
       </div>
     </section>
   );

@@ -15,23 +15,64 @@ import {
   SITE_NAME,
   SITE_TAGLINE,
   SITE_URL,
+  SITE_DESCRIPTION_MR,
+  KEYWORDS_MR,
 } from "@/lib/site";
-import { content, getSiteContentMap } from "@/lib/site-content";
+import { getSiteContentMap, translator } from "@/lib/site-content";
+import { localizeProduct } from "@/lib/catalog";
+import { ui, categoryBody } from "@/lib/strings";
+import { categoryName } from "@/lib/models/Category";
+import type { IProduct } from "@/lib/models/Product";
+import {
+  DEFAULT_LOCALE,
+  isKnownLocale,
+  localeAlternates,
+  localePath,
+  type Locale,
+} from "@/lib/i18n";
 
 export const revalidate = 60;
   // Edit state is resolved client-side (see EditModeContext).
   const editMode = false;
 
-export const metadata: Metadata = {
-  title: `${SITE_NAME} — Drip Irrigation Manufacturer in Pachora, Maharashtra`,
-  description: SITE_DESCRIPTION,
-  keywords: KEYWORDS,
-  alternates: { canonical: "/" },
-};
+type HomeProps = { params: Promise<{ locale: string }> };
+
+/**
+ * Per-locale home page metadata.
+ *
+ * Title, description and keywords all switch with the locale, and every
+ * locale advertises the other through hreflang. Google needs both halves:
+ * the translated text to match the query, and the alternates to know the two
+ * URLs are the same page rather than competing duplicates.
+ */
+export async function generateMetadata({ params }: HomeProps): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+  const isMr = locale === "mr";
+
+  const description = isMr ? SITE_DESCRIPTION_MR : SITE_DESCRIPTION;
+  const title = isMr
+    ? `${SITE_NAME} — पाचोरा, महाराष्ट्रातील ठिबक सिंचन निर्माता`
+    : `${SITE_NAME} — Drip Irrigation Manufacturer in Pachora, Maharashtra`;
+
+  return {
+    title,
+    description,
+    keywords: isMr ? KEYWORDS_MR : KEYWORDS,
+    alternates: {
+      canonical: `/${locale}`,
+      languages: localeAlternates("/", true, SITE_URL),
+    },
+    openGraph: { title, description, url: `/${locale}`, locale: isMr ? "mr_IN" : "en_IN" },
+  };
+}
 
 const WHY_ICONS = ["💧", "✅", "🎯", "🌾"];
 
-export default async function HomePage() {
+export default async function HomePage({ params }: HomeProps) {
+  const { locale: raw } = await params;
+  const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
+
   await connectDB();
   const [categories, featured, map] = await Promise.all([
     Category.find().lean(),
@@ -39,7 +80,10 @@ export default async function HomePage() {
     getSiteContentMap(),
   ]);
 
-  const t = (key: string) => content(map, key);
+  const t = translator(map, locale);
+  const featuredLocalized = featured.map((p) =>
+    localizeProduct(p as unknown as IProduct, locale)
+  );
   const stats = [0, 1, 2, 3].map((i) => ({
     value: t(`home.stats.${i}.value`),
     label: t(`home.stats.${i}.label`),
@@ -185,13 +229,13 @@ export default async function HomePage() {
               ) : (
                 <>
                   <Link
-                    href={t("home.primaryCtaHref")}
+                    href={localePath(locale, t("home.primaryCtaHref"))}
                     className="rounded-xl bg-accent-500 px-7 py-3.5 text-sm font-bold text-brand-950 shadow-lg transition hover:bg-accent-400"
                   >
                     {t("home.primaryCtaLabel")} →
                   </Link>
                   <Link
-                    href={t("home.secondaryCtaHref")}
+                    href={localePath(locale, t("home.secondaryCtaHref"))}
                     className="rounded-xl border border-brand-300 bg-white/70 px-7 py-3.5 text-sm font-bold text-brand-800 backdrop-blur transition hover:bg-white"
                   >
                     {t("home.secondaryCtaLabel")}
@@ -242,15 +286,17 @@ export default async function HomePage() {
           {categories.map((cat) => (
             <Link
               key={String(cat._id)}
-              href={`/products?category=${cat.slug}`}
+              href={localePath(locale, `/products?category=${cat.slug}`)}
               className="reveal group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg"
             >
               <h3 className="text-lg font-semibold text-brand-900 group-hover:text-brand-600">
-                {cat.name}
+                {categoryName(cat, locale)}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">{cat.description}</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                {categoryBody(cat.slug, locale, cat.description)}
+              </p>
               <span className="mt-4 inline-block text-sm font-semibold text-brand-600">
-                View products →
+                {ui("viewProducts", locale)}
               </span>
             </Link>
           ))}
@@ -273,15 +319,15 @@ export default async function HomePage() {
           </div>
           <div className="mt-4 text-center">
             <Link
-              href="/products"
+              href={localePath(locale, "/products")}
               className="rounded-lg border border-brand-600 px-5 py-2.5 text-sm font-semibold text-brand-700 transition hover:bg-brand-50"
             >
-              View All Products
+              {ui("allProducts", locale)}
             </Link>
           </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((p) => (
-              <ProductCard key={String(p._id)} product={p} />
+            {featuredLocalized.map((p) => (
+              <ProductCard key={String(p._id)} product={p} locale={locale} />
             ))}
           </div>
         </div>
@@ -337,7 +383,7 @@ export default async function HomePage() {
             </span>
           ) : (
             <Link
-              href={t("home.secondaryCtaHref")}
+              href={localePath(locale, t("home.secondaryCtaHref"))}
               className="mt-8 inline-block rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-brand-800 shadow-lg transition hover:bg-brand-50"
             >
               {t("home.ctaButton")} →
