@@ -6,7 +6,7 @@ import { useLocale } from "@/components/site/LocaleContext";
 import { ui } from "@/lib/strings";
 
 type Props = {
-  /** YouTube video id, e.g. "KnSEkZDC1Ho". */
+  /** YouTube video id, e.g. "lpP569Cv1x0". */
   videoId: string;
   /** Headline text drawn over the video. */
   title?: React.ReactNode;

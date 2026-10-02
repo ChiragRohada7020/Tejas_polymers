@@ -64,7 +64,7 @@ export default async function AboutPage({ params }: AboutProps) {
       <Reveal />
       {/* Company video as a decorative background layer behind the hero. */}
       <VideoBackground
-        videoId="KnSEkZDC1Ho"
+        videoId="lpP569Cv1x0"
         breadcrumb={
           <nav aria-label="Breadcrumb" className="text-sm text-brand-200">
             <Link href={localePath(locale, "/")} className="hover:text-white">
