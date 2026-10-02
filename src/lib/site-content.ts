@@ -40,7 +40,12 @@ const L = (key: string, defaultValue: string, maxLength = 500): ContentDef => ({
 });
 
 export const CONTENT_DEFS: ContentDef[] = [
-  I("brand.logoImage", ""),
+  // The supplied logo is a full lockup: the droplet mark and the wordmark are
+  // both baked into the artwork. BrandMark therefore renders the image on its
+  // own and skips the separate brand.wordmarkStart/End text when this is set,
+  // otherwise the wordmark would appear twice. Those two keys stay in place as
+  // the fallback for when no logo image is available.
+  I("brand.logoImage", "/images/brand/krusheebindoo-logo.png"),
   T("brand.logoAlt", `${BRAND_NAME} logo`, 160),
   T("brand.wordmarkStart", "Krushee", 40),
   T("brand.wordmarkEnd", "bindoo", 40),

@@ -27,6 +27,14 @@ type BrandProps = Pick<
   "logoImage" | "logoAlt" | "wordmarkStart" | "wordmarkEnd"
 > & { dark?: boolean };
 
+/**
+ * The logo artwork is built for a light background: "krushee" is a dark green
+ * and would be close to invisible on the dark footer. Rather than recolour the
+ * client's brand asset, the footer variant sits it on a light plate.
+ */
+const LOGO_CLS = "h-9 w-auto object-contain sm:h-10";
+const DARK_LOGO_CLS = "h-10 w-auto rounded-lg bg-white px-2.5 py-1.5 object-contain";
+
 export function BrandMark({
   logoImage,
   logoAlt,
@@ -46,17 +54,46 @@ export function BrandMark({
     </span>
   );
 
+  // The supplied logo already contains the wordmark, so showing the text on
+  // top of it would print "krusheebindoo" twice. The text is kept as the
+  // fallback for when no logo file is configured, and is still editable in
+  // that case.
+  if (logoImage) {
+    return (
+      <span className="flex items-center">
+        {useIsEditing() ? (
+          <EditableMedia
+            imageKey="brand.logoImage"
+            altKey="brand.logoAlt"
+                        src={logoImage}
+            alt={logoAlt}
+            imgClassName={dark ? DARK_LOGO_CLS : LOGO_CLS}
+            fallback={
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-lg font-black text-white">
+                {(wordmarkStart.charAt(0) || "A").toUpperCase()}
+              </span>
+            }
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logoImage}
+            alt={logoAlt}
+            className={dark ? DARK_LOGO_CLS : LOGO_CLS}
+            // Above the fold on every page, so it should not be lazy.
+            fetchPriority="high"
+          />
+        )}
+      </span>
+    );
+  }
+
   if (!useIsEditing()) {
     return (
       <span className="flex items-center gap-2">
-        {logoImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={logoImage} alt={logoAlt} className="h-9 w-auto rounded-lg object-contain" loading="lazy" />
-        ) : (
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-lg font-black text-white">
-            {(wordmarkStart.charAt(0) || "A").toUpperCase()}
-          </span>
-        )}
+        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-lg font-black text-white">
+          {(wordmarkStart.charAt(0) || "A").toUpperCase()}
+        </span>
         {wordmark}
       </span>
     );
