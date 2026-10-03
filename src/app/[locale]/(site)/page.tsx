@@ -19,6 +19,7 @@ import {
   KEYWORDS_MR,
 } from "@/lib/site";
 import { getSiteContentMap, translator } from "@/lib/site-content";
+import { buildOpenGraph, buildTwitter } from "@/lib/seo";
 import { localizeProduct } from "@/lib/catalog";
 import { ui, categoryBody } from "@/lib/strings";
 import { categoryName } from "@/lib/models/Category";
@@ -50,10 +51,16 @@ export async function generateMetadata({ params }: HomeProps): Promise<Metadata>
   const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
   const isMr = locale === "mr";
 
-  const description = isMr ? SITE_DESCRIPTION_MR : SITE_DESCRIPTION;
+  // Search-result space is roughly 60 characters before truncation, so the
+  // brand leads and the location follows rather than the reverse: "Tejas
+  // Polymers | Drip Irrigation, Pachora" survives a rewrite, whereas a long
+  // descriptive sentence loses its distinguishing tail.
   const title = isMr
-    ? `${SITE_NAME} — पाचोरा, महाराष्ट्रातील ठिबक सिंचन निर्माता`
-    : `${SITE_NAME} — Drip Irrigation Manufacturer in Pachora, Maharashtra`;
+    ? "तेजा पॉलिमर्स | पाचोरा ठिबक सिंचन निर्माता"
+    : "Tejas Polymers | Drip Irrigation, Pachora";
+  const description = isMr
+    ? "पाचोरा, महाराष्ट्रातील ठिबक सिंचन निर्माता. IS 13488 फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन एमिटर, फिल्टर व फिटिंग्ज — पाण्याची ६०% बचत."
+    : "Drip irrigation manufacturer in Pachora, Maharashtra. IS 13488 flat inline drip laterals, on-line emitters, filters and fittings. Save up to 60% water.";
 
   return {
     title,
@@ -63,7 +70,10 @@ export async function generateMetadata({ params }: HomeProps): Promise<Metadata>
       canonical: `/${locale}`,
       languages: localeAlternates("/", true, SITE_URL),
     },
-    openGraph: { title, description, url: `/${locale}`, locale: isMr ? "mr_IN" : "en_IN" },
+    // Built via the shared helper: a bare `openGraph` object here would replace
+    // the layout's block outright and silently drop the share image.
+    openGraph: buildOpenGraph({ locale, title, description, path: `/${locale}` }),
+    twitter: buildTwitter({ title, description }),
   };
 }
 

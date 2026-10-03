@@ -139,6 +139,12 @@ export const CONTENT_DEFS: ContentDef[] = [
     "Krusheebindoo is the drip irrigation brand of Tejas Polymers — a manufacturer of the full range of inline and online drip products at Goradakheda, Pachora, in Jalgaon district, Maharashtra."
   ),
   T("about.storyTitle", "Our Story", 120),
+  T("about.videoTitle", "See Our Work", 120),
+  T(
+    "about.videoBody",
+    "A short look inside the Goradakheda works — the line, the quality checks and the finished rolls.",
+    200
+  ),
   R(
     "about.storyBody",
     "<p>Tejas Polymers manufactures the Krusheebindoo range of inline and online drip irrigation products from our works at Survey No. 152/3, behind Sugaran Dairy, Goradakheda, Pachora. We produce flat inline drip laterals to IS 13488, on-line drippers and pressure-compensating emitters, screen and disc filters, and the fittings that complete a system.</p><p class=\"mt-4\">Maharashtra farms know the problem well: water is not always there when the crop needs it, and what is pumped is not always used by the plant. Our answer is simple engineering — a measured 4 litres per hour, delivered at the root zone, repeated evenly along the row. Done properly, that is where the water savings come from, and the savings show up in the power bill as much as in the yield.</p><p class=\"mt-4\">Every roll leaves our line checked and marked to standard, because a blocked emitter is the difference between a system that pays for itself and one that disappoints the farmer who bought it.</p>"
@@ -293,6 +299,8 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   "about.heroTitle": "ठिबक सिंचन उत्पादक. प्रत्येक थेंबाचे काळजीपालन.",
   "about.heroBody": "कृष्हीबिंडू हे तेजा पॉलिमर्सचा ठिबक सिंचन ब्रँड आहे — महाराष्ट्रातील जळगाव जिल्ह्यातील पाचोरा येथील गोरडाखेडा येथे इनलाइन व ऑनलाइन ठिबक उत्पादनांची संपूर्ण श्रृंखला तयार करणारा निर्माता.",
   "about.storyTitle": "आमची ओळख",
+  "about.videoTitle": "आमचे काम पहा",
+  "about.videoBody": "गोरडाखेडा कारखान्याची लघु झलक — उत्पादन ओळ, गुणवत्ता तपासणी आणि तयार रोल.",
   "about.storyBody": "<p>तेजा पॉलिमर्स सर्व्हे नं. १५२/३, सुगरान डेअरीच्या मागे, गोरडाखेडा, पाचोरा येथील कारखान्यातून कृष्हीबिंडू श्रृंखलेतील इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादने तयार करते. आम्ही IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन ड्रिपर्स व दाब-भरित एमिटर, स्क्रीन व डिस्क फिल्टर, आणि सिस्टम पूर्ण करणारी फिटिंग्ज तयार करतो.</p><p class=\"mt-4\">महाराष्ट्रातील शेतांना हा प्रश्न चांगलाच माहीत आहे: पीक जेवढ्या वेळेला पाणी लागेल तेवढे पाणी नेहमी असत नाही, आणि पंप केलेले पाणी झाडाला पूर्ण वापरले जात नाही. आमचा उपाय साधा इंजिनियरिंग आहे — तासाला ४ लिटर मापून, मुळांच्या क्षेत्रापर्यंत नेऊन, ओळीभर समान पद्धतीने पुन्हा. नीट केल्यास पाण्याची बचत इथूनच येते, आणि ही बचत उत्पादनापेक्षा जास्त वीज बिलात दिसते.</p><p class=\"mt-4\">प्रत्येक रोल मानकानुसार तपासलेला आणि चिन्हांकित आपल्या ओळीतून जातो, कारण बंद पडलेला एमिटर म्हणजे स्वतःचा खर्च वसूल करणारे सिस्टम आणि खरेदी करणाऱ्या शेतकऱ्याची निराशा यातला फरक आहे.</p>",
   "about.stats.0.label": "प्रमाणित मानक",
   "about.stats.1.label": "पाणी बचत",

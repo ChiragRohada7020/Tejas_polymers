@@ -6,7 +6,14 @@ import AnimatedStat from "@/components/AnimatedStat";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import { getSiteContentMap, translator } from "@/lib/site-content";
 import {
+  breadcrumbJsonLd,
+  jsonLdScript,
+  organizationJsonLd,
+} from "@/lib/seo";
+import { SITE_URL } from "@/lib/site";
+import {
   DEFAULT_LOCALE,
+  LOCALE_META,
   isKnownLocale,
   localeAlternates,
   localePath,
@@ -26,11 +33,11 @@ export async function generateMetadata({ params }: AboutProps): Promise<Metadata
   const isMr = locale === "mr";
 
   const title = isMr
-    ? "आमच्याबद्दल — पाचोरा, महाराष्ट्रातील सिंचन उपकरण पुरवठादार"
-    : "About Us — Irrigation Equipment Supplier in Pachora, Maharashtra";
+    ? "आमच्याबद्दल | तेजा पॉलिमर्स, पाचोरा"
+    : "About Us | Tejas Polymers, Pachora";
   const description = isMr
-    ? "तेजा पॉलिमर्सबद्दल जाणून घ्या: पाचोरा, महाराष्ट्रातीन सिंचन उपकरण पुरवठादार व कृषी अवजारे निर्माता, जे मालक व शेतकरी यांना दुर्लभ नसणारी शेती उपकरणे व स्पेअर पार्ट्स पुरवते."
-    : "Learn about Tejas Polymers: an irrigation equipment supplier and agricultural machinery manufacturer based in Pachora, Maharashtra, supplying dependable farming equipment and spare parts to dealers and farmers across the region.";
+    ? "पाचोरा, महाराष्ट्रातील सिंचन उपकरण निर्माता व पुरवठादार. IS 13488 प्रमाणित ठिबक सिंचन उत्पादने, मालक व शेतकरी यांना दुर्लभ नसणारी उपकरणे."
+    : "Drip irrigation equipment manufacturer and supplier in Pachora, Maharashtra. IS 13488 certified products supplied to dealers and farmers across the region.";
 
   return {
     title,
@@ -59,33 +66,54 @@ export default async function AboutPage({ params }: AboutProps) {
   const map = await getSiteContentMap();
   const t = translator(map, locale);
 
+  const isMr = locale === "mr";
+  // AboutPage carries the Organization node so the business entity can be tied
+  // to its own story page, plus a breadcrumb mirroring the visible nav.
+  const aboutLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: isMr ? "तेजा पॉलिमर्सबद्दल" : "About Tejas Polymers",
+    url: `${SITE_URL}/${locale}/about`,
+    inLanguage: LOCALE_META[locale].htmlLang,
+    mainEntity: organizationJsonLd(locale),
+  };
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: ui("breadcrumbHome", locale), path: `/${locale}` },
+    {
+      name: isMr ? "आमच्याबद्दल" : "About",
+      path: `/${locale}/about`,
+    },
+  ]);
+
   return (
     <>
       <Reveal />
-      {/* Company video as a decorative background layer behind the hero. */}
-      <VideoBackground
-        videoId="lpP569Cv1x0"
-        breadcrumb={
-          <nav aria-label="Breadcrumb" className="text-sm text-brand-200">
-            <Link href={localePath(locale, "/")} className="hover:text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(aboutLd, breadcrumbLd) }}
+      />
+      {/* Static hero. This deliberately does NOT use VideoBackground any more:
+          the footage used to sit behind the headline as a decorative layer,
+          which left the hero dark, unreadable behind moving images, and made
+          the video impossible to pause properly for motion-sensitive visitors.
+          The video now has its own section further down the page. */}
+      <section className="wave-bg border-b border-brand-100">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+          <nav aria-label="Breadcrumb" className="mb-4 text-sm text-slate-600">
+            <Link href={localePath(locale, "/")} className="hover:text-brand-800">
               {ui("breadcrumbHome", locale)}
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-white">{t("about.heroTitle")}</span>
+            <span className="text-brand-900">{t("about.heroTitle")}</span>
           </nav>
-        }
-        title={
-          <EditableText
-            contentKey="about.heroTitle"
-            editMode={editMode}
-            value={t("about.heroTitle")}
-            as="span"
-          />
-        }
-        subtitle={
-          <EditableRichText contentKey="about.heroBody" editMode={editMode} value={t("about.heroBody")} />
-        }
-      />
+          <h1 className="text-3xl font-extrabold text-brand-950 sm:text-4xl">
+            <EditableText contentKey="about.heroTitle" editMode={editMode} value={t("about.heroTitle")} as="span" />
+          </h1>
+          <div className="mt-3 max-w-2xl text-slate-700">
+            <EditableRichText contentKey="about.heroBody" editMode={editMode} value={t("about.heroBody")} />
+          </div>
+        </div>
+      </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2">
@@ -114,6 +142,23 @@ export default async function AboutPage({ params }: AboutProps) {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Video gets its own section rather than sitting behind the hero.
+          Inline means it uses the YouTube player's own controls, does not
+          autoplay, and does not compete with the headline for attention. */}
+      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+        <div className="reveal mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold text-brand-900">
+            <EditableText contentKey="about.videoTitle" editMode={editMode} value={t("about.videoTitle")} as="span" />
+          </h2>
+          <p className="mt-3 text-slate-600">
+            <EditableText contentKey="about.videoBody" editMode={editMode} value={t("about.videoBody")} as="span" />
+          </p>
+        </div>
+        <div className="reveal mx-auto mt-8 max-w-4xl">
+          <VideoBackground videoId="lpP569Cv1x0" variant="inline" />
         </div>
       </section>
 

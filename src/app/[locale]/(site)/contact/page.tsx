@@ -29,11 +29,11 @@ export async function generateMetadata({ params }: ContactProps): Promise<Metada
   const isMr = locale === "mr";
 
   const title = isMr
-    ? "संपर्क करा — पाचोरा, महाराष्ट्रातील सिंचन उपकरण पुरवठादार"
-    : "Contact Us — Irrigation Equipment Supplier in Pachora, Maharashtra";
+    ? "संपर्क | तेजा पॉलिमर्स, पाचोरा"
+    : "Contact | Tejas Polymers, Pachora";
   const description = isMr
-    ? "सिंचन उपकरणांच्या भाव, डिस्ट्रिब्यूटर किंमत व स्पेअर पार्ट्ससाठी तेजा पॉलिमर्सशी संपर्क साधा. जळगाव रोड, गोरडाखेडा, पाचोरा, महाराष्ट्र ४२४२०१. आम्ही १-२ कार्यदिवसांत उत्तर देतो."
-    : "Contact Tejas Polymers for irrigation equipment quotes, distributor pricing and spare parts. Visit us at Jalgaon Road, Goradakheda, Pachora, Maharashtra 424201. We respond within 1-2 business days.";
+    ? "सिंचन उपकरणांच्या भाव व डिस्ट्रिब्यूटर किंमतसाठी संपर्क साधा. गोरडाखेडा, पाचोरा, महाराष्ट्र ४२४२०१. १-२ कार्यदिवसांत उत्तर."
+    : "Contact us for irrigation equipment quotes and distributor pricing. Goradakheda, Pachora, Maharashtra 424201. We respond within 1-2 business days.";
 
   return {
     title,

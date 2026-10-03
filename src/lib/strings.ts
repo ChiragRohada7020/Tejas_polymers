@@ -149,6 +149,7 @@ const STRINGS = {
   labelVideoUnmute: { en: "Unmute", mr: "आवाज चालू करा" },
   labelVideoMute: { en: "Mute", mr: "आवाज बंद करा" },
   labelBackgroundVideo: { en: "Background video", mr: "पार्श्वभूमीचा व्हिडिओ" },
+  labelCompanyVideo: { en: "Company video", mr: "कंपनीचा व्हिडिओ" },
 } as const;
 
 export type StringKey = keyof typeof STRINGS;

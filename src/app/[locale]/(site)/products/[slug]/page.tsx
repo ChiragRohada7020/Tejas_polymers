@@ -7,6 +7,7 @@ import ProductCard from "@/components/ProductCard";
 import SafeImage from "@/components/SafeImage";
 import Reveal from "@/components/Reveal";
 import { BRAND_NAME, SITE_NAME, SITE_URL } from "@/lib/site";
+import { buildOpenGraph, buildTwitter } from "@/lib/seo";
 import { categoryName } from "@/lib/models/Category";
 import {
   DEFAULT_LOCALE,
@@ -41,26 +42,46 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { product, category } = data;
   const localized = localizeProduct(product, locale);
   const path = `/products/${product.slug}`;
-  const title = `${localized.name} - ${
-    categoryName(category, locale) || ui("dripIrrigationProduct", locale)
-  } | ${BRAND_NAME}`;
+
+  // Product names are already long and specific ("Krusheebindoo Flat Inline
+  // Drip 16 mm - 4 LPH - 30 cm"), so appending the category and brand pushed
+  // these titles past 110 characters and Google truncated away the
+  // distinguishing spec. The brand is now folded into the name only when the
+  // stored name does not already carry it, and the category is dropped from
+  // the title since it repeats in the breadcrumb and the H1.
+  const name = localized.name;
+  const brand = BRAND_NAME;
+  const withBrand = name.toLowerCase().includes(brand.toLowerCase())
+    ? name
+    : `${name} | ${brand}`;
+  const title = withBrand.length > 95 ? withBrand.slice(0, 92).trim() : withBrand;
+
+  // Clamp the description too: Google cuts around 155-160 characters, so
+  // anything past that is only feeding the snippet's ellipsis.
+  const rawDesc = (localized.shortDescription || "").trim();
+  const description =
+    rawDesc.length > 158 ? `${rawDesc.slice(0, 155).trimEnd()}…` : rawDesc;
 
   return {
     title,
-    description: localized.shortDescription,
+    description,
     alternates: {
       canonical: localePath(locale, path),
       languages: localeAlternates(path, true, SITE_URL),
     },
-    openGraph: {
+    openGraph: buildOpenGraph({
+      locale,
       title,
-      description: localized.shortDescription,
-      url: localePath(locale, path),
-      type: "website",
-      images: product.imageUrl
-        ? [{ url: product.imageUrl, alt: localized.name }]
-        : [{ url: "/images/og/tejas-polymers.jpg", alt: localized.name }],
-    },
+      description,
+      path: localePath(locale, path),
+      image: product.imageUrl || undefined,
+      imageAlt: localized.name,
+    }),
+    twitter: buildTwitter({
+      title,
+      description,
+      image: product.imageUrl || undefined,
+    }),
   };
 }
 
@@ -247,7 +268,13 @@ export default async function ProductDetailPage({ params }: Props) {
                   .slice(0, 6)
                   .map(([key, value]) => (
                     <div key={key} className="border-b border-slate-100 pb-2">
-                      <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                      {/*
+                        * slate-400 on white is only 2.6:1, which fails WCAG AA
+                        * for text this small. slate-600 clears 4.5:1 with room
+                        * to spare, and the uppercase/letter-spacing still
+                        * carries the "label" reading.
+                        */}
+                      <dt className="text-xs font-medium uppercase tracking-wide text-slate-600">
                         {specLabel(key, locale)}
                       </dt>
                       <dd className="mt-0.5 font-medium text-slate-800">{String(value)}</dd>

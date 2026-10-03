@@ -5,10 +5,26 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale } from "@/components/site/LocaleContext";
 import { ui } from "@/lib/strings";
 
+/**
+ * How the video is presented:
+ *
+ * - "background" fills a dark hero with the headline laid over the footage.
+ * - "inline" puts the same player in its own rounded 16:9 box, as content in
+ *   the page rather than atmosphere.
+ *
+ * Both variants autoplay muted and hide YouTube's own control bar, because
+ * that bar is what makes an embed read as "a YouTube video" rather than as
+ * footage from this company. We supply the Play/Pause and Mute buttons
+ * ourselves, which also keeps WCAG 2.2.2 satisfied: autoplaying motion must
+ * offer a way to stop it.
+ */
+type Variant = "background" | "inline";
+
 type Props = {
   /** YouTube video id, e.g. "lpP569Cv1x0". */
   videoId: string;
-  /** Headline text drawn over the video. */
+  variant?: Variant;
+  /** Headline text drawn over the video. Only used by the "background" variant. */
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   breadcrumb?: React.ReactNode;
@@ -71,12 +87,14 @@ function loadYouTubeApi(): Promise<void> {
 
 export default function VideoBackground({
   videoId,
+  variant = "background",
   title,
   subtitle,
   breadcrumb,
   videoLabel,
 }: Props) {
   const locale = useLocale();
+  const isInline = variant === "inline";
   const hostRef = useRef<HTMLDivElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<YouTubePlayer | null>(null);
@@ -99,9 +117,18 @@ export default function VideoBackground({
         videoId,
         playerVars: {
           autoplay: 1,
-          // Without this the browser blocks autoplay outright.
+          // Without this the browser blocks autoplay outright. Muting is the
+          // only condition browsers allow, so autoplay and silence are the
+          // same switch - the visible Unmute button is how visitors opt in.
           mute: 1,
+          // The player's own control bar is what makes an embed look like a
+          // YouTube video: branded logo button, "Watch on YouTube" link, red
+          // progress bar. controls:0 removes the whole bar and logo:0 drops
+          // the corner logo, leaving the footage itself clean.
           controls: 0,
+          logo: 0,
+          // No keyboard hijacking (the page has its own shortcuts and focus
+          // order) and no fullscreen button, which needs a visible bar.
           disablekb: 1,
           fs: 0,
           cc_load_policy: 0,
@@ -181,6 +208,13 @@ export default function VideoBackground({
     const player = playerRef.current;
     if (!ready || !wrap || !player) return;
 
+    // Both variants use the same cover maths. The inline box is exactly 16:9
+    // so the scale resolves to 1 and nothing is cropped; the hero box is a
+    // different ratio and does need the cover scale.
+    //
+    // pointerEvents stays off in both cases so clicks reach our own controls,
+    // which are siblings above the video layer and are explicitly set back
+    // to pointer-events-auto.
     const VIDEO_RATIO = 16 / 9;
 
     const fit = () => {
@@ -262,6 +296,81 @@ export default function VideoBackground({
   }, []);
 
   if (!videoId) return null;
+
+  if (isInline) {
+    return (
+      <figure className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-sm">
+        {/* aspect-video reserves the space before the iframe exists, so the
+            page never jumps as the player loads. It is also the measured
+            box the fit effect scales the iframe against. */}
+        <div className="relative aspect-video w-full" ref={wrapRef}>
+          {/* Poster underneath: covers the gap before the iframe paints, and
+              stays put if the video cannot be embedded at all. */}
+          <img
+            // eslint-disable-next-line @next/next/no-img-element
+            src={posterSrc ?? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+            alt=""
+            aria-hidden="true"
+            onError={() => {
+              if (posterSrc) return;
+              setPosterSrc(`https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`);
+            }}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+              playing ? "opacity-0" : "opacity-100"
+            }`}
+          />
+          {/* The API replaces this div with the <iframe>. */}
+          <div ref={hostRef} />
+
+          {/*
+            Only a bottom gradient, and only under the controls. The hero
+            variant needs a full-frame scrim because copy sits on the video;
+            here nothing overlaps the footage, so darkening the whole picture
+            would just make it look murky.
+          */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/80 to-transparent"
+          />
+
+          {/*
+            Autoplaying motion needs a way to stop it (WCAG 2.2.2), and since
+            the YouTube bar is hidden these buttons are the only controls.
+            The wrapper is pointer-events-none so clicks fall through to the
+            page; each button opts back in.
+          */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-end gap-2 p-3">
+            <button
+              type="button"
+              onClick={togglePlay}
+              aria-label={
+                playing
+                  ? `${ui("labelVideoPause", locale)} — ${ui("labelCompanyVideo", locale)}`
+                  : `${ui("labelVideoPlay", locale)} — ${ui("labelCompanyVideo", locale)}`
+              }
+              className="pointer-events-auto inline-flex items-center gap-2 rounded-lg bg-white/15 px-3 py-2 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
+              {ui(playing ? "labelVideoPause" : "labelVideoPlay", locale)}
+            </button>
+            <button
+              type="button"
+              onClick={toggleMute}
+              aria-label={ui(muted ? "labelVideoUnmute" : "labelVideoMute", locale)}
+              className="pointer-events-auto inline-flex items-center gap-2 rounded-lg bg-white/15 px-3 py-2 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <span aria-hidden="true">{muted ? "🔇" : "🔊"}</span>
+              {ui(muted ? "labelVideoUnmute" : "labelVideoMute", locale)}
+            </button>
+          </div>
+        </div>
+        <figcaption className="sr-only">
+          {videoLabel ?? ui("labelCompanyVideo", locale)}
+        </figcaption>
+      </figure>
+    );
+  }
+
   return (
     <section className="wave-bg-deep relative isolate overflow-hidden">
       {/* Video layer */}

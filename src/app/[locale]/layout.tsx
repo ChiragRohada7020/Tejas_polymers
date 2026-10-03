@@ -3,6 +3,7 @@ import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 import "../globals.css";
 import { CONTACT, KEYWORDS, KEYWORDS_MR, SITE_DESCRIPTION, SITE_DESCRIPTION_MR, SITE_NAME, SITE_URL } from "@/lib/site";
 import { DEFAULT_LOCALE, LOCALES, LOCALE_META, isKnownLocale, localeAlternates, type Locale } from "@/lib/i18n";
+import { buildOpenGraph, buildTwitter } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 const notoDevanagari = Noto_Sans_Devanagari({
@@ -62,28 +63,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `/${locale}`,
       languages: localeAlternates("/", true, SITE_URL),
     },
-    openGraph: {
-      type: "website",
-      siteName: SITE_NAME,
-      locale: meta.ogLocale,
-      url: `${SITE_URL}/${locale}`,
+    openGraph: buildOpenGraph({
+      locale,
       title: ogHeading,
       description,
-      images: [
-        {
-          url: "/images/og/tejas-polymers.jpg",
-          width: 1200,
-          height: 630,
-          alt: ogHeading,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: ogHeading,
-      description,
-      images: ["/images/og/tejas-polymers.jpg"],
-    },
+      path: `/${locale}`,
+    }),
+    twitter: buildTwitter({ title: ogHeading, description }),
     robots: {
       index: true,
       follow: true,

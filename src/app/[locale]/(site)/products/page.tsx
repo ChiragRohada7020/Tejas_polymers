@@ -5,15 +5,18 @@ import ProductCard from "@/components/ProductCard";
 import Reveal from "@/components/Reveal";
 import { EditableLink, EditableRichText, EditableText } from "@/components/site/Editable";
 import { getSiteContentMap, translator } from "@/lib/site-content";
+import { breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 import { localizeProduct } from "@/lib/catalog";
 import { categoryName } from "@/lib/models/Category";
 import {
   DEFAULT_LOCALE,
+  LOCALE_META,
   isKnownLocale,
   localeAlternates,
   localePath,
   type Locale,
 } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/site";
 import { productsFoundFor, ui, categoryBody } from "@/lib/strings";
 import AdminChrome from "@/components/site/AdminChrome";
 
@@ -31,12 +34,14 @@ export async function generateMetadata({ params }: ProductsProps): Promise<Metad
   const locale: Locale = isKnownLocale(raw) ? (raw as Locale) : DEFAULT_LOCALE;
   const isMr = locale === "mr";
 
+  // Kept near 60 characters so the service and the place both survive the
+  // search-result rewrite; the older phrasing was cut mid-phrase.
   const title = isMr
-    ? "ठिबक सिंचन उत्पादने — इनलाइन ठिबक, एमिटर, फिल्टर व फिटिंग्ज"
-    : "Drip Irrigation Products — Inline Drip, Emitters, Filters & Fittings";
+    ? "ठिबक सिंचन उत्पादने | तेजा पॉलिमर्स"
+    : "Drip Irrigation Products | Tejas Polymers";
   const description = isMr
-    ? "कृष्हीबिंडूची संपूर्ण श्रृंखला पहा: IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल १२ मिमी व १६ मिमी, ४ व ८ LPH ऑनलाइन ड्रिपर्स, दाब-भरित एमिटर, स्क्रीन व डिस्क फिल्टर, ग्रोमेट, एंड कॅप व टेक-ऑफ कनेक्टर. जळगाव, धुले, नंदुरबार व संपूर्ण महाराष्ट्रातील मालकांसाठी निर्माता किंमत."
-    : "Browse Krusheebindoo by Tejas Polymers: IS 13488 certified flat inline drip laterals in 12 mm and 16 mm, online drippers 4 and 8 LPH, pressure-compensating emitters, screen and disc filters, grommets, end caps and take-off connectors. Manufacturer pricing for dealers in Jalgaon, Dhule, Nandurbar and across Maharashtra.";
+    ? "IS 13488 फ्लॅट इनलाइन ठिबक लेटरल १२ व १६ मिमी, ४ व ८ LPH ऑनलाइन ड्रिपर्स, स्क्रीन व डिस्क फिल्टर, ग्रोमेट व फिटिंग्ज."
+    : "IS 13488 flat inline drip laterals in 12 mm and 16 mm, 4 and 8 LPH online drippers, screen and disc filters, grommets and fittings.";
 
   return {
     title,
@@ -108,9 +113,54 @@ export default async function ProductsPage({ params, searchParams }: ProductsPro
   const t = translator(map, locale);
   const activeCat = categories.find((c) => c.slug === category);
 
+  const isMr = locale === "mr";
+  const pagePath = category
+    ? `/${locale}/products?category=${category}`
+    : `/${locale}/products`;
+
+  /*
+   * ItemList + CollectionPage: this is the catalogue's main index, so telling
+   * Google what it actually lists (and in what order) helps it understand the
+   * page rather than treating it as a thin shell. Built from the same
+   * filtered/localised array that renders, so the markup cannot drift from
+   * the visible cards.
+   */
+  const listLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: activeCat
+      ? categoryName(activeCat, locale)
+      : isMr
+        ? "ठिबक सिंचन उत्पादने"
+        : "Drip Irrigation Products",
+    url: `${SITE_URL}${pagePath}`,
+    inLanguage: LOCALE_META[locale].htmlLang,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: products.length,
+      itemListElement: products.slice(0, 100).map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: p.name,
+        url: `${SITE_URL}${localePath(locale, `/products/${p.slug}`)}`,
+      })),
+    },
+  };
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: ui("breadcrumbHome", locale), path: `/${locale}` },
+    { name: ui("breadcrumbProducts", locale), path: `/${locale}/products` },
+    ...(activeCat
+      ? [{ name: categoryName(activeCat, locale), path: pagePath }]
+      : []),
+  ]);
+
   return (
     <>
       <Reveal />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(listLd, breadcrumbLd) }}
+      />
       {/* Page header */}
       <section className="wave-bg border-b border-brand-100">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -219,7 +269,13 @@ export default async function ProductsPage({ params, searchParams }: ProductsPro
         ) : (
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((p) => (
-              <ProductCard key={String(p._id)} product={p} locale={locale} editMode={editMode} />
+              <ProductCard
+                key={String(p._id)}
+                product={p}
+                locale={locale}
+                editMode={editMode}
+                headingLevel="h2"
+              />
             ))}
           </div>
         )}

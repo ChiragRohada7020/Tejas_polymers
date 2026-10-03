@@ -9,13 +9,22 @@ export default function ProductCard({
   product,
   locale,
   editMode = false,
+  headingLevel = "h3",
 }: {
   /** Must already have been passed through localizeProduct() by the caller. */
   product: IProduct;
   locale: Locale;
   editMode?: boolean;
+  /**
+   * Cards sit under different ancestors depending on where they render: the
+   * home page groups them beneath a section heading (so h3 is correct), while
+   * the products listing hangs them directly off the page h1 (where h3 would
+   * skip a level). Callers pass h2 there to keep the outline contiguous.
+   */
+  headingLevel?: "h2" | "h3";
 }) {
   const detailHref = localePath(locale, `/products/${product.slug}`);
+  const Heading = headingLevel;
   return (
     <article className="reveal group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
       <div className="relative aspect-[4/3] overflow-hidden bg-brand-50">
@@ -45,11 +54,11 @@ export default function ProductCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-base font-semibold text-brand-900">
+        <Heading className="text-base font-semibold text-brand-900">
           <Link href={detailHref} className="hover:text-brand-600">
             {product.name}
           </Link>
-        </h3>
+        </Heading>
         <p className="mt-2 line-clamp-2 flex-1 text-sm text-slate-600">{product.shortDescription}</p>
 
         <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
