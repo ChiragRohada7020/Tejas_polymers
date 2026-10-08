@@ -58,6 +58,24 @@ explicitly in `src/lib/seo.ts` (`SITE_ICONS`) rather than via `app/icon.png`, be
 Google Search needs a stable, unhashed icon URL. Replace the SVG product images in
 `public/images/` with real photos (same filenames) whenever they are available.
 
+## Guides
+
+`/mr/blog` and `/en/blog` hold long-form articles that answer a question a grower
+would actually search for — 12 mm or 16 mm, 30 cm or 40 cm spacing, screen or disc
+filter — and each one links to the single product it recommends.
+
+The article text is typed in `src/lib/blog.ts`, not stored in the database. Bodies
+are structured (sections and FAQs) and referenced by JSON-LD, so a malformed row
+would corrupt structured data rather than merely look wrong. Typing them also makes
+a missing translation a compile error, exactly like `STRINGS` in `src/lib/strings.ts`.
+One rule when adding a guide: **every figure quoted must already exist in the
+product's own spec table** — the spec table, hero image and call to action are
+pulled from the live product, so a guide cannot drift out of sync with the catalog.
+
+The guides are deliberately **not** in the main navigation; they are reachable from
+the footer, from each other, and from `sitemap.xml`. If you ever want them competing
+with the catalog for attention, add them to the nav in `src/components/HeaderClient.tsx`.
+
 ## Project Structure
 
 ```
@@ -71,6 +89,7 @@ src/
     (site)/             # Public pages (share Header/Footer)
       page.tsx          # Home
       products/         # Catalog + [slug] detail page
+      blog/             # Guides index + [slug] article (text in lib/blog.ts)
       about/ contact/ become-a-distributor/
     admin/
       login/            # Admin sign-in
