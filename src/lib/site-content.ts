@@ -189,7 +189,7 @@ export const CONTENT_DEFS: ContentDef[] = [
   T("distributor.lookingTitle", "Who We're Looking For", 120),
   R(
     "distributor.lookingList",
-    "<ul class=\"space-y-4\"><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\"></span> Existing agri-input, hardware or equipment business</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\"></span> Warehouse or showroom space for stock</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\"></span> Technical staff for assembly &amp; basic service</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\"></span> Motivation to build long-term market presence</li></ul>"
+    "<ul class=\"space-y-4\"><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\">✓</span> Existing agri-input, hardware or equipment business</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\">✓</span> Warehouse or showroom space for stock</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\">✓</span> Technical staff for assembly &amp; basic service</li><li class=\"flex gap-3\"><span class=\"text-brand-600 font-bold\">✓</span> Motivation to build long-term market presence</li></ul>"
   ),
   T("distributor.processTitle", "How it works", 120),
   R(
@@ -197,7 +197,7 @@ export const CONTENT_DEFS: ContentDef[] = [
     "<ol class=\"space-y-3\"><li class=\"flex gap-2\"><span class=\"font-semibold text-brand-700\">1.</span> <span>Submit the application form</span></li><li class=\"flex gap-2\"><span class=\"font-semibold text-brand-700\">2.</span> <span>Our team reviews &amp; calls you within 48 hours</span></li><li class=\"flex gap-2\"><span class=\"font-semibold text-brand-700\">3.</span> <span>Receive price list, catalog &amp; territory terms</span></li><li class=\"flex gap-2\"><span class=\"font-semibold text-brand-700\">4.</span> <span>Place trial order &amp; start selling</span></li></ol>"
   ),
   T("distributor.formTitle", "Distributor Application", 120),
-  R("distributor.formSubtitle", "Tell us about your business  no commitment, no fees."),
+  R("distributor.formSubtitle", "Tell us about your business — no commitment, no fees."),
 
   // Products Catalog Page
   T("products.heroTitle", "Drip Irrigation Products", 140),
@@ -209,6 +209,16 @@ export const CONTENT_DEFS: ContentDef[] = [
   R("products.ctaBody", "Tell us your crop, area and plant spacing. We will recommend the lateral diameter, emitter spacing and filter type, and quote the full system."),
   T("products.ctaButton", "Request Distributor Pricing", 80),
   L("products.ctaHref", "/become-a-distributor"),
+
+  // Guides index. The article bodies live in src/lib/blog.ts, because they are
+  // structured content referenced by JSON-LD; these are just the page's own
+  // heading and intro, which the client may reasonably want to reword.
+  T("blog.eyebrow", "Guides & Articles", 80),
+  T("blog.heroTitle", "Drip Irrigation Guides for Maharashtra Growers", 140),
+  R(
+    "blog.heroBody",
+    "Practical notes on choosing laterals, emitters and filters - written to answer the questions growers actually ask, rather than to repeat the catalogue."
+  ),
 ];
 
 
@@ -342,6 +352,11 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   "products.ctaTitle": "तुमच्या पिकासाठी कोणता आकार चालेल याची खात्री नाही?",
   "products.ctaBody": "तुमचे पीक, क्षेत्र व झाडांतील अंतर कळवा. आम्ही लेटरल व्यास, एमिटर अंतर व फिल्टरचा प्रकार शिफारस करू आणि संपूर्ण सिस्टमचा भाव देऊ.",
   "products.ctaButton": "डिस्ट्रिब्यूटर किंमत मागवा",
+
+  // Guides index
+  "blog.eyebrow": "मार्गदर्शक व लेख",
+  "blog.heroTitle": "महाराष्ट्रातील शेतकऱ्यांसाठी ठिबक सिंचन मार्गदर्शक",
+  "blog.heroBody": "लेटरल, एमिटर व फिल्टर निवडण्याविषयी उपयुक्त टिपा — कॅटलॉगची पुनरावृत्ती न करता, शेतकरी प्रत्यक्षात विचारतात त्या प्रश्नांची उत्तरे देण्यासाठी लिहिलेल्या.",
 };
 
 function isLocaleKey(value: unknown): value is Locale {

@@ -4,6 +4,7 @@ import { Category } from "@/lib/models/Category";
 import { Product } from "@/lib/models/Product";
 import { SITE_URL } from "@/lib/site";
 import { LOCALES, localeAlternates, localePath } from "@/lib/i18n";
+import { allBlogPosts } from "@/lib/blog";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,8 @@ const STATIC_PATHS: StaticEntry[] = [
   { path: "/about", changeFrequency: "monthly", priority: 0.6 },
   { path: "/become-a-distributor", changeFrequency: "monthly", priority: 0.8 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.7 },
+  // The guides index. Individual guides are appended below from BLOG_POSTS.
+  { path: "/blog", changeFrequency: "weekly", priority: 0.7 },
 ];
 
 function entry(
@@ -51,6 +54,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const { path, changeFrequency, priority } of STATIC_PATHS) {
     for (const locale of LOCALES) {
       const base = entry(path, now, changeFrequency, priority);
+      entries.push({
+        ...base,
+        url: `${SITE_URL}${localePath(locale, path)}`,
+      });
+    }
+  }
+
+  // Guides. Listed here even though they are not in the main navigation:
+  // the sitemap is how a crawler finds a section that is only linked from
+  // the footer, and each guide also links to the next one.
+  for (const post of allBlogPosts()) {
+    const path = `/blog/${post.slug}`;
+    const modified = new Date(post.updatedAt);
+    for (const locale of LOCALES) {
+      const base = entry(
+        path,
+        Number.isNaN(modified.getTime()) ? undefined : modified,
+        "monthly",
+        0.6
+      );
       entries.push({
         ...base,
         url: `${SITE_URL}${localePath(locale, path)}`,

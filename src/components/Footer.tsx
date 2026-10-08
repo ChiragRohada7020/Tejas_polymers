@@ -66,6 +66,7 @@ export default function Footer({
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link prefetch className="hover:text-white" href={href("/about")}>{ui("footerAbout", locale)}</Link></li>
             <li><Link prefetch className="hover:text-white" href={href("/become-a-distributor")}>{ui("footerBecomeDistributor", locale)}</Link></li>
+            <li><Link prefetch className="hover:text-white" href={href("/blog")}>{ui("footerBlog", locale)}</Link></li>
             <li><Link prefetch className="hover:text-white" href={href("/contact")}>{ui("footerContact", locale)}</Link></li>
             <li><Link prefetch className="hover:text-white" href={href("/products")}>{ui("allProducts", locale)}</Link></li>
           </ul>

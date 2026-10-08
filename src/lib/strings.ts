@@ -20,6 +20,7 @@ const STRINGS = {
     en: "Become a Distributor",
     mr: "डिस्ट्रिब्यूटर व्हा",
   },
+  footerBlog: { en: "Guides & Articles", mr: "मार्गदर्शक व लेख" },
   allRightsReserved: { en: "All rights reserved.", mr: "सर्व हक्क राखीव." },
 
   // Footer catalogue shortcuts. Duplicated from the Category collection on
@@ -150,6 +151,23 @@ const STRINGS = {
   labelVideoMute: { en: "Mute", mr: "आवाज बंद करा" },
   labelBackgroundVideo: { en: "Background video", mr: "पार्श्वभूमीचा व्हिडिओ" },
   labelCompanyVideo: { en: "Company video", mr: "कंपनीचा व्हिडिओ" },
+
+  // Blog / guides. Structural chrome only - the article copy itself lives in
+  // src/lib/blog.ts, because it is content, not a UI label.
+  breadcrumbBlog: { en: "Guides", mr: "मार्गदर्शक" },
+  blogAllPosts: { en: "All guides", mr: "सर्व मार्गदर्शक" },
+  blogBackToIndex: { en: "Back to all guides", mr: "सर्व मार्गदर्शकांकडे परत" },
+  blogFaqTitle: { en: "Common questions", mr: "वारंवार विचारले जाणारे प्रश्न" },
+  blogSpecsTitle: { en: "Specifications at a glance", mr: "एका दृष्टीक्षेपात तपशील" },
+  blogRelatedTitle: { en: "Related guides", mr: "संबंधित मार्गदर्शक" },
+  blogProductCtaTitle: { en: "See the product", mr: "उत्पादन पहा" },
+  blogProductCtaBody: {
+    en: "Full specifications, minimum order quantity and pricing for this product.",
+    mr: "या उत्पादनाचे संपूर्ण तपशील, किमान ऑर्डर व किंमत.",
+  },
+  blogProductCtaButton: { en: "View product", mr: "उत्पादन पहा" },
+  blogNotFound: { en: "Guide not found", mr: "मार्गदर्शक सापडला नाही" },
+  blogNoPosts: { en: "No guides published yet.", mr: "अजून कोणताही मार्गदर्शक प्रकाशित नाही." },
 } as const;
 
 export type StringKey = keyof typeof STRINGS;

@@ -21,6 +21,8 @@ const ROUTES = [
   "/en/contact",
   "/mr/become-a-distributor",
   "/en/become-a-distributor",
+  "/mr/blog",
+  "/en/blog",
 ];
 
 /** Product detail pages are read from the sitemap so the list stays current. */
@@ -33,6 +35,26 @@ async function productRoutes() {
       .map((m) => new URL(m[1].trim()).pathname)
       .filter((p) => /\/products\/[^/]+$/.test(p));
     return [...new Set(found)].slice(0, 3);
+  } catch (e) {
+    console.log(`(sitemap unreadable: ${e.message})`);
+    return [];
+  }
+}
+
+/**
+ * A couple of guides, also read from the sitemap.
+ *
+ * The guides are the pages most likely to drift out of the SEO setup, because
+ * they are authored in code rather than through the admin, so they are worth
+ * auditing rather than assuming.
+ */
+async function guideRoutes() {
+  try {
+    const xml = await (await fetch(`${BASE}/sitemap.xml`)).text();
+    const found = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)]
+      .map((m) => new URL(m[1].trim()).pathname)
+      .filter((p) => /\/blog\/[^/]+$/.test(p));
+    return [...new Set(found)].slice(0, 2);
   } catch (e) {
     console.log(`(sitemap unreadable: ${e.message})`);
     return [];
@@ -143,7 +165,7 @@ async function audit(route) {
 }
 
 (async () => {
-  const routes = [...ROUTES, ...(await productRoutes())];
+  const routes = [...ROUTES, ...(await productRoutes()), ...(await guideRoutes())];
   let fail = 0;
   const rows = [];
 

@@ -23,6 +23,15 @@ config({ path: ".env.local", quiet: true });
  *    A row that already holds a real path (e.g. an admin's own upload) is
  *    never touched.
  *
+ * 3. SOME STORED VALUES CARRY C0 CONTROL CHARACTERS.
+ *    distributor.lookingList holds four U+0013 where a tick (U+2713) was
+ *    meant, and distributor.formSubtitle holds a U+0014 where an em dash
+ *    (U+2014) was meant - the marks survived an encoding round trip badly.
+ *    Control characters render as nothing or as a stray glyph, so the tick
+ *    list on the Become a Distributor page was silently broken. The same
+ *    damage existed in the code defaults and has been corrected there; this
+ *    repairs the rows that override them.
+ *
  * Idempotent: re-running finds nothing left to change.
  */
 
@@ -91,6 +100,43 @@ async function repairSpelling(db: mongoose.mongo.Db): Promise<number> {
   return totalChanged;
 }
 
+/**
+ * Replaces the two C0 control characters that survived an encoding round trip
+ * in place of a tick and an em dash. Keyed by character rather than by content
+ * key, so a row that gets reworded through the admin and keeps the damage is
+ * still repaired.
+ */
+const CONTROL_FIXES: [string, string, string][] = [
+  ["\u0013", "\u2713", "tick"],
+  ["\u0014", "\u2014", "em dash"],
+];
+
+async function repairControlChars(db: mongoose.mongo.Db): Promise<number> {
+  const col = db.collection("sitecontents");
+  const docs = await col.find({}).toArray();
+  let changed = 0;
+
+  for (const doc of docs) {
+    if (typeof doc.value !== "string") continue;
+    let value = doc.value;
+    const applied: string[] = [];
+    for (const [from, to, label] of CONTROL_FIXES) {
+      if (value.includes(from)) {
+        value = value.split(from).join(to);
+        applied.push(label);
+      }
+    }
+    if (applied.length === 0) continue;
+
+    await col.updateOne({ _id: doc._id }, { $set: { value } });
+    changed += 1;
+    console.log(`  sitecontents "${doc.key}" [${doc.locale ?? "-"}] -> ${applied.join(", ")}`);
+  }
+
+  console.log(`control characters: ${changed} document(s) repaired\n`);
+  return changed;
+}
+
 async function repairBlankLogo(db: mongoose.mongo.Db): Promise<number> {
   const col = db.collection("sitecontents");
   let changed = 0;
@@ -152,6 +198,17 @@ async function verify(db: mongoose.mongo.Db): Promise<boolean> {
     );
   }
 
+  const controlRows = await db.collection("sitecontents").find({}).toArray();
+  for (const row of controlRows) {
+    if (typeof row.value !== "string") continue;
+    for (const [from, , label] of CONTROL_FIXES) {
+      if (row.value.includes(from)) {
+        remaining += 1;
+        console.log(`  STILL DAMAGED: sitecontents "${row.key}" [${row.locale ?? "-"}] -> ${label}`);
+      }
+    }
+  }
+
   console.log(
     remaining === 0
       ? "\nPASS: brand spelling corrected and the logo is set in every locale"
@@ -171,7 +228,12 @@ async function main() {
   console.log("--- logo image rows ---");
   const logo = await repairBlankLogo(db);
 
-  console.log(`\ntotal: ${spelling} document(s) and ${logo} logo row(s) changed`);
+  console.log("--- control characters ---");
+  const controls = await repairControlChars(db);
+
+  console.log(
+    `\ntotal: ${spelling} document(s), ${logo} logo row(s) and ${controls} control-character row(s) changed`
+  );
 
   console.log("\n--- verify ---");
   const ok = await verify(db);
