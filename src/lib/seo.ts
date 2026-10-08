@@ -82,7 +82,7 @@ export function organizationJsonLd(locale: Locale) {
     logo: `${SITE_URL}/images/brand/krusheebindoo-mark.png`,
     image: `${SITE_URL}/images/og/tejas-polymers.jpg`,
     description: isMr
-      ? "पाचोरा, महाराष्ट्रातीन ठिबक सिंचन उपकरण निर्माता व पुरवठादार."
+      ? "पाचोरा, महाराष्ट्रातील ठिबक सिंचन उपकरण निर्माता व पुरवठादार."
       : "Drip irrigation equipment manufacturer and supplier based in Pachora, Maharashtra.",
     email: CONTACT.email,
     telephone: CONTACT.phone,

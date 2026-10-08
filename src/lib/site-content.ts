@@ -235,7 +235,7 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   // Brand & navigation. The wordmark (brand.wordmarkStart/End) is the trade
   // name and is deliberately left in Latin - transliterating a brand is how
   // shoppers end up unable to search for it.
-  "brand.logoAlt": "कृष्हीबिंडू लोगो",
+  "brand.logoAlt": "कृषीबिंदू लोगो",
   "header.nav.home.label": "मुख्यपृष्ठ",
   "header.nav.products.label": "उत्पादने",
   "header.nav.about.label": "आमच्याबद्दल",
@@ -244,10 +244,10 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   "header.cta.label": "भाव मिळवा",
 
   // Home
-  "home.heroBadge": "कृष्हीबिंडू - IS 13488 प्रमाणित - महाराष्ट्रातील जळगाव येथे निर्मित",
+  "home.heroBadge": "कृषीबिंदू - IS 13488 प्रमाणित - महाराष्ट्रातील जळगाव येथे निर्मित",
   "home.heroTitleMain": "प्रत्येक थेंब, थेट",
   "home.heroTitleAccent": "मुळांच्या क्षेत्रापर्यंत",
-  "home.heroBody": "तेजा पॉलिमर्सचे कृष्हीबिंडू हे इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादनांची संपूर्ण श्रृंखला तयार करते: IS 13488 प्रमाणित फ्लॅट इनलाइन लेटरल, ऑनलाइन एमिटर, फिल्टर व फिटिंग्ज. ६०% पर्यंत कमी पाणी, झाडाला नेमलेल्या ठिकाणी.",
+  "home.heroBody": "तेजा पॉलिमर्सचे कृषीबिंदू हे इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादनांची संपूर्ण श्रृंखला तयार करते: IS 13488 प्रमाणित फ्लॅट इनलाइन लेटरल, ऑनलाइन एमिटर, फिल्टर व फिटिंग्ज. ६०% पर्यंत कमी पाणी, झाडाला नेमलेल्या ठिकाणी.",
   "home.primaryCtaLabel": "उत्पादने पहा",
   "home.secondaryCtaLabel": "डिस्ट्रिब्यूटर व्हा",
   // Stat VALUES (60%, IS 13488, 5000m, 4 LPH) are intentionally absent -
@@ -262,7 +262,7 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   "home.featuredEyebrow": "निवडक उत्पादने",
   "home.featuredTitle": "आमची सर्वाधिक विक्री",
   "home.featuredBody": "सर्वाधिक पुन्हा मागणी होणारी उपकरणे - शेतात सिद्ध झालेली आणि मालकांनी संपूर्ण प्रदेशात साठवलेली.",
-  "home.whyTitle": "शेतकरी कृष्हीबिंडू का निवडतात",
+  "home.whyTitle": "शेतकरी कृषीबिंदू का निवडतात",
   "home.why.0.title": "६०% पर्यंत कमी पाणी",
   "home.why.0.text": "पाणी ओळीभर पसरत नाही, मुळांच्या क्षेत्रापर्यंत जाते. कमी पाणी उपसा, पंप करण्यासाठी कमी वीज, आणि झाडांमध्ये वाष्पीकरणात काहीही नाही.",
   "home.why.1.title": "IS 13488 प्रमाणित",
@@ -271,7 +271,7 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   "home.why.2.text": "३०, ४० किंवा ६० सेंटीमीटर अंतरावर कारखान्यातच बसवलेले एमिटर प्रत्येक झाडाला एकच मापदान देतात. ओळीभर ओले किंवा कोरडे भाग नाहीत.",
   "home.why.3.title": "भारतीय शेतीसाठी तयार",
   "home.why.3.text": "महाराष्ट्रातील जमिनी, पाण्याच्या प्रती आणि लांब उन्हाळ्याच्या परिस्थितीसाठी तयार केलेले, आणि त्यावर काम करणाऱ्या शेतकऱ्यांच्या अडचणींनुसार.",
-  "home.testimonialQuote": "कृष्हीबिंडूने आमच्या सिंचनाची पद्धत बदलली. पाण्याचा वापर कमी झाला, संपूर्ण ब्लॉकमध्ये उत्पादन सारखेच राहिले, आणि ५००० मीटरचा रोल त्याच्या किमतीत खूप दूरपर्यंत पोहोचतो.",
+  "home.testimonialQuote": "कृषीबिंदूने आमच्या सिंचनाची पद्धत बदलली. पाण्याचा वापर कमी झाला, संपूर्ण ब्लॉकमध्ये उत्पादन सारखेच राहिले, आणि ५००० मीटरचा रोल त्याच्या किमतीत खूप दूरपर्यंत पोहोचतो.",
   "home.testimonialAttribution": "शेतकरी, जळगाव विभाग",
   "home.ctaTitle": "या हंगामीत पाण्याचे बिल कापीत घ्या",
   "home.ctaBody": "तुमचे पीक, क्षेत्र व झाडांतील अंतर कळवा; आम्ही योग्य लेटरल, एमिटर अंतर व फिल्टर शिफारस करू आणि मालकांसाठी डिस्ट्रिब्यूटर किंमत देतो.",
@@ -279,7 +279,7 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   // Footer. Email, phone and postal address stay as-is: they are an address
   // and a phone number, and transliterating a postal address makes it harder
   // to find rather than easier.
-  "footer.aboutBlurb": "तेजा पॉलिमर्सचे कृष्हीबिंडू हे IS 13488 प्रमाणित इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादने गोरडाखेडा, पाचोरा, जळगाव येथील कारखान्यातून तयार करते.",
+  "footer.aboutBlurb": "तेजा पॉलिमर्सचे कृषीबिंदू हे IS 13488 प्रमाणित इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादने गोरडाखेडा, पाचोरा, जळगाव येथील कारखान्यातून तयार करते.",
 
   // Contact
   "contact.heroTitle": "आमच्याशी संपर्क साधा",
@@ -297,11 +297,11 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   // "निर्माता" works as an adjective ("निर्माता कंपनी"), but standing alone
   // as a noun it reads as an incomplete phrase.
   "about.heroTitle": "ठिबक सिंचन उत्पादक. प्रत्येक थेंबाचे काळजीपालन.",
-  "about.heroBody": "कृष्हीबिंडू हे तेजा पॉलिमर्सचा ठिबक सिंचन ब्रँड आहे — महाराष्ट्रातील जळगाव जिल्ह्यातील पाचोरा येथील गोरडाखेडा येथे इनलाइन व ऑनलाइन ठिबक उत्पादनांची संपूर्ण श्रृंखला तयार करणारा निर्माता.",
+  "about.heroBody": "कृषीबिंदू हे तेजा पॉलिमर्सचा ठिबक सिंचन ब्रँड आहे — महाराष्ट्रातील जळगाव जिल्ह्यातील पाचोरा येथील गोरडाखेडा येथे इनलाइन व ऑनलाइन ठिबक उत्पादनांची संपूर्ण श्रृंखला तयार करणारा निर्माता.",
   "about.storyTitle": "आमची ओळख",
   "about.videoTitle": "आमचे काम पहा",
   "about.videoBody": "गोरडाखेडा कारखान्याची लघु झलक — उत्पादन ओळ, गुणवत्ता तपासणी आणि तयार रोल.",
-  "about.storyBody": "<p>तेजा पॉलिमर्स सर्व्हे नं. १५२/३, सुगरान डेअरीच्या मागे, गोरडाखेडा, पाचोरा येथील कारखान्यातून कृष्हीबिंडू श्रृंखलेतील इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादने तयार करते. आम्ही IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन ड्रिपर्स व दाब-भरित एमिटर, स्क्रीन व डिस्क फिल्टर, आणि सिस्टम पूर्ण करणारी फिटिंग्ज तयार करतो.</p><p class=\"mt-4\">महाराष्ट्रातील शेतांना हा प्रश्न चांगलाच माहीत आहे: पीक जेवढ्या वेळेला पाणी लागेल तेवढे पाणी नेहमी असत नाही, आणि पंप केलेले पाणी झाडाला पूर्ण वापरले जात नाही. आमचा उपाय साधा इंजिनियरिंग आहे — तासाला ४ लिटर मापून, मुळांच्या क्षेत्रापर्यंत नेऊन, ओळीभर समान पद्धतीने पुन्हा. नीट केल्यास पाण्याची बचत इथूनच येते, आणि ही बचत उत्पादनापेक्षा जास्त वीज बिलात दिसते.</p><p class=\"mt-4\">प्रत्येक रोल मानकानुसार तपासलेला आणि चिन्हांकित आपल्या ओळीतून जातो, कारण बंद पडलेला एमिटर म्हणजे स्वतःचा खर्च वसूल करणारे सिस्टम आणि खरेदी करणाऱ्या शेतकऱ्याची निराशा यातला फरक आहे.</p>",
+  "about.storyBody": "<p>तेजा पॉलिमर्स सर्व्हे नं. १५२/३, सुगरान डेअरीच्या मागे, गोरडाखेडा, पाचोरा येथील कारखान्यातून कृषीबिंदू श्रृंखलेतील इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादने तयार करते. आम्ही IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन ड्रिपर्स व दाब-भरित एमिटर, स्क्रीन व डिस्क फिल्टर, आणि सिस्टम पूर्ण करणारी फिटिंग्ज तयार करतो.</p><p class=\"mt-4\">महाराष्ट्रातील शेतांना हा प्रश्न चांगलाच माहीत आहे: पीक जेवढ्या वेळेला पाणी लागेल तेवढे पाणी नेहमी असत नाही, आणि पंप केलेले पाणी झाडाला पूर्ण वापरले जात नाही. आमचा उपाय साधा इंजिनियरिंग आहे — तासाला ४ लिटर मापून, मुळांच्या क्षेत्रापर्यंत नेऊन, ओळीभर समान पद्धतीने पुन्हा. नीट केल्यास पाण्याची बचत इथूनच येते, आणि ही बचत उत्पादनापेक्षा जास्त वीज बिलात दिसते.</p><p class=\"mt-4\">प्रत्येक रोल मानकानुसार तपासलेला आणि चिन्हांकित आपल्या ओळीतून जातो, कारण बंद पडलेला एमिटर म्हणजे स्वतःचा खर्च वसूल करणारे सिस्टम आणि खरेदी करणाऱ्या शेतकऱ्याची निराशा यातला फरक आहे.</p>",
   "about.stats.0.label": "प्रमाणित मानक",
   "about.stats.1.label": "पाणी बचत",
   "about.stats.2.label": "रोलची लांबी",
@@ -319,8 +319,8 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
   // Distributor. The two list bodies are stored as sanitised HTML, so the
   // markup must be preserved exactly - only the text inside each tag is
   // translated.
-  "distributor.heroTitle": "तुमच्या जिल्ह्यात कृष्हीबिंडू विका",
-  "distributor.heroBody": "भारतीय कृषीत ठिबक हा सर्वात वेगाने वाढणारा भाग आहे आणि शेतकरी विश्वासार्ह स्थानिक पुरवठादार शोधत आहेत. कारखान्यातून थेट किंमतीत कृष्हीबिंडू साठवा, तुमच्या विभागासाठी सविष्ट संरक्षण व पूर्ण विक्रीपश्चात सहाय्य मिळेल. अर्ज मोफत, आणि आम्ही ४८ तासांत निर्णय देतो.",
+  "distributor.heroTitle": "तुमच्या जिल्ह्यात कृषीबिंदू विका",
+  "distributor.heroBody": "भारतीय कृषीत ठिबक हा सर्वात वेगाने वाढणारा भाग आहे आणि शेतकरी विश्वासार्ह स्थानिक पुरवठादार शोधत आहेत. कारखान्यातून थेट किंमतीत कृषीबिंदू साठवा, तुमच्या विभागासाठी सविष्ट संरक्षण व पूर्ण विक्रीपश्चात सहाय्य मिळेल. अर्ज मोफत, आणि आम्ही ४८ तासांत निर्णय देतो.",
   "distributor.benefits.0.title": "कारखान्यातून थेट किंमत",
   "distributor.benefits.0.text": "पाचोरा येथील आमच्या कारखान्यातून थेट निर्माता दराने खरेदी करा; निवृत्त विक्रीसाठी निकूळ असलेले भाव आम्ही ठरवून देतो.",
   "distributor.benefits.1.title": "विभागासाठी सविष्ट संरक्षण",
@@ -338,7 +338,7 @@ export const MARATHI_DEFAULTS: Record<string, string> = {
 
   // Products catalogue
   "products.heroTitle": "ठिबक सिंचन उत्पादने",
-  "products.heroBody": "कृष्हीबिंडूची संपूर्ण श्रृंखला: १२ मिमी व १६ मिमी IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन ड्रिपर्स व दाब-भरित एमिटर, स्क्रीन व डिस्क फिल्टर, आणि सिस्टम पूर्ण करणारी फिटिंग्ज. मालकांसाठी थोक किंमत उपलब्ध.",
+  "products.heroBody": "कृषीबिंदूची संपूर्ण श्रृंखला: १२ मिमी व १६ मिमी IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन ड्रिपर्स व दाब-भरित एमिटर, स्क्रीन व डिस्क फिल्टर, आणि सिस्टम पूर्ण करणारी फिटिंग्ज. मालकांसाठी थोक किंमत उपलब्ध.",
   "products.ctaTitle": "तुमच्या पिकासाठी कोणता आकार चालेल याची खात्री नाही?",
   "products.ctaBody": "तुमचे पीक, क्षेत्र व झाडांतील अंतर कळवा. आम्ही लेटरल व्यास, एमिटर अंतर व फिल्टरचा प्रकार शिफारस करू आणि संपूर्ण सिस्टमचा भाव देऊ.",
   "products.ctaButton": "डिस्ट्रिब्यूटर किंमत मागवा",
@@ -409,8 +409,21 @@ export function invalidateSiteContentCache(): void {
  * Marathi as soon as the code ships a Marathi default, and only falls back
  * to English for keys that genuinely have no Marathi translation yet.
  *
- * A stored empty string still wins - that is an admin deliberately clearing
- * a field, and must not be second-guessed by falling back to a default.
+ * A stored empty string still wins for TEXT - that is an admin deliberately
+ * clearing a field, and must not be second-guessed by falling back to a
+ * default.
+ *
+ * The one exception is `kind: "image"`. An empty image value is never a
+ * deliberate clear, because the visual editor has no way to clear one: it
+ * either leaves the <img> with its current src or replaces it with an
+ * upload. The only way an image key becomes "" is the bilingual migration
+ * backfilling every pre-existing key, and because the editor renders the
+ * <img> only when a value exists, such a key could never be repaired from
+ * the UI - it stayed blank forever. The logo hit exactly this: `en` was
+ * blanked once, then `mr`, each time quietly falling back to the text
+ * wordmark. Falling through to the default instead makes the image keys
+ * self-healing, and costs nothing: no code path intentionally stores an
+ * empty image.
  */
 export function content(
   map: ContentMap | undefined,
@@ -418,7 +431,8 @@ export function content(
   key: string
 ): string {
   const stored = map?.[locale]?.[key];
-  if (typeof stored === "string") return stored;
+  const blankImage = stored === "" && CONTENT_DEF_MAP[key]?.kind === "image";
+  if (typeof stored === "string" && !blankImage) return stored;
 
   if (locale === "mr") {
     const mr = MARATHI_DEFAULTS[key];

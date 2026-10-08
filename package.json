@@ -24,7 +24,8 @@
     "i18n:migrate": "tsx scripts/migrate-i18n.ts",
     "i18n:seed": "tsx scripts/seed-i18n-content.ts",
     "i18n:inspect": "tsx scripts/inspect-i18n.ts",
-    "i18n:check-write": "tsx scripts/check-i18n-write.ts"
+    "i18n:check-write": "tsx scripts/check-i18n-write.ts",
+    "i18n:fix-brand": "tsx scripts/fix-brand-content.ts"
   },
   "dependencies": {
     "mongoose": "^8.16.0",
