@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 import "../globals.css";
+import { SITE_ICONS } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 // Declared here too so the admin inherits the same --font-sans stack that
@@ -15,6 +16,8 @@ const notoDevanagari = Noto_Sans_Devanagari({
 export const metadata: Metadata = {
   title: { default: "Admin — Krusheebindoo", template: "%s | Admin" },
   robots: { index: false, follow: false },
+  // Same icon set as the public site, so the admin tab is recognisable.
+  icons: SITE_ICONS,
 };
 
 /**

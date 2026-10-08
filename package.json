@@ -18,6 +18,7 @@
     "check:contrast-pixels": "node scripts/check-contrast-pixels.cjs",
     "audit:seo": "node scripts/audit-seo.mjs",
     "brand:logo": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-logo.ps1",
+    "brand:favicons": "node scripts/make-favicons.cjs",
     "images:inspect": "tsx scripts/inspect-product-images.cts",
     "images:crop": "tsx scripts/crop-collage.cts",
     "images:repoint": "tsx scripts/repoint-product-images.cts",

@@ -52,8 +52,11 @@ npm start
 
 All branding (name, description, contact details) lives in `src/lib/site.ts`.
 Colors are defined in `src/app/globals.css` (`--color-brand-*`, `--color-accent-*`).
-The favicon is `src/app/icon.svg`. Replace the SVG product images in `public/images/`
-with real photos (same filenames) whenever they are available.
+The favicon set lives in `public/` (`favicon.ico`, `icons/`, `apple-touch-icon.png`) and
+is generated from the logo artwork by `npm run brand:favicons`. It is declared
+explicitly in `src/lib/seo.ts` (`SITE_ICONS`) rather than via `app/icon.png`, because
+Google Search needs a stable, unhashed icon URL. Replace the SVG product images in
+`public/images/` with real photos (same filenames) whenever they are available.
 
 ## Project Structure
 

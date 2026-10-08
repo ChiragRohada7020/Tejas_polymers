@@ -1,8 +1,41 @@
+import type { Metadata } from "next";
 import { AREA_SERVED, BRAND_NAME, CONTACT, SITE_NAME, SITE_URL } from "@/lib/site";
 import { LOCALE_META, type Locale } from "@/lib/i18n";
 
 /** Fallback share image, used whenever a page has no photo of its own. */
 const DEFAULT_OG_IMAGE = "/images/og/tejas-polymers.jpg";
+
+/**
+ * The site's favicon set, declared explicitly instead of relying on the
+ * `app/icon.png` file convention.
+ *
+ * Google Search shows one favicon per hostname next to the site name, and two
+ * of its requirements are easy to miss:
+ *
+ *   - "The favicon URL must be stable (don't change the URL frequently)."
+ *     The file convention emits `/icon.png?<build-hash>`, so the URL changed
+ *     on every deploy.
+ *   - The icon must be a square of at least 8x8px, "preferably larger than
+ *     48x48px". The old icon.png was a 96x96 crop of the 240x120 wordmark
+ *     lockup, which at the 16-32px Google renders was an unreadable smear of
+ *     half a droplet and the letters "krushe".
+ *
+ * Absolute URLs also mean every route - /mr, /en, the redirect from / and the
+ * admin - advertises the identical icon, which is what "one favicon per
+ * hostname" asks for. The files are built by `npm run brand:favicons`, and
+ * the shared constant exists because the site and the admin are separate root
+ * layouts (there is no app/layout.tsx) and must not drift apart.
+ */
+export const SITE_ICONS: Metadata["icons"] = {
+  icon: [
+    { url: `${SITE_URL}/favicon.ico`, sizes: "any", type: "image/x-icon" },
+    { url: `${SITE_URL}/icons/icon-48.png`, sizes: "48x48", type: "image/png" },
+    { url: `${SITE_URL}/icons/icon-96.png`, sizes: "96x96", type: "image/png" },
+    { url: `${SITE_URL}/icons/icon-192.png`, sizes: "192x192", type: "image/png" },
+  ],
+  shortcut: `${SITE_URL}/favicon.ico`,
+  apple: `${SITE_URL}/apple-touch-icon.png`,
+};
 
 /**
  * Builds a complete `openGraph` block.

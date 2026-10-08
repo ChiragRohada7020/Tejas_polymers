@@ -3,7 +3,7 @@ import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 import "../globals.css";
 import { CONTACT, KEYWORDS, KEYWORDS_MR, SITE_DESCRIPTION, SITE_DESCRIPTION_MR, SITE_NAME, SITE_URL } from "@/lib/site";
 import { DEFAULT_LOCALE, LOCALES, LOCALE_META, isKnownLocale, localeAlternates, type Locale } from "@/lib/i18n";
-import { buildOpenGraph, buildTwitter } from "@/lib/seo";
+import { buildOpenGraph, buildTwitter, SITE_ICONS } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 const notoDevanagari = Noto_Sans_Devanagari({
@@ -56,6 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     publisher: SITE_NAME,
     keywords: isMr ? KEYWORDS_MR : KEYWORDS,
     category: "Drip Irrigation Equipment",
+    icons: SITE_ICONS,
     // Canonical points at this locale's own home page, and the languages map
     // tells Google the two are translations of each other so it can serve
     // Marathi to Marathi searchers instead of picking one arbitrarily.
