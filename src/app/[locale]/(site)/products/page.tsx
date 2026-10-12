@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: ProductsProps): Promise<Metad
   // Kept near 60 characters so the service and the place both survive the
   // search-result rewrite; the older phrasing was cut mid-phrase.
   const title = isMr
-    ? "ठिबक सिंचन उत्पादने | तेजा पॉलिमर्स"
+    ? "ठिबक सिंचन उत्पादने | तेजस पॉलिमर्स"
     : "Drip Irrigation Products | Tejas Polymers";
   const description = isMr
     ? "IS 13488 फ्लॅट इनलाइन ठिबक लेटरल १२ व १६ मिमी, ४ व ८ LPH ऑनलाइन ड्रिपर्स, स्क्रीन व डिस्क फिल्टर, ग्रोमेट व फिटिंग्ज."

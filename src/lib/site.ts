@@ -16,7 +16,7 @@ export const SITE_DESCRIPTION =
  * deliberately kept in Latin where that is how the trade actually writes them.
  */
 export const SITE_DESCRIPTION_MR =
-  "तेजा पॉलिमर्सचे कृषीबिंदू हे पाचोरा, जळगाव, महाराष्ट्रातील इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादनांची संपूर्ण श्रृंखला तयार करते. IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल (12 मिमी व 16 मिमी), ऑनलाइन एमिटर, फिल्टर व फिटिंग्ज — सिंचनाच्या पाण्याची ६०% पर्यंत बचत करणारे.";
+  "तेजस पॉलिमर्सचे कृषीबिंदू हे पाचोरा, जळगाव, महाराष्ट्रातील इनलाइन व ऑनलाइन ठिबक सिंचन उत्पादनांची संपूर्ण श्रृंखला तयार करते. IS 13488 प्रमाणित फ्लॅट इनलाइन ठिबक लेटरल (12 मिमी व 16 मिमी), ऑनलाइन एमिटर, फिल्टर व फिटिंग्ज — सिंचनाच्या पाण्याची ६०% पर्यंत बचत करणारे.";
 
 export const CONTACT = {
   email: "tejaspolymers0101@gmail.com",
@@ -30,10 +30,25 @@ export const CONTACT = {
   region: "Maharashtra",
   postalCode: "424201",
   country: "IN",
-  // Approximate coordinates for Goradakheda, Pachora, Jalgaon district, Maharashtra.
-  latitude: 20.2589,
-  longitude: 75.3556,
+  // Exact Google Maps pin for the factory (Tejas Polymers, Goradakheda,
+  // Tal. Pachora). Taken from the place's own map listing rather than the
+  // town centroid, so the embedded map and the JSON-LD `geo` both point at
+  // the real building.
+  latitude: 20.6707551,
+  longitude: 75.3899961,
 };
+
+/**
+ * Google Maps embed URL for the factory.
+ *
+ * The `maps.google.com/maps?...&output=embed` form needs no API key and
+ * renders inside an <iframe>. Coordinates are interpolated from CONTACT so
+ * the visible map can never drift from the JSON-LD / meta geo tags.
+ */
+export const MAP_EMBED_URL = `https://maps.google.com/maps?q=${CONTACT.latitude},${CONTACT.longitude}&z=16&output=embed`;
+
+/** Opens the location in the Google Maps app / website. */
+export const MAP_LINK_URL = `https://www.google.com/maps/search/?api=1&query=${CONTACT.latitude},${CONTACT.longitude}`;
 
 /** Local-SEO: areas served around Pachora / Jalgaon district. */
 export const AREA_SERVED = [
@@ -88,7 +103,7 @@ export const KEYWORDS_MR = [
   "पाचोरा ठिबक सिंचन उत्पादने",
   "जळगाव ठिबक सिंचन पुरवठादार",
   "कृषीबिंदू ठिबक सिंचन",
-  "तेजा पॉलिमर्स",
+  "तेजस पॉलिमर्स",
   "डिस्क फिल्टर आणि स्क्रीन फिल्टर",
   "ठिबक सिंचण फिटिंग्ज",
   "पाणी वाचवणारे सिंचन उपकरण",

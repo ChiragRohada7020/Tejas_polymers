@@ -31,10 +31,10 @@ export async function generateMetadata({ params }: DistributorProps): Promise<Me
   const isMr = locale === "mr";
 
   const title = isMr
-    ? "डिस्ट्रिब्यूटर व्हा | तेजा पॉलिमर्स"
+    ? "डिस्ट्रिब्यूटर व्हा | तेजस पॉलिमर्स"
     : "Become a Distributor | Tejas Polymers";
   const description = isMr
-    ? "तेजा पॉलिमर्सचे डिस्ट्रिब्यूटर व्हा. सिंचन उपकरणे व शेती अवजारांवर थेट कारखान्यादून किंमत, क्षेत्रासाठी सहाय्य व स्पेअर पार्ट्सची खात्रीशीर उपलब्धता."
+    ? "तेजस पॉलिमर्सचे डिस्ट्रिब्यूटर व्हा. सिंचन उपकरणे व शेती अवजारांवर थेट कारखान्यादून किंमत, क्षेत्रासाठी सहाय्य व स्पेअर पार्ट्सची खात्रीशीर उपलब्धता."
     : "Become a Tejas Polymers distributor. Factory-direct pricing on irrigation equipment and farm machinery, territory support and reliable supply of spare parts.";
 
   return {

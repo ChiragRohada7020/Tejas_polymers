@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: AboutProps): Promise<Metadata
   const isMr = locale === "mr";
 
   const title = isMr
-    ? "आमच्याबद्दल | तेजा पॉलिमर्स, पाचोरा"
+    ? "आमच्याबद्दल | तेजस पॉलिमर्स, पाचोरा"
     : "About Us | Tejas Polymers, Pachora";
   const description = isMr
     ? "पाचोरा, महाराष्ट्रातील सिंचन उपकरण निर्माता व पुरवठादार. IS 13488 प्रमाणित ठिबक सिंचन उत्पादने, मालक व शेतकरी यांना दुर्लभ नसणारी उपकरणे."
@@ -72,7 +72,7 @@ export default async function AboutPage({ params }: AboutProps) {
   const aboutLd = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    name: isMr ? "तेजा पॉलिमर्सबद्दल" : "About Tejas Polymers",
+    name: isMr ? "तेजस पॉलिमर्सबद्दल" : "About Tejas Polymers",
     url: `${SITE_URL}/${locale}/about`,
     inLanguage: LOCALE_META[locale].htmlLang,
     mainEntity: organizationJsonLd(locale),

@@ -96,6 +96,8 @@ const STRINGS = {
   labelPhoneWhatsApp: { en: "Phone / WhatsApp", mr: "फोन / व्हॉट्सॅप" },
   labelFactoryAddress: { en: "Factory Address", mr: "कारखान्याचा पत्ता" },
   labelWorkingHours: { en: "Working Hours", mr: "कामाची वेळ" },
+  mapTitle: { en: "Find us on Google Maps", mr: "गूगल मॅपवर आम्हाला शोधा" },
+  mapDirections: { en: "Get directions", mr: "दिशा पहा" },
 
   // Inquiry / distributor form
   formFullName: { en: "Full Name *", mr: "पूर्ण नाव *" },

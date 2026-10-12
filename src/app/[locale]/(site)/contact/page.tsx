@@ -3,7 +3,7 @@ import Link from "next/link";
 import InquiryForm from "@/components/InquiryForm";
 import Reveal from "@/components/Reveal";
 import { EditableRichText, EditableText } from "@/components/site/Editable";
-import { AREA_SERVED, CONTACT, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { AREA_SERVED, CONTACT, MAP_EMBED_URL, MAP_LINK_URL, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { getSiteContentMap, translator } from "@/lib/site-content";
 import {
   DEFAULT_LOCALE,
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: ContactProps): Promise<Metada
   const isMr = locale === "mr";
 
   const title = isMr
-    ? "संपर्क | तेजा पॉलिमर्स, पाचोरा"
+    ? "संपर्क | तेजस पॉलिमर्स, पाचोरा"
     : "Contact | Tejas Polymers, Pachora";
   const description = isMr
     ? "सिंचन उपकरणांच्या भाव व डिस्ट्रिब्यूटर किंमतसाठी संपर्क साधा. गोरडाखेडा, पाचोरा, महाराष्ट्र ४२४२०१. १-२ कार्यदिवसांत उत्तर."
@@ -242,6 +242,36 @@ export default async function ContactPage({ params, searchParams }: ContactProps
                 compact
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+        <div className="reveal overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-slate-100 px-6 py-4 sm:px-8">
+            <h2 className="text-xl font-bold text-brand-900">
+              <EditableText contentKey="contact.mapTitle" editMode={editMode} value={ui("mapTitle", locale)} as="span" />
+            </h2>
+            <a
+              href={MAP_LINK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-semibold text-brand-700 underline hover:text-brand-800"
+            >
+              {ui("mapDirections", locale)} →
+            </a>
+          </div>
+          {/* aspect-video reserves the box so the page does not jump when the
+              iframe loads. The frame itself is stretched over it. */}
+          <div className="relative aspect-video w-full">
+            <iframe
+              src={MAP_EMBED_URL}
+              title={ui("mapTitle", locale)}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 h-full w-full border-0"
+              allowFullScreen
+            />
           </div>
         </div>
       </section>

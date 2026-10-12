@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: HomeProps): Promise<Metadata>
   // Polymers | Drip Irrigation, Pachora" survives a rewrite, whereas a long
   // descriptive sentence loses its distinguishing tail.
   const title = isMr
-    ? "तेजा पॉलिमर्स | पाचोरा ठिबक सिंचन निर्माता"
+    ? "तेजस पॉलिमर्स | पाचोरा ठिबक सिंचन निर्माता"
     : "Tejas Polymers | Drip Irrigation, Pachora";
   const description = isMr
     ? "पाचोरा, महाराष्ट्रातील ठिबक सिंचन निर्माता. IS 13488 फ्लॅट इनलाइन ठिबक लेटरल, ऑनलाइन एमिटर, फिल्टर व फिटिंग्ज — पाण्याची ६०% बचत."
