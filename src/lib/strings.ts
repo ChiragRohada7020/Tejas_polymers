@@ -21,6 +21,8 @@ const STRINGS = {
     mr: "डिस्ट्रिब्यूटर व्हा",
   },
   footerBlog: { en: "Guides & Articles", mr: "मार्गदर्शक व लेख" },
+  footerGuides: { en: "Popular guides", mr: "लोकप्रिय मार्गदर्शक" },
+  footerBlogAll: { en: "All guides", mr: "सर्व मार्गदर्शक" },
   allRightsReserved: { en: "All rights reserved.", mr: "सर्व हक्क राखीव." },
 
   // Footer catalogue shortcuts. Duplicated from the Category collection on

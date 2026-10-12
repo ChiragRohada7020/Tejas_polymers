@@ -72,8 +72,11 @@ One rule when adding a guide: **every figure quoted must already exist in the
 product's own spec table** — the spec table, hero image and call to action are
 pulled from the live product, so a guide cannot drift out of sync with the catalog.
 
-The guides are deliberately **not** in the main navigation; they are reachable from
-the footer, from each other, and from `sitemap.xml`. If you ever want them competing
+The guides are deliberately **not** in the main navigation. Instead the footer carries
+a "Popular guides" strip listing the five newest guides by title, so every page on the
+site links straight to five guide URLs rather than only to the index. That strip is
+generated from `allBlogPosts()`, so it keeps itself current as guides are added and
+removed — there is no list to maintain by hand. If you ever want the guides competing
 with the catalog for attention, add them to the nav in `src/components/HeaderClient.tsx`.
 
 ## Project Structure

@@ -791,6 +791,414 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     },
   },
+  {
+    slug: "drip-subsidy-application",
+    productSlug: "krusheebindoo-flat-inline-drip-16mm-4lph-30cm",
+    publishedAt: "2026-10-08",
+    updatedAt: "2026-10-08",
+    copy: {
+      en: {
+        title: "Drip Irrigation Subsidy: How to Apply and Why Claims Get Rejected",
+        metaDescription:
+          "Most subsidy claims fail on paperwork rather than on the field. IS-marked material, a quotation from a registered dealer and matching land records decide the outcome.",
+        excerpt:
+          "Subsidy is settled on paper long before an inspector reaches the field. IS marking and a matching name on the 7/12 are what most claims turn on.",
+        sections: [
+          {
+            heading: "Why IS marking decides eligibility",
+            body: [
+              "Every micro-irrigation subsidy in India is tied to material that carries the IS mark. That is not a formality. The scheme pays for a specified standard of pipe, and a lateral that is not marked to that standard cannot be verified as being it.",
+              "Both of our flat inline laterals are made to IS 13488:2008 Class 2, and the plain lateral to IS 12786. The standard is moulded into the pipe rather than printed on a label, so it survives the season and it survives the inspection. If you are buying material to claim on, look for the mark before the invoice is written, not after.",
+            ],
+          },
+          {
+            heading: "What the file actually needs",
+            body: [
+              "The paperwork is ordinary: the 7/12 extract for the survey number being irrigated, Aadhaar, a bank passbook in the same name, and a quotation or invoice from a dealer registered for the scheme.",
+              "The step that catches people out is sequence. Take the quotation first and the approval second. Material bought before approval is the most common single reason a claim is refused, because the scheme reimburses against an approved estimate rather than against a receipt.",
+            ],
+          },
+          {
+            heading: "Where claims stall",
+            body: [
+              "Almost every rejection traces back to one of four things: the name on the 7/12 not matching the name on the bank account, a quotation from a dealer who is not registered for the scheme, material bought before approval, or an invoice that does not carry the IS mark.",
+              "Rates and per-hectare caps change by state, by farmer category and by year. Treat any figure you read anywhere, including on this page, as a starting point, and confirm the current one with your Krishi Vibhag or on the official scheme portal before you commit money.",
+            ],
+          },
+        ],
+        faq: [
+          {
+            question: "Can I claim subsidy on material I have already bought?",
+            answer:
+              "That is the case that most often fails. Approval is normally given against an estimate before purchase, and the scheme reimburses against that approved estimate. If you have already bought, raise it with your Krishi Vibhag rather than assuming it will not be covered.",
+          },
+          {
+            question: "Does the land have to be in my own name?",
+            answer:
+              "The 7/12 extract and the bank account need to agree. Where land is held jointly or in a family member's name, that is a paperwork problem to settle before the application rather than after it.",
+          },
+          {
+            question: "Is there a subsidy for repairing an existing system?",
+            answer:
+              "Renovation of an existing system is treated separately from a new installation, and the rules differ by state. Ask specifically about renovation when you enquire, because it is not the same application form.",
+          },
+        ],
+      },
+      mr: {
+        title: "ठिबक सिंचन अनुदान: अर्ज कसा करावा आणि दावे का फेटाळले जातात",
+        metaDescription:
+          "अनुदानाचे बहुतेक दावे शेतात नाही तर कागदपत्रांवरच फेटाळले जातात. IS मार्क असलेले साहित्य, नोंदणीकृत विक्रेत्याचे कोटेशन आणि जुळणारे ७/१२ हेच निर्णायक ठरतात.",
+        excerpt:
+          "अनुदान शेतात पोहोचण्याच्या खूप आधी कागदावर ठरते. IS मार्क आणि ७/१२ व बँक खात्यावरील नाव जुळणे यावरच बहुतेक दावे टिकतात किंवा फेटाळले जातात.",
+        sections: [
+          {
+            heading: "IS मार्कच अनुदानाची पात्रता ठरवतो",
+            body: [
+              "भारतातील प्रत्येक सूक्ष्म सिंचन अनुदान योजना IS मार्क असलेल्या साहित्याशी जोडलेली आहे. हा केवळ औपचारिक भाग नाही. योजना ठराविक दर्जाच्या पाइपसाठी पैसे देते, आणि त्या दर्जाचा छाप नसलेली लेटरल तो दर्जा आहे हे पटवून देऊ शकत नाही.",
+              "आमच्या दोन्ही फ्लॅट इनलाइन लेटरल्स IS १३४८८:२००८ क्लास २ नुसार आणि साधी लेटरल IS १२७८६ नुसार बनवली जाते. मानक लेबलावर छापलेले नाही तर पाइपवरच ठसवलेले असते, त्यामुळे ते हंगामही झेलते आणि तपासणीही. अनुदानासाठी साहित्य घेत असाल तर बिल लिहिण्याआधीच छाप तपासा, नंतर नाही.",
+            ],
+          },
+          {
+            heading: "फाइलला प्रत्यक्षात काय लागते",
+            body: [
+              "कागदपत्रे साधीच असतात: ज्या सर्व्हे नंबरवर सिंचन करायचे त्याचा ७/१२ उतारा, आधार, त्याच नावावरील बँक पासबुक, आणि योजनेसाठी नोंदणीकृत विक्रेत्याचे कोटेशन किंवा बिल.",
+              "लोकांची गल्लत क्रमात होते. आधी कोटेशन घ्या, नंतर मंजुरी. मंजुरीआधी खरेदी केलेले साहित्य हे दावा नाकारला जाण्याचे सर्वात मोठे कारण आहे, कारण योजना मंजूर अंदाजपत्रकावर परतावा देते, पावतीवर नाही.",
+            ],
+          },
+          {
+            heading: "दावे कुठे अडकतात",
+            body: [
+              "जवळजवळ प्रत्येक नकार या चारपैकी एका कारणामुळे असतो: ७/१२ वरील नाव बँक खात्यावरील नावाशी न जुळणे, योजनेसाठी नोंदणी नसलेल्या विक्रेत्याचे कोटेशन, मंजुरीआधी केलेली खरेदी, किंवा IS मार्क नसलेले बिल.",
+              "दर व प्रति हेक्टर मर्यादा राज्य, शेतकरी वर्ग आणि वर्षानुसार बदलतात. या पानावरील आकड्यासह कोणताही आकडा फक्त प्रारंभबिंदू माना, आणि पैसे खर्च करण्यापूर्वी सध्याचा दर तुमच्या कृषी विभागाकडून किंवा अधिकृत योजना पोर्टलवरून खात्री करा.",
+            ],
+          },
+        ],
+        faq: [
+          {
+            question: "आधीच खरेदी केलेल्या साहित्यावर अनुदान मिळू शकते का?",
+            answer:
+              "बहुतेकदा हाच दावा अडतो. सामान्यतः खरेदीपूर्वी अंदाजपत्रकावर मंजुरी मिळते आणि योजना त्याच मंजूर अंदाजावर परतावा देते. आधीच खरेदी केले असेल तर मिळणार नाही असे गृहीत धरण्यापूर्वी तुमच्या कृषी विभागाकडे तुमच्या प्रकरणाबद्दल विचारा.",
+          },
+          {
+            question: "जमीन स्वतःच्या नावावर असावी लागते का?",
+            answer:
+              "७/१२ उतारा आणि बँक खाते जुळणे आवश्यक आहे. जमीन संयुक्त नावावर किंवा कुटुंबातील सदस्याच्या नावावर असल्यास ही कागदपत्रांची अडचण अर्जानंतर नाही तर आधी सोडवावी लागते.",
+          },
+          {
+            question: "आधीच्या सिस्टमच्या दुरुस्तीवर अनुदान मिळते का?",
+            answer:
+              "सध्याच्या सिस्टमचे नूतनीकरण आणि नवीन बसवणी यांची प्रक्रिया वेगळी असते, आणि नियम राज्यानुसार बदलतात. चौकशी करताना नूतनीकरणाबद्दल स्वतंत्रपणे विचारा, कारण तो अर्ज वेगळा असतो.",
+          },
+        ],
+      },
+    },
+  },
+  {
+    slug: "drip-cost-per-acre",
+    productSlug: "krusheebindoo-flat-inline-drip-12mm-4lph-40cm",
+    publishedAt: "2026-10-08",
+    updatedAt: "2026-10-08",
+    copy: {
+      en: {
+        title: "Drip Irrigation Cost per Acre: How to Work It Out",
+        metaDescription:
+          "Cost per acre is not one number, it follows row spacing. Worked from the actual roll price: our 12 mm lateral comes to about 92 paise a metre.",
+        excerpt:
+          "A lateral is priced by the roll but you buy by the acre. Row spacing is the conversion, and it is worth doing on paper before you commit.",
+        sections: [
+          {
+            heading: "Start from the roll, not the acre",
+            body: [
+              "A drip lateral is sold by the roll and a field is measured in acres, so the two have to be converted before any price means anything. Our 12 mm flat inline lateral is 5000 metres to the roll at an M.R.P. of ₹4,585, which comes to about 92 paise a metre.",
+              "That per-metre figure is the useful one, because it turns the question from what a roll costs into what your field actually needs.",
+            ],
+          },
+          {
+            heading: "Row spacing is the whole calculation",
+            body: [
+              "An acre is 4,047 square metres. Where laterals run down every crop row, the metres you need is that area divided by the row spacing. At 1.2 metre rows an acre needs about 3,370 metres, roughly two thirds of a roll and about ₹3,090 of lateral. At 1.5 metres it is about 2,700 metres, around ₹2,470. At 1.8 metres it is about 2,250 metres, around ₹2,060.",
+              "Wider rows costing less is not obvious until you do the division. The catch is that wider rows also mean fewer emitters per square metre, so the same crop can need a longer run or a higher discharge to put the same water down.",
+            ],
+          },
+          {
+            heading: "What that number leaves out",
+            body: [
+              "The lateral is the largest single line, but it is not the system. A working installation also needs the filter, the sub-main, the take-off connectors and valves, the end fittings, and the labour to lay it all.",
+              "So treat the per-acre figure above as the lateral budget and price the rest against a proper quotation. A quotation also lets you check the one thing a per-acre figure cannot: that the pipe being quoted is IS 13488 material and not a lighter wall at the same price.",
+            ],
+          },
+        ],
+        faq: [
+          {
+            question: "Is a longer roll cheaper per metre?",
+            answer:
+              "No. A 5000 metre roll is priced as a roll, so the rate per metre is the same however much you buy. Buying in full rolls saves you joints rather than rupees, and fewer joints means fewer places for the system to leak or come apart.",
+          },
+          {
+            question: "Is 12 mm or 16 mm cheaper per acre?",
+            answer:
+              "Our 12 mm roll is ₹4,585 and the 16 mm roll is ₹6,225, both 5000 metres, so per acre the narrower pipe costs less. Whether it is the right choice depends on run length and slope rather than on price alone.",
+          },
+          {
+            question: "Does this figure include the subsidy?",
+            answer:
+              "No. These are M.R.P. figures before any subsidy, and subsidy is settled separately once the installation is approved. Our guide on the subsidy application covers how that side of it works.",
+          },
+        ],
+      },
+      mr: {
+        title: "ठिबक सिंचनाचा खर्च प्रति एकर कसा मोजावा",
+        metaDescription:
+          "प्रति एकर खर्च हा एकच आकडा नसतो, तो पंक्तीतील अंतरावर अवलंबून असतो. प्रत्यक्ष रोल दरावरून मोजलेला: आमची १२ मिमी लेटरल सुमारे ९२ पैसे प्रति मीटर.",
+        excerpt:
+          "लेटरल रोलने विकली जाते पण शेत एकरात मोजले जाते. पंक्तीतील अंतर हेच रूपांतर, आणि तो आकडा पैसे खर्च करण्यापूर्वी कागदावर काढून घ्यावा.",
+        sections: [
+          {
+            heading: "एकरापासून नाही, रोलपासून सुरुवात करा",
+            body: [
+              "ठिबक लेटरल रोलने विकली जाते आणि शेत एकरात मोजले जाते, त्यामुळे कोणताही दर अर्थपूर्ण होण्यापूर्वी हे दोन्ही जुळवावे लागतात. आमची १२ मिमी फ्लॅट इनलाइन लेटरल रोलला ५००० मीटर असून M.R.P. ₹४,५८५ आहे, म्हणजे सुमारे ९२ पैसे प्रति मीटर.",
+              "प्रति मीटरचा आकडा उपयोगी आहे, कारण तो प्रश्न 'रोल किती रुपयांचा' वरून 'माझ्या शेताला किती लागेल' असा करतो.",
+            ],
+          },
+          {
+            heading: "पंक्तीतील अंतर हेच संपूर्ण गणित",
+            body: [
+              "एक एकर म्हणजे ४,०४७ चौरस मीटर. प्रत्येक पंक्तीला लेटरल टाकली तर लागणारी लांबी म्हणजे हे क्षेत्रफळ भागिले पंक्तीतील अंतर. १.२ मीटर अंतरावर एकरला सुमारे ३,३७० मीटर लागतात, म्हणजे जवळपास दोन तृतीयांश रोल आणि सुमारे ₹३,०९० ची लेटरल. १.५ मीटरवर सुमारे २,७०० मीटर, म्हणजे जवळपास ₹२,४७०. १.८ मीटरवर सुमारे २,२५० मीटर, म्हणजे जवळपास ₹२,०६०.",
+              "रुंद पंक्ती स्वस्त पडतात हे भागाकार केल्याशिवाय लक्षात येत नाही. पण रुंद पंक्तीत प्रति चौरस मीटर एमिटर कमी असतात, त्यामुळे त्याच पिकाला तेवढेच पाणी देण्यासाठी लांब रन किंवा जास्त डिस्चार्ज लागू शकतो.",
+            ],
+          },
+          {
+            heading: "या आकड्यात काय समाविष्ट नाही",
+            body: [
+              "लेटरल हा सर्वात मोठा एकच खर्च आहे, पण ती संपूर्ण सिस्टम नाही. कार्यरत बसवणीसाठी फिल्टर, सब-मेन, टेक-ऑफ कनेक्टर व व्हाव्ह, शेवटची फिटिंग्ज आणि मजुरीही लागते.",
+              "त्यामुळे वरील प्रति एकर आकडा लेटरलचे बजेट माना आणि बाकीचे योग्य कोटेशनवर मिळवा. कोटेशनमुळे एक गोष्ट तपासता येते जी प्रति एकर आकड्याने तपासता येत नाही: जो पाइप कोट केला आहे तो IS १३४८८ चा आहे की त्याच दरात पातळ भिंतीचा.",
+            ],
+          },
+        ],
+        faq: [
+          {
+            question: "लांब रोल प्रति मीटर स्वस्त पडतो का?",
+            answer:
+              "नाही. ५००० मीटरचा रोल रोल म्हणूनच दर केला जातो, त्यामुळे कितीही घेतले तरी प्रति मीटर दर तोच राहतो. पूर्ण रोल घेतल्याने रुपये वाचत नाहीत, जोड वाचतात — आणि कमी जोड म्हणजे गळती किंवा निखळण्याची कमी ठिकाणे.",
+          },
+          {
+            question: "प्रति एकर १२ मिमी स्वस्त की १६ मिमी?",
+            answer:
+              "आमचा १२ मिमी रोल ₹४,५८५ आणि १६ मिमी रोल ₹६,२२५, दोन्ही ५००० मीटर, त्यामुळे प्रति एकर बारीक पाइप स्वस्त पडतो. योग्य निवड फक्त दरावर नाही तर रनची लांबी व उतार यांवर अवलंबून असते.",
+          },
+          {
+            question: "या आकड्यात अनुदान धरले आहे का?",
+            answer:
+              "नाही. येथील आकडे कोणत्याही अनुदानापूर्वीचे M.R.P. आहेत, आणि बसवणी मंजूर झाल्यावर अनुदान वेगळे दिले जाते. ती प्रक्रिया कशी चालते हे आमच्या अनुदान अर्जाच्या मार्गदर्शकात पहा.",
+          },
+        ],
+      },
+    },
+  },
+  {
+    slug: "mulch-and-drip-lateral",
+    productSlug: "krusheebindoo-flat-inline-drip-16mm-4lph-30cm",
+    publishedAt: "2026-10-08",
+    updatedAt: "2026-10-08",
+    copy: {
+      en: {
+        title: "Laying a Drip Lateral Under Plastic Mulch",
+        metaDescription:
+          "Under mulch the lateral is buried for the season, so spacing and joints have to be right the first time. What changes when you lay the pipe under the sheet.",
+        excerpt:
+          "Once the mulch sheet is down the lateral cannot be adjusted, so everything that would be easy to change later has to be decided first.",
+        sections: [
+          {
+            heading: "The sheet makes every later decision permanent",
+            body: [
+              "Laying a lateral on bare soil is forgiving. If the spacing is wrong or a run comes up short, you lift the pipe, punch it again and move it. Put a mulch sheet over it and that option is gone: the lateral sits under the sheet for the whole crop, and getting at it means disturbing the mulch you have already paid for.",
+              "So the order matters. Settle the row spacing, the run lengths and the position of every take-off before the sheet goes down, not after.",
+            ],
+          },
+          {
+            heading: "Why a flat thin-wall lateral suits mulch",
+            body: [
+              "A flat lateral lies low against the soil, which is exactly what you want under a sheet. Our 16 mm flat inline lateral is made to IS 13488:2008 Class 2 with emitters at 30 cm, and the flat profile sits close enough to the bed that the mulch lies flat over it instead of tenting wherever the pipe passes.",
+              "Emitters at 30 cm give a wet strip along the row rather than isolated points, and that is what a mulch bed wants: the sheet holds the moisture in and the strip wets the root zone evenly underneath it.",
+            ],
+          },
+          {
+            heading: "Joints are the part that fails",
+            body: [
+              "A joint under a mulch sheet is a leak you cannot see and cannot easily reach. Fewer joints is the most useful thing you can do, which is an argument for taking the lateral down the full row length rather than piecing it together.",
+              "It is also an argument for checking run length before you buy rather than after. A run that is too long loses pressure at the far end, and under mulch the crop at that end simply receives less water with no visible sign until it shows in the plants.",
+            ],
+          },
+        ],
+        faq: [
+          {
+            question: "Can the lateral go on top of the mulch instead?",
+            answer:
+              "It can, and it is easier to service, but it stays exposed to sun and to anything that walks or drives over the bed. Under the sheet is the usual arrangement for a seasonal crop; on top is worth considering if you need to reach the emitters often.",
+          },
+          {
+            question: "Do emitters clog faster under mulch?",
+            answer:
+              "The sheet does not clog emitters by itself, but it does hide them, so a blockage is found later. That is an argument for filtration you can inspect, and for checking pressure at the far end of a run rather than waiting for the crop to show it.",
+          },
+          {
+            question: "Is 30 cm or a wider spacing better under mulch?",
+            answer:
+              "Under mulch the sheet is already limiting evaporation, so the wet strip is doing more of the work. A closer spacing such as 30 cm wets a continuous strip, which is usually what a mulched bed is after.",
+          },
+        ],
+      },
+      mr: {
+        title: "प्लास्टिक मल्चखाली ठिबक लेटरल कशी अंथरावी",
+        metaDescription:
+          "मल्चखाली लेटरल हंगामभर पुरलेली असते, त्यामुळे अंतर व जोड पहिल्याच वेळी बरोबर हवेत. आच्छादनाखाली अंथरताना काय बदलते ते पहा.",
+        excerpt:
+          "मल्चचे आच्छादन अंथरल्यावर लेटरल हलवता येत नाही, त्यामुळे नंतर सहज बदलता आले असते ते सर्व आधीच ठरवावे लागते.",
+        sections: [
+          {
+            heading: "आच्छादनामुळे नंतरचा प्रत्येक निर्णय कायमचा होतो",
+            body: [
+              "उघड्या जमिनीवर लेटरल अंथरणे सोपे असते. अंतर चुकले किंवा रन लहान पडला तर पाइप उचलून, पुन्हा छिद्र पाडून हलवता येतो. त्यावर मल्चचे आच्छादन अंथरले की ती सोय संपते: लेटरल संपूर्ण पिकभर आच्छादनाखाली राहते, आणि तिथवर पोहोचणे म्हणजे आधीच पैसे दिलेले आच्छादन बिघडवणे.",
+              "त्यामुळे क्रम महत्त्वाचा आहे. आच्छादन अंथरण्याआधीच पंक्तीतील अंतर, रनची लांबी आणि प्रत्येक टेक-ऑफची जागा निश्चित करा, नंतर नाही.",
+            ],
+          },
+          {
+            heading: "मल्चसाठी फ्लॅट व पातळ भिंतीची लेटरलच योग्य",
+            body: [
+              "फ्लॅट लेटरल जमिनीला घट्ट बसते, आणि आच्छादनाखाली नेमके हेच हवे. आमची १६ मिमी फ्लॅट इनलाइन लेटरल IS १३४८८:२००८ क्लास २ नुसार असून ३० सें.मी. अंतरावर एमिटर आहेत, आणि फ्लॅट आकार वाफ्याला इतका घट्ट बसतो की आच्छादन पाइपच्या ठिकाणी तंबूसारखे उचलले जात नाही तर सपाट पडते.",
+              "३० सें.मी. अंतरावरील एमिटर पंक्तीभर ओलसर पट्टा देतात, तुकड्या नाही — आणि मल्च वाफ्याला नेमके हेच लागते: आच्छादन ओलावा रोखते आणि पट्टा त्याखालील मुळांचा भाग समान ओला ठेवतो.",
+            ],
+          },
+          {
+            heading: "जोड हाच तुटणारा भाग",
+            body: [
+              "मल्चच्या आच्छादनाखालील जोड म्हणजे असा गळती जो दिसत नाही आणि सहज पोहोचत नाही. जोड कमी करणे हीच सर्वात उपयोगी गोष्ट, आणि म्हणून लेटरल तुकड्या जोडण्यापेक्षा पूर्ण पंक्तीभर एकसंध नेणे बरे.",
+              "रनची लांबी विकत घेण्याआधी तपासण्याचे हेदेखील कारण आहे: नको इतका लांब रन शेवटी दाब गमावतो, आणि मल्चखाली शेवटच्या टोकाच्या पिकाला कमी पाणी मिळत असूनही पिकावर दिसेपर्यंत काहीच लक्षात येत नाही.",
+            ],
+          },
+        ],
+        faq: [
+          {
+            question: "लेटरल आच्छादनावर वर ठेवता येते का?",
+            answer:
+              "येते, आणि देखभाल सोपी होते, पण ती उन्हाला आणि वाफ्यावरून चालणाऱ्या किंवा धावणाऱ्या कशालाही उघडी राहते. हंगामी पिकासाठी आच्छादनाखाली ठेवणे हीच नेहमीची पद्धत; एमिटरकडे वारंवार पोहोचावे लागत असेल तर वर ठेवण्याचा विचार करा.",
+          },
+          {
+            question: "मल्चखाली एमिटर लवकर बंद पडतात का?",
+            answer:
+              "आच्छादनामुळे एमिटर बंद पडत नाहीत, पण ते लपतात, त्यामुळे बंद पडल्याचे उशिरा कळते. म्हणून पाहता येणारी गाळण ठेवावी आणि पिकावर दिसण्याची वाट न पाहता रनच्या शेवटच्या टोकावर दाब तपासावा.",
+          },
+          {
+            question: "मल्चखाली ३० सें.मी. की जास्त अंतर बरे?",
+            answer:
+              "आच्छादनाखाली बाष्पीभवन आच्छादनच रोखते, त्यामुळे ओलसर पट्टा जास्त काम करतो. ३० सें.मी.सारखे कमी अंतर सतत ओलसर पट्टा देतो, जो मल्च वाफ्याला सामान्यतः हवाच असतो.",
+          },
+        ],
+      },
+    },
+  },
+  {
+    slug: "fertigation-and-filtration",
+    productSlug: "krusheebindoo-disc-filter-2-inch",
+    publishedAt: "2026-10-08",
+    updatedAt: "2026-10-08",
+    copy: {
+      en: {
+        title: "Fertigation Makes Filtration More Important, Not Less",
+        metaDescription:
+          "Dissolved fertiliser does not remove the need for a filter, it raises it. Salts and organic load blind a screen faster, so the filter choice changes.",
+        excerpt:
+          "Fertigation is sold as a way to feed the crop, but the practical bottleneck is the filter. Dissolved salts do not pass through the way water does.",
+        sections: [
+          {
+            heading: "What fertigation actually puts in the line",
+            body: [
+              "Fertigation is usually described in terms of what it does for the crop, but it is worth thinking about what it puts into the pipe. Water-soluble fertiliser is dissolved, but it is not pure, and the fillers and impurities in a commercial grade do not disappear because the label says soluble.",
+              "Add that to whatever the source water already carries and the filter is now handling two loads at once rather than one.",
+            ],
+          },
+          {
+            heading: "Why a disc stack copes better with that",
+            body: [
+              "A screen filter traps contaminants on a single mesh and blinds progressively: as the mesh loads, the pressure drop climbs. With fertiliser in the water there is more to trap, and a screen blinding at the wrong moment starves a block at exactly the point in the season when the crop is being fed through that line.",
+              "A disc filter separates rather than blocks. Our 2 inch disc filter uses a 130 micron grooved disc stack rated to 40 m³/h at a maximum working pressure of 10 bar, and the grooves hold far more dirt before the pressure drop becomes noticeable. Each disc lifts out and can be washed, so a loaded stack is a cleaning job rather than a replacement.",
+            ],
+          },
+          {
+            heading: "Order of operations on a fertigation line",
+            body: [
+              "The usual arrangement puts the primary filter first, then the finer stage, and the injection point after that. Injecting after the filter is what you want: fertiliser goes into water that has already been cleaned rather than through the element that is catching the dirt.",
+              "Whatever the arrangement, the indicator that matters is differential pressure. Fertigation changes the load through the season, so clean the filter on the gauge rather than on a calendar.",
+            ],
+          },
+        ],
+        faq: [
+          {
+            question: "Does fertigation need a different filter from plain water?",
+            answer:
+              "The filter still has to remove what is in the water, and fertigation adds to that load. A disc filter copes with the extra load better than a fine screen because it holds more dirt before the pressure drop shows.",
+          },
+          {
+            question: "Can I inject fertiliser before the filter?",
+            answer:
+              "You can, and the filter will then catch anything the fertiliser carries, but it loads the element faster and the fertiliser has to pass through whatever is already trapped there. Injecting after the filter is the more usual arrangement.",
+          },
+          {
+            question: "How often should the filter be cleaned when fertigating?",
+            answer:
+              "More often than on plain water, because there is more to trap. Go by the differential pressure gauge rather than a fixed interval, since the load changes with the fertiliser and with the season.",
+          },
+        ],
+      },
+      mr: {
+        title: "विद्राव्य खते दिल्यावर गाळण अधिक महत्त्वाची होते, कमी नाही",
+        metaDescription:
+          "विद्राव्य खत गाळणीची गरज संपवत नाही तर वाढवते. क्षार व सेंद्रिय भारामुळे जाळी लवकर बंद होते, त्यामुळे फिल्टरची निवड बदलते.",
+        excerpt:
+          "विद्राव्य खत पिकाला खत देण्याची पद्धत म्हणून सांगितले जाते, पण प्रत्यक्ष अडथळा फिल्टरचा असतो. विरघळलेले क्षार पाण्यासारखे सहज जात नाहीत.",
+        sections: [
+          {
+            heading: "विद्राव्य खत प्रत्यक्षात ओळीत काय टाकते",
+            body: [
+              "विद्राव्य खत हे पिकाला काय देते या दृष्टीने सांगितले जाते, पण ते पाइपमध्ये काय टाकते हेही विचारात घ्यावे. पाण्यात विरघळणारे खत विरघळलेले असते, पण शुद्ध नसते, आणि बाजारातील दर्जातील भराव व अशुद्धी 'विद्राव्य' लिहिले आहे म्हणून गायब होत नाहीत.",
+              "ते तुमच्या स्रोताच्या पाण्यात आधीच असलेल्या भारात मिळवा, आणि फिल्टरला आता एकाऐवजी दोन भार सांभाळावे लागतात.",
+            ],
+          },
+          {
+            heading: "डिस्क स्टॅक हा भार का जास्त चांगला सांभाळतो",
+            body: [
+              "स्क्रीन फिल्टर एका जाळीवर घाण अडवतो आणि हळूहळू बंद होत जातो: जाळी भरत जाते तसे दाब कमी होणे वाढते. पाण्यात खत असल्यास अडवण्यासारखे जास्त असते, आणि चुकीच्या क्षणी बंद पडलेली जाळी हंगामातील ज्या टप्प्यात त्या ओळीतून पिकाला खत दिले जाते त्याच टप्प्यात वाफा कोरडा ठेवते.",
+              "डिस्क फिल्टर अडवत नाही तर वेगळे करतो. आमचा २ इंच डिस्क फिल्टर १३० मायक्रॉन खोबणी असलेला स्टॅक वापरतो, जो १० बार कमाल कार्य दाबावर ४० घनमीटर प्रति तासापर्यंत रेट केलेला आहे, आणि खोबणी दाब कमी होणे जाणवण्यापूर्वी खूप जास्त घाण सहन करते. प्रत्येक डिस्क काढता व धुवता येते, त्यामुळे भरलेला स्टॅक म्हणजे बदलण्याचे नाही तर स्वच्छ करण्याचे काम.",
+            ],
+          },
+          {
+            heading: "विद्राव्य खत असलेल्या ओळीतील क्रम",
+            body: [
+              "नेहमीच्या रचनेत आधी मुख्य फिल्टर, नंतर बारीक टप्पा आणि नंतर इंजेक्शनचा बिंदू असतो. फिल्टरनंतर इंजेक्शन देणेच योग्य: खत घाण अडवणाऱ्या घटकातून न जाता आधीच स्वच्छ झालेल्या पाण्यात मिसळते.",
+              "रचना कोणतीही असो, महत्त्वाचा निर्देशक दाबातील फरक आहे. विद्राव्य खतामुळे हंगामभर भार बदलतो, त्यामुळे दिनदर्शिकेवर नाही तर गेजवर फिल्टर साफ करा.",
+            ],
+          },
+        ],
+        faq: [
+          {
+            question: "विद्राव्य खतासाठी वेगळा फिल्टर लागतो का?",
+            answer:
+              "फिल्टरला पाण्यातील घाण काढावीच लागते, आणि विद्राव्य खत तो भार वाढवते. बारीक जाळीपेक्षा डिस्क फिल्टर हा वाढीव भार जास्त चांगला सांभाळतो, कारण दाब कमी होणे जाणवण्यापूर्वी तो बरीच घाण धरतो.",
+          },
+          {
+            question: "फिल्टरआधी खत देता येते का?",
+            answer:
+              "येते, आणि मग फिल्टर खतासोबत येणारे काहीही अडवेल, पण त्यामुळे घटक लवकर भरतो आणि खताला आधीच अडकलेल्या घाणीतून जावे लागते. फिल्टरनंतर खत देणे हीच नेहमीची रचना.",
+          },
+          {
+            question: "विद्राव्य खत देत असताना फिल्टर किती वेळा साफ करावा?",
+            answer:
+              "साध्या पाण्यापेक्षा जास्त वेळा, कारण अडवण्यासारखे जास्त असते. ठराविक कालावधीऐवजी दाबातील फरकाच्या गेजवरून साफ करा, कारण खत व हंगामानुसार भार बदलतो.",
+          },
+        ],
+      },
+    },
+  },
 ];
 
 export function blogPost(slug: string): BlogPost | undefined {
